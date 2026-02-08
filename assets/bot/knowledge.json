@@ -1,0 +1,179 @@
+{
+  "snippets": [
+    {
+      "id": "hackathon_award",
+      "title": "AWS Hackathon Grand Prize",
+      "text": "Jason's team won Grand Prize at AWS AI Hackathon Hong Kong 2025, competing against 130+ shortlisted teams.",
+      "tags": ["aws", "hackathon", "award", "grand prize", "competition", "winner"],
+      "url": "hackathon.html#award"
+    },
+    {
+      "id": "hackathon_build",
+      "title": "14-Day Development Sprint",
+      "text": "The Bay Management System was built in just 14 days using HTML, CSS, JavaScript, AWS Q Developer, and Kiro AI.",
+      "tags": ["hackathon", "development", "14 days", "build", "rapid", "aws q developer"],
+      "url": "hackathon.html#development"
+    },
+    {
+      "id": "hackathon_media",
+      "title": "Media Coverage",
+      "text": "Jason was featured in 4 media interviews including unwire.hk, SCMP, HAECO internal media, and AWS Hong Kong.",
+      "tags": ["media", "interview", "coverage", "scmp", "unwire", "aws"],
+      "url": "hackathon.html#media"
+    },
+    {
+      "id": "reinvent_trip",
+      "title": "AWS re:Invent Las Vegas",
+      "text": "Jason traveled to Las Vegas for AWS re:Invent conference and was interviewed on-site about the winning project.",
+      "tags": ["reinvent", "re:invent", "las vegas", "aws", "conference", "interview"],
+      "url": "hackathon.html#reinvent"
+    },
+    {
+      "id": "bay_system",
+      "title": "Bay Management System",
+      "text": "An AI-based aircraft bay scheduling optimization platform that automates bay assignments and provides real-time analytics for HAECO operations.",
+      "tags": ["bay management", "aircraft", "scheduling", "optimization", "ai", "haeco"],
+      "url": "hackathon.html"
+    },
+    {
+      "id": "coop_duration",
+      "title": "HAECO Co-op Internship",
+      "text": "Jason completed a 5-month Co-op at HAECO Technology Innovation department from September 2025 to January 2026.",
+      "tags": ["haeco", "coop", "co-op", "internship", "5 months", "technology innovation"],
+      "url": "coop.html"
+    },
+    {
+      "id": "techathon_organize",
+      "title": "HAECO Techathon Lead Organizer",
+      "text": "Jason solely organized HAECO's first-ever Techathon from scratch, including framework design and 3 GM pitch meetings.",
+      "tags": ["techathon", "organizer", "haeco", "innovation", "pitch", "gm meeting"],
+      "url": "coop.html#techathon"
+    },
+    {
+      "id": "techathon_roadmap",
+      "title": "Techathon Framework",
+      "text": "Designed comprehensive Techathon roadmap with pitch sessions, team formation, and innovation challenges for HAECO employees.",
+      "tags": ["techathon", "roadmap", "framework", "design", "innovation"],
+      "url": "coop.html#techathon"
+    },
+    {
+      "id": "lean_day_mc",
+      "title": "Lean Day Master of Ceremony",
+      "text": "Jason served as MC at HAECO Lean Day 2025, engaging executives and hundreds of attendees in front of large audiences.",
+      "tags": ["lean day", "mc", "master of ceremony", "haeco", "presentation", "public speaking"],
+      "url": "coop.html#leanday"
+    },
+    {
+      "id": "lean_day_sharing",
+      "title": "Lean Day Sharing Session",
+      "text": "Presented the AWS Hackathon winning project and shared innovation insights at HAECO Lean Day 2025.",
+      "tags": ["lean day", "sharing", "presentation", "hackathon", "innovation"],
+      "url": "coop.html#leanday"
+    },
+    {
+      "id": "handover_package",
+      "title": "Co-op Handover Documentation",
+      "text": "Created comprehensive handover package documenting all projects, learnings, and recommendations for future interns.",
+      "tags": ["handover", "documentation", "coop", "package", "knowledge transfer"],
+      "url": "coop.html"
+    },
+    {
+      "id": "demo_video",
+      "title": "Hackathon Demo Video Production",
+      "text": "Jason produced the 3-minute AWS Hackathon demo video that showcased the Bay Management System and helped win Grand Prize.",
+      "tags": ["video", "demo", "production", "hackathon", "media"],
+      "url": "hackathon.html#demo"
+    },
+    {
+      "id": "education_hkust",
+      "title": "HKUST Engineering Degree",
+      "text": "Currently pursuing BEng in Industrial Engineering and Engineering Management with Minor in Big Data Technology at HKUST.",
+      "tags": ["hkust", "education", "ieem", "engineering", "big data", "university"],
+      "url": "index.html#education"
+    },
+    {
+      "id": "education_hku",
+      "title": "HKU SPACE Data Science",
+      "text": "Completed Higher Diploma in Data Science at HKU SPACE with Academic Excellence Award and Principal's Honor List.",
+      "tags": ["hku space", "data science", "diploma", "award", "honor list"],
+      "url": "index.html#education"
+    },
+    {
+      "id": "fyp_project",
+      "title": "Final Year Project",
+      "text": "FYP focuses on Efficient Data-Driven Methods for Inventory Control using JIT, Monte Carlo simulation, AutoML, and Multi-Agent Systems.",
+      "tags": ["fyp", "final year project", "inventory control", "jit", "monte carlo", "automl"],
+      "url": "index.html#projects"
+    },
+    {
+      "id": "skills_programming",
+      "title": "Programming Skills",
+      "text": "Proficient in Python, R, Octave, SQLite, and SQL for data analysis and software development.",
+      "tags": ["skills", "programming", "python", "r", "sql", "coding"],
+      "url": "index.html#skills"
+    },
+    {
+      "id": "skills_ai",
+      "title": "AI Development Tools",
+      "text": "Experienced with AWS Q Developer, Krio, OpenAI Codex, and AutoML for rapid AI-driven development.",
+      "tags": ["ai", "tools", "aws q developer", "krio", "automl", "development"],
+      "url": "index.html#skills"
+    },
+    {
+      "id": "skills_creative",
+      "title": "Creative Production",
+      "text": "Skilled in Adobe Creative Suite, Canva, and MS Office for photo/video editing and digital media production.",
+      "tags": ["creative", "adobe", "video editing", "photo editing", "media production"],
+      "url": "index.html#skills"
+    },
+    {
+      "id": "languages",
+      "title": "Multilingual Communication",
+      "text": "Fluent in English, Cantonese, and Mandarin for effective communication across diverse audiences.",
+      "tags": ["languages", "english", "cantonese", "mandarin", "communication"],
+      "url": "index.html#skills"
+    },
+    {
+      "id": "class_rep",
+      "title": "Class Representative Leadership",
+      "text": "Served as Class Representative managing 80+ students in Data Science program at HKU SPACE.",
+      "tags": ["leadership", "class representative", "students", "hku space", "management"],
+      "url": "index.html#education"
+    },
+    {
+      "id": "haeco_75th",
+      "title": "HAECO 75th Anniversary",
+      "text": "Participated in celebrating HAECO's 75th Birthday during the Co-op internship period.",
+      "tags": ["haeco", "anniversary", "75th birthday", "celebration"],
+      "url": "coop.html"
+    },
+    {
+      "id": "contact_email",
+      "title": "Contact Information",
+      "text": "Reach Jason at wcauyeungaa@connect.ust.hk for inquiries about AI-driven solutions and operations optimization.",
+      "tags": ["contact", "email", "reach", "connect"],
+      "url": "index.html#contact"
+    },
+    {
+      "id": "soft_skills",
+      "title": "Professional Soft Skills",
+      "text": "Strong capabilities in critical thinking, leadership, teamwork, negotiation, and decision-making.",
+      "tags": ["soft skills", "leadership", "teamwork", "critical thinking", "negotiation"],
+      "url": "index.html#skills"
+    },
+    {
+      "id": "speedy_group",
+      "title": "Speedy Group IT Support",
+      "text": "Part-time IT operations and digital media production role at Speedy Group since July 2021.",
+      "tags": ["speedy group", "it support", "part-time", "work experience"],
+      "url": "index.html#experience"
+    },
+    {
+      "id": "hkust_itso",
+      "title": "HKUST ITSO Internship",
+      "text": "Completed IT support and asset management internship at HKUST ITSO from February to June 2026.",
+      "tags": ["hkust", "itso", "internship", "it support", "asset management"],
+      "url": "index.html#experience"
+    }
+  ]
+}
