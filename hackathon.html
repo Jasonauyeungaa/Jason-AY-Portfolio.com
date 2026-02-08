@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS AI Hackathon 2025 - Grand Prize Winner | Jason Au-Yeung</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/hackathon.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">← Back to Portfolio</a>
+            <div class="nav-controls">
+                <button id="themeToggle" class="control-btn">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hackathon-hero">
+            <div class="container">
+                <div class="hero-content glass-card">
+                    <div class="champion-badge">🏆 Grand Prize Winner</div>
+                    <h1><img src="assets/images/logos/aws-logo.png" alt="AWS" class="title-logo"> AWS AI Hackathon Hong Kong 2025</h1>
+                    <h2>HAECO Bay Management System</h2>
+                    <p class="hackathon-subtitle">Built in 14 days • 130+ shortlisted teams • Hong Kong's first and largest AWS AI Hackathon</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">🏆</div>
+                            <div class="stat-label">Grand Prize</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">130+</div>
+                            <div class="stat-label">Teams</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">14</div>
+                            <div class="stat-label">Days</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Interviews</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Statement -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎯 The Challenge</h2>
+                <div class="problem-card glass-card">
+                    <h3>Aircraft Bay Assignment at HAECO</h3>
+                    <p>HAECO provides world-class aircraft maintenance, repair, and overhaul (MRO) services to commercial airlines and private jets. Its hangars at Hong Kong International Airport are among the busiest aircraft base maintenance facilities worldwide, servicing over 20 aircraft simultaneously.</p>
+                    
+                    <div class="challenge-points">
+                        <div class="challenge-item">
+                            <span class="challenge-icon">⚠️</span>
+                            <div>
+                                <h4>Manual Planning Complexity</h4>
+                                <p>Bay assignment is done manually with time pressures, leading to errors and potential regulation breaches</p>
+                            </div>
+                        </div>
+                        <div class="challenge-item">
+                            <span class="challenge-icon">🔧</span>
+                            <div>
+                                <h4>Multiple Constraints</h4>
+                                <p>Each bay has constraints on aircraft models and maintenance task types, plus geographical dependencies</p>
+                            </div>
+                        </div>
+                        <div class="challenge-item">
+                            <span class="challenge-icon">📊</span>
+                            <div>
+                                <h4>Dynamic Operations</h4>
+                                <p>Frequent task reprioritization due to unpredictable external factors creates planning bottlenecks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">💡 Our Solution</h2>
+                <div class="solution-grid">
+                    <div class="solution-card glass-card">
+                        <div class="solution-icon">🤖</div>
+                        <h3>AI-Powered Optimization</h3>
+                        <p>Automated bay assignment using AI that considers work type compatibility, urgency, bay dependencies, and operational factors</p>
+                    </div>
+                    <div class="solution-card glass-card">
+                        <div class="solution-icon">📊</div>
+                        <h3>Real-Time Visualization</h3>
+                        <p>Interactive dashboard showing bay utilization, aircraft schedules, and system statistics at a glance</p>
+                    </div>
+                    <div class="solution-card glass-card">
+                        <div class="solution-icon">⚡</div>
+                        <h3>Zero Installation</h3>
+                        <p>Web-based system that opens directly in browser - fast, secure, and accessible anywhere</p>
+                    </div>
+                    <div class="solution-card glass-card">
+                        <div class="solution-icon">💬</div>
+                        <h3>AI Assistant</h3>
+                        <p>Built-in chatbot for instant help, conflict detection, and operational insights</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Video Section -->
+        <section id="demo" class="section">
+            <div class="container">
+                <h2 class="section-title">🎥 3-Minute Demo Video</h2>
+                <div class="video-container glass-card">
+                    <!-- Video will be dynamically loaded from assets/videos/ folder -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">📸 Photo Gallery</h2>
+                <div id="hackathonGallery" class="media-gallery">
+                    <!-- Album will be dynamically loaded from assets/images/hackathon/ folder -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">✨ Key Features</h2>
+                <div class="features-timeline">
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">1</div>
+                        <div class="feature-content">
+                            <h3>📊 Dashboard</h3>
+                            <p>Zero-install web app opens directly in browser. Planners instantly see upcoming aircraft, bay utilization, and system statistics—all in one place.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">2</div>
+                        <div class="feature-content">
+                            <h3>📥 Data Import</h3>
+                            <p>Download CSV template, fill in aircraft registration and task details, then import. System validates and processes everything locally—fast and secure.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">3</div>
+                        <div class="feature-content">
+                            <h3>🎯 Schedule & Optimization</h3>
+                            <p>Bay assignments generated automatically. System considers aircraft model constraints, bay dependencies, and task urgency. Fewer errors, lower towing costs, less manual effort.</p>
+                            <ul class="feature-list">
+                                <li>94% confidence level matching</li>
+                                <li>Efficiency and cost optimization</li>
+                                <li>Auto-assign or AI-powered optimizer</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">4</div>
+                        <div class="feature-content">
+                            <h3>🏢 Bay Status & Layout</h3>
+                            <p>Real-time bay availability and aircraft assignments. Digital replica of HAECO hangar layout with daily view.</p>
+                            <ul class="feature-list">
+                                <li>Bay Utilization Timeline (7-day rolling window)</li>
+                                <li>Dynamic layout updates</li>
+                                <li>Easy adjustments for delays or early departures</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">5</div>
+                        <div class="feature-content">
+                            <h3>📈 Analytics & Reports</h3>
+                            <p>Clear insights into bay utilization, cost reports, and operational trends. Managers make confident, data-driven decisions.</p>
+                            <ul class="feature-list">
+                                <li>Bay Type Utilization charts</li>
+                                <li>Work Type Distribution</li>
+                                <li>Optimization Score tracking</li>
+                                <li>Recent Activity Log</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-number">6</div>
+                        <div class="feature-content">
+                            <h3>💬 AI Assistant</h3>
+                            <p>Built-in chatbot responds instantly to questions like:</p>
+                            <ul class="feature-list">
+                                <li>"How do I assign an aircraft to a bay?"</li>
+                                <li>"What are today's conflicts?"</li>
+                                <li>"Show me optimization statistics"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🛠️ Technology Stack</h2>
+                <div class="tech-grid">
+                    <div class="tech-card glass-card">
+                        <h3>Frontend</h3>
+                        <div class="tech-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                    </div>
+                    <div class="tech-card glass-card">
+                        <h3>AI Development</h3>
+                        <div class="tech-tags">
+                            <span class="tag">AWS Q Developer</span>
+                            <span class="tag">Krio AI</span>
+                        </div>
+                    </div>
+                    <div class="tech-card glass-card">
+                        <h3>Features</h3>
+                        <div class="tech-tags">
+                            <span class="tag">AI Optimization</span>
+                            <span class="tag">Real-time Viz</span>
+                            <span class="tag">Analytics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Development Process -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">⚡ 14-Day Sprint</h2>
+                <div class="sprint-grid">
+                    <div class="sprint-card glass-card">
+                        <h3>📋 Requirements & Design</h3>
+                        <p>Used Krio to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.</p>
+                    </div>
+                    <div class="sprint-card glass-card">
+                        <h3>💻 Development</h3>
+                        <p>Built web-based solution with HTML, CSS, JavaScript. Leveraged Kiro's support to streamline development and focus on core logic and UX.</p>
+                    </div>
+                    <div class="sprint-card glass-card">
+                        <h3>🤖 AI Integration</h3>
+                        <p>Integrated AWS Q Developer for intelligent bay assignment. Implemented optimization engine with comprehensive rule-based planning.</p>
+                    </div>
+                    <div class="sprint-card glass-card">
+                        <h3>🎬 Demo & Presentation</h3>
+                        <p>Created 3-minute demo video, prepared presentation materials, and delivered system walkthrough with UI design showcase.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">👥 Team HAECO</h2>
+
+                <div class="team-grid">
+
+                    <!-- Jason -->
+                    <div class="team-card glass-card">
+                        <img src="assets/images/hackathon/JA.png" alt="Jason Au-Yeung" class="hero-avatar">
+
+                        <h3 class="team-name">Jason Au Yeung</h3>
+
+                        <p class="team-main-role">
+                            <strong>Developer & Demo Presenter</strong>
+                        </p>
+
+                        <ul class="team-details">
+                            <li>Solution architecture & core development</li>
+                            <li>System integration & live demo presentation</li>
+                        </ul>
+
+                        <p class="team-org">
+                            Transformation & Technology<br>
+                            <span>Technology Innovation Team</span>
+                        </p>
+                    </div>
+
+                    <!-- Derek -->
+                    <div class="team-card glass-card">
+                        <img src="assets/images/hackathon/DE.png" alt="Derek Szeto" class="hero-avatar">
+
+                        <h3 class="team-name">Derek Szeto</h3>
+
+                        <p class="team-main-role">
+                            <strong>Developer</strong> – Testing & Documentation
+                        </p>
+
+                        <ul class="team-details">
+                            <li>Debugging & testing for system stability</li>
+                            <li>Technical documentation & QA support</li>
+                        </ul>
+
+                        <p class="team-org">
+                            Transformation & Technology<br>
+                            <span>Technology Innovation Team</span>
+                        </p>
+                    </div>
+
+                    <!-- Peter -->
+                    <div class="team-card glass-card">
+                        <img src="assets/images/hackathon/PE.png" alt="Peter Yuen" class="hero-avatar">
+
+                        <h3 class="team-name">Peter Yuen</h3>
+
+                        <p class="team-main-role">
+                            <strong>Business Analyst</strong>
+                        </p>
+
+                        <ul class="team-details">
+                            <li>Business requirements & use-case definition</li>
+                            <li>Advisory on workflow & solution feasibility</li>
+                        </ul>
+
+                        <p class="team-org">
+                            Transformation & Technology
+                        </p>
+                    </div>
+
+                    <!-- Sahil -->
+                    <div class="team-card glass-card">
+                        <img src="assets/images/hackathon/SA.png" alt="Sahil Kunder" class="hero-avatar">
+
+                        <h3 class="team-name">Sahil Kunder</h3>
+
+                        <p class="team-main-role">
+                            <strong>Subject Matter Expert (SME)</strong>
+                        </p>
+
+                        <ul class="team-details">
+                            <li>Operational expertise & maintenance insights</li>
+                            <li>Data source & real-world constraints</li>
+                        </ul>
+
+                        <p class="team-org">
+                            Base Maintenance
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Hackathon Details -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎪 Hackathon Details</h2>
+                <div class="hackathon-info glass-card">
+                    <h3>AWS AI Hackathon Hong Kong 2025</h3>
+                    <p class="hackathon-tagline">"Build Tomorrow's Hong Kong with AI"</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>📅 Timeline</h4>
+                            <ul>
+                                <li>Briefing: August 26, 2025</li>
+                                <li>Submission: Aug 15 - Sep 30, 2025</li>
+                                <li>Judging: Oct 2 - Oct 14, 2025</li>
+                                <li>Winners: October 16, 2025</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>🎯 Requirements</h4>
+                            <ul>
+                                <li>Use Amazon Q Developer or Kiro</li>
+                                <li>Choose theme or freestyle</li>
+                                <li>3-minute demo video</li>
+                                <li>Source code repository</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>⚖️ Judging Criteria</h4>
+                            <ul>
+                                <li>Business Value & Use Case</li>
+                                <li>Implementation Quality</li>
+                                <li>Innovation & Originality</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>📊 Statistics</h4>
+                            <ul>
+                                <li>841 total participants</li>
+                                <li>130+ shortlisted teams</li>
+                                <li>Hong Kong's first AWS AI Hackathon</li>
+                                <li>4 non-cash prizes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact & Recognition -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🌟 Impact & Recognition</h2>
+                <div class="impact-grid">
+                    <div class="impact-card glass-card">
+                        <div class="impact-icon">🎙️</div>
+                        <h3>4 Media Interviews</h3>
+                        <ul>
+                            <li><strong>unwire.hk</strong> - Tech media coverage</li>
+                            <li><strong>SCMP</strong> - South China Morning Post</li>
+                            <li><strong>HAECO</strong> - HiHAECO Post, Lean Day</li>
+                            <li><strong>AWS Hong Kong</strong> - Official interview</li>
+                        </ul>
+                    </div>
+                    <div class="impact-card glass-card">
+                        <div class="impact-icon">🌍</div>
+                        <h3>Global Exposure</h3>
+                        <p>
+                            Represented HAECO at <strong>AWS re:Invent (Las Vegas)</strong>, 
+                            interviewed on-site and featured in <strong>unwire.hk</strong> 
+                            covering the HAECO Bay Management System.
+                        </p>
+                        <p class="impact-note">
+                            Demonstrated ability to explain complex operational systems to a global audience.
+                        </p>
+                        <a href="https://youtu.be/BDJEDqSPP8M?si=n8KmWvZS1GzSXCOI&t=539"
+                        class="project-link" target="_blank">▶️ YouTube Interview</a>
+                    </div>
+                    <div class="impact-card glass-card">
+                        <div class="impact-icon">💼</div>
+                        <h3>Professional Capability</h3>
+                        <ul>
+                            <li>Owned end-to-end solution design under a 14-day hackathon timeline</li>
+                            <li>Translated real operational constraints into a working digital prototype</li>
+                            <li>Balanced technical feasibility with business requirements</li>
+                            <li>Delivered a system suitable for enterprise-level discussion</li>
+                        </ul>
+                    </div>
+                    <div class="impact-card glass-card">
+                        <div class="impact-icon">🚀</div>
+                        <h3>From Hackathon to Enterprise Thinking</h3>
+                        <p>
+                            The prototype establishes a clear digitalization roadmap, 
+                            with potential integration into existing maintenance systems 
+                            and future deployment to frontline and mobile operational teams.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Links -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🔗 Relevant Links</h2>
+                <div class="links-grid">
+                    <a href="https://devpost.com/software/aircraft-bay-management" class="link-card glass-card" target="_blank">
+                        <div class="link-icon">📱</div>
+                        <h3>Devpost</h3>
+                        <p>View project submission</p>
+                    </a>
+                    <a href="https://www.scmp.com/presented/tech/topics/generative-ai-and-cloud-services/article/3330885/genai-pioneers-tackle-hong-kongs-challenges-first-aws-ai-hackathon" class="link-card glass-card" target="_blank">
+                        <div class="link-icon">📰</div>
+                        <h3>SCMP Article</h3>
+                        <p>Media coverage</p>
+                    </a>
+                    <a href="https://unwire.hk/2025/12/04/aws_reinvent2025/unwire_podcast/" class="link-card glass-card" target="_blank">
+                        <div class="link-icon">🎥</div>
+                        <h3>unwire.hk</h3>
+                        <p>re:Invent interview</p>
+                    </a>
+                    <a href="coop.html" class="link-card glass-card">
+                        <div class="link-icon">🚀</div>
+                        <h3>Co-op Experience</h3>
+                        <p>Full HAECO journey</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="container">
+            <p>&copy; 2026 Jason Au-Yeung. All rights reserved.</p>
+            <p>🏆 AWS AI Hackathon Hong Kong 2025 - Grand Prize Winner</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/hackathon.js"></script>
+    <script src="assets/js/assistant.js"></script>
+</body>
+</html>
