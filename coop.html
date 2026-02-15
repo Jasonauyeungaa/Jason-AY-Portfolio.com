@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAECO Co-op Experience | Jason Au-Yeung</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/coop.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <script src="assets/js/translations.js"></script>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand-logo" title="Back to Portfolio">
+                <img src="assets/images/logos/back-button.png" alt="Back" class="back-arrow">
+            </a>
+            <div class="nav-page-title">
+                <img src="assets/images/logos/haeco-logo.png" alt="HAECO" class="title-logo">
+                <h1 data-i18n="coop.nav.title">HAECO Co-op Experience</h1>
+            </div>
+            <div class="nav-controls">
+                <div class="lang-switcher">
+                    <button class="lang-toggle" onclick="toggleLangDropdown()">🌐</button>
+                    <div class="lang-dropdown">
+                        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
+                        <button class="lang-btn" data-lang="zh-TW" onclick="setLanguage('zh-TW')">繁體中文</button>
+                        <button class="lang-btn" data-lang="zh-CN" onclick="setLanguage('zh-CN')">简体中文</button>
+                        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">Español</button>
+                    </div>
+                </div>
+                <button id="themeToggle" class="control-btn">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="coop-hero">
+            <div class="container">
+                <div class="hero-content glass-card">
+                    <div class="coop-badge" data-i18n="coop.hero.badge">✅ Completed</div>
+                    <h1><img src="assets/images/logos/haeco-logo.png" alt="HAECO" class="title-logo"> <span data-i18n="coop.hero.title">HAECO Co-op Experience</span></h1>
+                    <h2 data-i18n="coop.hero.department">Technology Innovation | Transformation & Technology Department</h2>
+                    <p class="coop-period" data-i18n="coop.hero.period">September 2025 - January 2026 | 5 Months</p>
+                    <p class="coop-intro" data-i18n="coop.hero.intro">An intensive 5-month journey working on AI-driven and data-driven solutions for operations optimization and digital transformation at Hong Kong Aircraft Engineering Company Limited (HAECO).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Highlights -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="coop.highlights.title">🌟 Key Highlights</h2>
+                <div class="highlights-grid">
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">🏆</div>
+                        <h3 data-i18n="coop.highlights.hackathon.title">AWS AI Hackathon Champion</h3>
+                        <p data-i18n="coop.highlights.hackathon.desc">Grand Prize Winner among 130+ teams. Developed HAECO Bay Management System within 14 days.</p>
+                    </div>
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">💡</div>
+                        <h3 data-i18n="coop.highlights.techathon.title">Techathon Lead Organizer</h3>
+                        <p data-i18n="coop.highlights.techathon.desc">Solely planned and organized HAECO's first Techathon, building a framework for future innovation programs.</p>
+                    </div>
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">🎤</div>
+                        <h3 data-i18n="coop.highlights.leanday.title">Lean Day MC</h3>
+                        <p data-i18n="coop.highlights.leanday.desc">Master of Ceremony at HAECO Lean Day 2025, engaging executives in the Annual Kaizen showcase.</p>
+                    </div>
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">🎙️</div>
+                        <h3 data-i18n="coop.highlights.media.title">4 Media Interviews</h3>
+                        <p data-i18n="coop.highlights.media.desc">Participated in media and industry interviews following the AWS AI Hackathon championship.</p>
+                    </div>
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">🌍</div>
+                        <h3 data-i18n="coop.highlights.reinvent.title">AWS re:Invent</h3>
+                        <p data-i18n="coop.highlights.reinvent.desc">Attended AWS re:Invent conference in Las Vegas, representing HAECO and sharing our innovation.</p>
+                    </div>
+                    <div class="highlight-card glass-card">
+                        <div class="highlight-icon">🎉</div>
+                        <h3 data-i18n="coop.highlights.anniversary.title">75th Anniversary Helper</h3>
+                        <p data-i18n="coop.highlights.anniversary.desc">Contributed to HAECO's 75th Birthday Celebration, supporting the milestone event.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Monthly Timeline -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="coop.timeline.title">📅 5-Month Journey Timeline</h2>
+                
+                <!-- September -->
+                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
+                    <div class="month-header">
+                        <h3 data-i18n="coop.timeline.sep.header">📍 September 2025 - Getting Started</h3>
+                        <span class="month-badge" data-i18n="coop.timeline.sep.badge">Month 1</span>
+                    </div>
+                    <div class="month-summary" data-i18n="coop.timeline.sep.summary">LMS orientation, AWS Hackathon prep & delivery, Techathon brainstorming</div>
+                    <div class="month-details">
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.sep.week1">Week 1-2 (Sep 1-12)</h4>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <span class="task-status">📘</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.sep.lms.title">LMS Guidelines & Orientation (Transformation & Technology)</h5>
+                                    <p data-i18n="coop.timeline.sep.lms.desc">
+                                        Completed Learning Management System orientation and consolidated key guidelines 
+                                        to support structured onboarding and knowledge alignment.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🚀</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.sep.prep.title">AWS AI Hackathon Preparation</h5>
+                                    <p data-i18n="coop.timeline.sep.prep.desc">
+                                        Conducted focused preparation for the AWS AI Hackathon Hong Kong 2025, 
+                                        aligning problem understanding, solution approach, and team readiness.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.sep.week2">Week 3-4 (Sep 15-30)</h4>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <span class="task-status">✅</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.sep.bay.title">HAECO Bay Management System (AWS AI Hackathon 2025)</h5>
+                                    <p data-i18n="coop.timeline.sep.bay.desc">
+                                        Delivered an AI-driven aircraft bay scheduling solution within a 
+                                        <strong>14-day hackathon timeline</strong>.
+                                    </p>
+                                    <div class="task-notes">
+                                        <strong data-i18n="coop.timeline.sep.bay.scope">Delivery Scope:</strong>
+                                        <ul>
+                                            <li data-i18n="coop.timeline.sep.bay.item1">Defined system requirements and solution design</li>
+                                            <li data-i18n="coop.timeline.sep.bay.item2">Developed a web-based prototype</li>
+                                            <li data-i18n="coop.timeline.sep.bay.item3">Implemented rule-based AI optimization</li>
+                                            <li data-i18n="coop.timeline.sep.bay.item4">Prepared demo and executive walkthrough</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">💡</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.sep.brainstorm.title">Techathon Brainstorming with TI Manager</h5>
+                                    <p data-i18n="coop.timeline.sep.brainstorm.desc">
+                                        Defined the strategic direction for HAECO’s first Techathon, 
+                                        establishing a <strong>4-year roadmap</strong> centered on 
+                                        technology adoption, lean execution, and stakeholder alignment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- October -->
+                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
+                    <div class="month-header">
+                        <h3 data-i18n="coop.timeline.oct.header">📍 October 2025 - Framework Design</h3>
+                        <span class="month-badge" data-i18n="coop.timeline.oct.badge">Month 2</span>
+                    </div>
+                    <div class="month-summary" data-i18n="coop.timeline.oct.summary">Grand Prize win, 4-year Techathon roadmap, Lean Day prep, GM pitches</div>
+                    <div class="month-details">
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.oct.week1">Week 1-2 (Oct 1-17)</h4>
+                        <div class="task-list">
+                            <div class="task-item featured-task">
+                                <span class="task-status">🏆</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.prize.title">AWS AI Hackathon 2025 – Grand Prize</h5>
+                                    <p data-i18n="coop.timeline.oct.prize.desc">
+                                        Awarded <strong>Grand Prize Champion</strong>, officially announced by 
+                                        <strong>AWS</strong> through an online presentation.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🧭</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.framework.title">Techathon 4-Year Strategic Framework (2026–2029)</h5>
+                                    <p data-i18n="coop.timeline.oct.framework.desc">
+                                        Defined a comprehensive <strong>4-year Techathon roadmap</strong>, 
+                                        outlining strategic objectives, key milestones, and high-level 
+                                        resource planning to support long-term program sustainability.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">📣</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.leanday.title">Lean Day Communication Materials</h5>
+                                    <p data-i18n="coop.timeline.oct.leanday.desc">
+                                        Developed visual communication materials to support promotion 
+                                        and audience engagement for HAECO Lean Day 2025.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.oct.week2">Week 3-4 (Oct 20-31)</h4>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <span class="task-status">💡</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.pitch1.title">Techathon Framework Pitch to Transformation & Technology GM (1)</h5>
+                                    <p data-i18n="coop.timeline.oct.pitch1.desc">
+                                        Executive pitch proposing a <strong>4-year Techathon framework</strong> 
+                                        to Transformation & Technology leadership.
+                                    </p>
+                                    <div class="task-notes">
+                                        <strong data-i18n="coop.timeline.oct.pitch1.focus">Pitch Focus:</strong>
+                                        <ul>
+                                            <li data-i18n="coop.timeline.oct.pitch1.item1">Articulated long-term vision with near-term execution milestones</li>
+                                            <li data-i18n="coop.timeline.oct.pitch1.item2">Proposed participation and engagement model</li>
+                                            <li data-i18n="coop.timeline.oct.pitch1.item3">Positioned a feasible plan aligned with available resources</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🔁</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.redirect.title">Techathon Framework Strategic Redirection</h5>
+                                    <p data-i18n="coop.timeline.oct.redirect.desc">
+                                        Redirected the Techathon framework, 
+                                        aligning ambition with execution feasibility following executive review.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🎤</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.oct.mcprep.title">Lean Day MC & AWS AI Hackathon Sharing Preparation</h5>
+                                    <p data-i18n="coop.timeline.oct.mcprep.desc">
+                                        Prepared for a dedicated speaking slot at Lean Day, serving as <strong>Master of Ceremonies</strong> 
+                                        while developing sharing content on the <strong>AWS AI Hackathon Champion project</strong> 
+                                        for internal knowledge sharing and engagement.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- November -->
+                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
+                    <div class="month-header">
+                        <h3 data-i18n="coop.timeline.nov.header">📍 November 2025 - Interviews & Events</h3>
+                        <span class="month-badge" data-i18n="coop.timeline.nov.badge">Month 3</span>
+                    </div>
+                    <div class="month-summary" data-i18n="coop.timeline.nov.summary">Media interviews, 75th Anniversary, Lean Day MC, Techathon teaser video</div>
+                    <div class="month-details">
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.nov.week1">Week 1-2 (Nov 1-14)</h4>
+                        <div class="task-list">
+                            <div class="task-item featured-task">
+                                <span class="task-status">🎙️</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.media.title">AWS Champion Media Engagements</h5>
+                                    <p data-i18n="coop.timeline.nov.media.desc">
+                                        Represented HAECO as AWS AI Hackathon Champion in media and internal interviews, 
+                                        including <strong>SCMP</strong>, <strong>HAECO</strong>, 
+                                        and <strong>AWS Hong Kong</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🎓</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.review.title">HKUST Co-op Progress Review</h5>
+                                    <p data-i18n="coop.timeline.nov.review.desc">
+                                        Conducted mid-term progress alignment with HKUST Co-op coordinators, 
+                                        reviewing learning outcomes and internship contributions.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">💡</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.pitch2.title">Techathon Framework Pitch to Transformation & Technology GM (2)</h5>
+                                    <p data-i18n="coop.timeline.nov.pitch2.desc">
+                                        Follow-up executive pitch to refine and converge the Techathon framework 
+                                        for implementation readiness.
+                                    </p>
+                                    <div class="task-notes">
+                                        <strong data-i18n="coop.timeline.nov.pitch2.decisions">Planning Decisions:</strong>
+                                        <ul>
+                                            <li data-i18n="coop.timeline.nov.pitch2.item1">Sharpened initiative scope to ensure clarity and focus</li>
+                                            <li data-i18n="coop.timeline.nov.pitch2.item2">Confirmed 2026 as the primary planning and execution horizon</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.nov.week2">Week 3-4 (Nov 17-28)</h4>
+                        <div class="task-list">
+                            <div class="task-item featured-task">
+                                <span class="task-status">🎉</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.anniversary.title">HAECO 75th Anniversary Helper</h5>
+                                    <p data-i18n="coop.timeline.nov.anniversary.desc">
+                                        Supported HAECO’s 75th Anniversary celebration, engaging with colleagues 
+                                        and leadership across the organization and expanding professional networks 
+                                        within the wider HAECO community.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item featured-task">
+                                <span class="task-status">🎤</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.leanday.title">Lean Day (MC & AWS Hackathon Sharing)</h5>
+                                    <p data-i18n="coop.timeline.nov.leanday.desc">
+                                        Served as <strong>Master of Ceremonies</strong> at HAECO Lean Day 2025, 
+                                        delivering an AWS AI Hackathon Champion sharing session, 
+                                        and received an <strong>Outstanding Achievement Certification</strong> 
+                                        presented by the HAECO CEO, followed by direct engagement on future return opportunities.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item featured-task">
+                                <span class="task-status">🌟</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.teambuilding.title">Transformation & Technology Team Building</h5>
+                                    <p data-i18n="coop.timeline.nov.teambuilding.desc">
+                                        Participated in Transformation & Technology team-building activities 
+                                        to strengthen internal networks, cross-team collaboration, 
+                                        and team cohesion, including informal engagement during the Christmas dinner.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">📊</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.survey.title">Techathon Interest & Readiness Survey</h5>
+                                    <p data-i18n="coop.timeline.nov.survey.desc">
+                                        Designed and distributed an internal questionnaire to assess employee interest 
+                                        and readiness, providing data-driven input for Techathon planning and prioritization.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🎬</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.nov.teaser.title">Lean Day Techathon AI Teaser Video</h5>
+                                    <p data-i18n="coop.timeline.nov.teaser.desc">
+                                        Designed and produced an <strong>AI-generated teaser video</strong> 
+                                        to officially kick off the HAECO Hong Kong Techathon, 
+                                        showcased during Lean Day in front of senior management.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- December -->
+                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
+                    <div class="month-header">
+                        <h3 data-i18n="coop.timeline.dec.header">📍 December 2025 - Innovation & Exploration</h3>
+                        <span class="month-badge" data-i18n="coop.timeline.dec.badge">Month 4</span>
+                    </div>
+                    <div class="month-summary" data-i18n="coop.timeline.dec.summary">AWS re:Invent, AI team teaser, Techathon 2026 structure, AR/VR exploration</div>
+                    <div class="month-details">
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.dec.week1">Week 1-2 (Dec 1-12)</h4>
+                        <div class="task-list">
+                            <div class="task-item featured-task">
+                                <span class="task-status">🌍</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.reinvent.title">AWS re:Invent – Global Exposure</h5>
+                                    <p data-i18n="coop.timeline.dec.reinvent.desc">
+                                        Represented HAECO at AWS re:Invent (Las Vegas), interviewed by <strong>AWS</strong> 
+                                        and <strong>unwire.hk</strong> on the Bay Management System, and expanded professional 
+                                        networks with engineers and technology leaders across Hong Kong, Taiwan, and Mainland China.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🎬</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.aiteam.title">AI & Digital Team Teaser (Transformation & Technology)</h5>
+                                    <p data-i18n="coop.timeline.dec.aiteam.desc">
+                                        Designed and produced an <strong>AI-generated teaser video</strong> introducing the AI & Digital team; 
+                                        following positive GM feedback at Lean Day, was invited to create an enhanced version 
+                                        for presentation at a management meeting.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🧩</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.structure.title">Techathon 2026 Structure – Detailed Design</h5>
+                                    <p data-i18n="coop.timeline.dec.structure.desc">
+                                        Developed the detailed implementation structure for the <strong>2026 Techathon</strong>, 
+                                        translating executive direction from prior GM pitches into actionable planning 
+                                        ahead of final leadership alignment.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">💡</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.pitch3.title">Techathon Framework Pitch to Transformation & Technology GM (3)</h5>
+                                    <p data-i18n="coop.timeline.dec.pitch3.desc">
+                                        Final executive pitch to align governance, scope, and execution readiness 
+                                        for the Techathon framework.
+                                    </p>
+                                    <div class="task-notes">
+                                        <strong data-i18n="coop.timeline.dec.pitch3.decisions">Key Decisions & Governance:</strong>
+                                        <ul>
+                                            <li data-i18n="coop.timeline.dec.pitch3.item1">Maintained flexibility in participation scope and submission formats</li>
+                                            <li data-i18n="coop.timeline.dec.pitch3.item2">Aligned funding and incentives with practical feasibility</li>
+                                            <li data-i18n="coop.timeline.dec.pitch3.item3">Focused workshops on innovation experience over technical training</li>
+                                            <li data-i18n="coop.timeline.dec.pitch3.item4">Confirmed transparent shortlisting, panel structure, and realistic timelines</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="week-group">
+                        <h4 data-i18n="coop.timeline.dec.week2">Week 3-4 (Dec 15-31)</h4>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <span class="task-status">🎬</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.summary.title">Lean Day Summary Video (Internal Communications)</h5>
+                                    <p data-i18n="coop.timeline.dec.summary.desc">
+                                        Supported the Lean Day organizing team in producing a summary video, 
+                                        highlighting key moments and achievements for publication on 
+                                        <strong>HiHAECO</strong>, the internal communication platform.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🗓️</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.realign.title">Techathon Timeline Realignment (H2 2026)</h5>
+                                    <p data-i18n="coop.timeline.dec.realign.desc">
+                                        Realigned the Techathon schedule following TI Manager guidance, balancing delivery readiness with team 
+                                        capacity changes after Co-op completion.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">📊</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.tracker.title">Technology Innovation Project Tracker</h5>
+                                    <p data-i18n="coop.timeline.dec.tracker.desc">
+                                        Designed and implemented a visual project tracking dashboard 
+                                        to support regular stand-up updates and cross-team alignment 
+                                        within the Technology Innovation team.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <span class="task-status">🥽</span>
+                                <div class="task-content">
+                                    <h5 data-i18n="coop.timeline.dec.arvr.title">AR/VR/XR Glasses Exploration</h5>
+                                    <p data-i18n="coop.timeline.dec.arvr.desc">
+                                        Explored potential AR/VR/XR applications for HAECO operations, 
+                                        contributing early-stage innovation ideas for future TI team projects 
+                                        and Techathon experiential concepts.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- January (Final Month) -->
+                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
+                    <div class="month-header">
+                        <h3 data-i18n="coop.timeline.jan.header">📍 January 2026 - Completion & Handover</h3>
+                        <span class="month-badge" data-i18n="coop.timeline.jan.badge">Month 5</span>
+                    </div>
+                    <div class="month-summary" data-i18n="coop.timeline.jan.summary">Techathon handover package, Co-op completion</div>
+                    <div class="month-details">
+                    <div class="task-item">
+                        <span class="task-status">📦</span>
+                        <div class="task-content">
+                            <h5 data-i18n="coop.timeline.jan.handover.title">Techathon Handover Package (2026)</h5>
+                            <p data-i18n="coop.timeline.jan.handover.desc">
+                                Delivered a comprehensive Techathon handover package to ensure 
+                                continuity, knowledge transfer, and execution readiness 
+                                following Co-op completion.
+                            </p>
+
+                            <div class="task-notes">
+                                <strong data-i18n="coop.timeline.jan.handover.scope">Handover Scope:</strong>
+                                <ul>
+                                    <li data-i18n="coop.timeline.jan.handover.item1">Techathon posters and roadmap visuals</li>
+                                    <li data-i18n="coop.timeline.jan.handover.item2">Techathon rules and briefing materials (English & Chinese)</li>
+                                    <li data-i18n="coop.timeline.jan.handover.item3">Registration form and submission templates</li>
+                                    <li data-i18n="coop.timeline.jan.handover.item4">End-to-end Techathon handover guideline</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="completion-note">
+                        <p data-i18n="coop.timeline.jan.completion">
+                            Successfully completed a <strong>5-month Co-op internship</strong>, 
+                            delivering high-impact contributions across innovation delivery, 
+                            strategic planning, and knowledge transfer within HAECO.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Gallery -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="coop.gallery.title">📸 Photos & Videos</h2>
+                <p class="gallery-intro" data-i18n="coop.gallery.intro">Visual highlights from my 5-month journey at HAECO</p>
+                
+                <div class="media-categories">
+                    <button class="category-btn active" data-category="all" data-i18n="coop.gallery.all">All</button>
+                    <button class="category-btn" data-category="hackathon" data-i18n="coop.gallery.hackathon">AWS Hackathon</button>
+                    <button class="category-btn" data-category="leanday" data-i18n="coop.gallery.leanday">Lean Day</button>
+                    <button class="category-btn" data-category="techathon" data-i18n="coop.gallery.techathon">Techathon</button>
+                    <button class="category-btn" data-category="events" data-i18n="coop.gallery.events">Team Building</button>
+                    <button class="category-btn" data-category="reinvent" data-i18n="coop.gallery.reinvent">re:Invent</button>
+                </div>
+
+                <div id="mediaGallery" class="media-gallery">
+                    <!-- Album will be dynamically loaded from assets/images/coop/ folder -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Learnings -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="coop.learnings.title">💡 Key Learnings & Takeaways</h2>
+
+                <div class="learnings-grid">
+
+                    <div class="learning-card glass-card">
+                        <h3 data-i18n="coop.learnings.tech.title">🤖 Technology & AI Innovation</h3>
+                        <ul>
+                            <li data-i18n="coop.learnings.tech.item1">Applied AI-driven optimization to real operational challenges</li>
+                            <li data-i18n="coop.learnings.tech.item2">Utilized modern AI-assisted development tools to support rapid prototyping and iterative refinement</li>
+                            <li data-i18n="coop.learnings.tech.item3">Evaluated AR/VR technologies as potential enablers for aviation operations</li>
+                        </ul>
+                    </div>
+
+                    <div class="learning-card glass-card">
+                        <h3 data-i18n="coop.learnings.strategy.title">📊 Strategy & Program Management</h3>
+                        <ul>
+                            <li data-i18n="coop.learnings.strategy.item1">Planned and structured multi-year innovation roadmaps</li>
+                            <li data-i18n="coop.learnings.strategy.item2">Engaged senior management through structured executive pitches</li>
+                            <li data-i18n="coop.learnings.strategy.item3">Translated stakeholder input into feasible and executable plans</li>
+                        </ul>
+                    </div>
+
+                    <div class="learning-card glass-card">
+                        <h3 data-i18n="coop.learnings.leadership.title">🎤 Leadership & Executive Communication</h3>
+                        <ul>
+                            <li data-i18n="coop.learnings.leadership.item1">Led and facilitated large-scale corporate events as Master of Ceremonies</li>
+                            <li data-i18n="coop.learnings.leadership.item2">Communicated complex ideas to executives and cross-functional audiences</li>
+                            <li data-i18n="coop.learnings.leadership.item3">Represented the organization in media and industry interviews</li>
+                        </ul>
+                    </div>
+
+                    <div class="learning-card glass-card">
+                        <h3 data-i18n="coop.learnings.innovation.title">🚀 Innovation Enablement & Entrepreneurship</h3>
+                        <ul>
+                            <li data-i18n="coop.learnings.innovation.item1">Designed frameworks to enable internal innovation programs</li>
+                            <li data-i18n="coop.learnings.innovation.item2">Structured funding, mentorship, and participation models</li>
+                            <li data-i18n="coop.learnings.innovation.item3">Contributed to building a sustainable innovation pipeline within HAECO</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="container">
+            <p data-i18n="coop.footer.reference">Reference: Manager, Technology Innovation</p>
+            <p data-i18n="coop.footer.dept">Transformation & Technology Department</p>
+            <p data-i18n="coop.footer.tagline">🌟 HKUST - HAECO Co-op Experience | Sep 2025 - Jan 2026</p>
+            <p data-i18n="coop.footer.copyright">&copy; 2026 Jason Au-Yeung. All rights reserved.</p>
+            <p data-i18n="coop.footer.disclaimer.line">Content reflects my personal experience during my internship. It does not represent official views of any affiliated organization.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/coop.js"></script>
+    <script src="assets/js/assistant.js"></script>
+</body>
+</html>
