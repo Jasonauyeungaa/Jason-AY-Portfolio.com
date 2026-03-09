@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script>
         (() => {
             const root = document.documentElement;
+            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
+            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
+            const supportedThemes = new Set(['dark', 'light']);
+            let storedPrefs = {};
+
             try {
-                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
-                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
             } catch (error) {
-                root.lang = root.lang || 'en';
-                root.setAttribute('data-theme', 'dark');
+                storedPrefs = {};
             }
+
+            const language = supportedLanguages.has(storedPrefs.language)
+                ? storedPrefs.language
+                : (runtimePrefs.language || root.lang || 'en');
+            const theme = supportedThemes.has(storedPrefs.theme)
+                ? storedPrefs.theme
+                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
+
+            root.lang = language;
+            root.setAttribute('data-theme', theme);
+            runtimePrefs.language = root.lang;
+            runtimePrefs.theme = root.getAttribute('data-theme');
         })();
     </script>
     <title>HAECO Co-op Experience | Jason Au-Yeung</title>
@@ -33,7 +51,7 @@
             </a>
             <div class="site-header-title">
                 <img src="assets/images/logos/haeco-logo.png" alt="HAECO" class="title-logo">
-                <h1 data-i18n="coop.nav.title">HAECO Co-op Experience</h1>
+                <h1 data-i18n="coop.nav.title" data-mobile-label="HAECO">HAECO Co-op Experience</h1>
             </div>
             <div class="site-header-shortcuts" aria-label="Co-op section shortcuts">
                 <ul class="nav-links site-header-links site-header-shortcut-list">

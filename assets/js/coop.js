@@ -1,5 +1,6 @@
 (() => {
   const site = window.JasonSite || {};
+  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const mediaGallery = document.getElementById('mediaGallery');
   const categoryButtons = Array.from(document.querySelectorAll('.category-btn'));
   const monthSections = Array.from(document.querySelectorAll('.month-section'));
@@ -8,7 +9,7 @@
   const mediaFiles = window.JasonMedia?.coop || [];
   let activeCategory = 'all';
 
-  const getCurrentLang = () => localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+  const getCurrentLang = () => runtimePrefs.language || document.documentElement.lang || 'en';
   const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
   const getLocalizedText = (value, fallback = '') => {
     if (!value) return fallback;

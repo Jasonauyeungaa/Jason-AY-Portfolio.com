@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script>
         (() => {
             const root = document.documentElement;
+            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
+            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
+            const supportedThemes = new Set(['dark', 'light']);
+            let storedPrefs = {};
+
             try {
-                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
-                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
             } catch (error) {
-                root.lang = root.lang || 'en';
-                root.setAttribute('data-theme', 'dark');
+                storedPrefs = {};
             }
+
+            const language = supportedLanguages.has(storedPrefs.language)
+                ? storedPrefs.language
+                : (runtimePrefs.language || root.lang || 'en');
+            const theme = supportedThemes.has(storedPrefs.theme)
+                ? storedPrefs.theme
+                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
+
+            root.lang = language;
+            root.setAttribute('data-theme', theme);
+            runtimePrefs.language = root.lang;
+            runtimePrefs.theme = root.getAttribute('data-theme');
         })();
     </script>
     <title>Policy & Statement | Jason Au-Yeung</title>
@@ -32,7 +50,7 @@
                 <img src="assets/images/logos/back-button.png" alt="Back" class="back-arrow">
             </a>
             <div class="site-header-title visible" aria-hidden="false">
-                <h1 data-i18n="policy.nav.title">Policy & Statement</h1>
+                <h1 data-i18n="policy.nav.title" data-mobile-label="Policy">Policy & Statement</h1>
             </div>
             <div class="nav-controls site-header-controls">
                 <button id="siteSearchToggle" class="control-btn search-toggle" type="button">🔎</button>

@@ -212,10 +212,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Curriculum Vitae',
-        'resume.modal.copy': 'A quick CV preview with direct access to the full PDF.',
-        'resume.modal.hint': 'Tap the letter to open or close the CV preview.',
+        'resume.modal.copy': 'Open the CV panel only when you want it. The PDF is no longer loaded automatically.',
+        'resume.modal.hint': 'Tap the letter to open or close the CV panel.',
         'resume.modal.open': 'Open PDF',
         'resume.modal.download': 'Download CV',
+        'resume.modal.note': 'The CV stays off until you choose to open it. Nothing downloads automatically from this page.',
         
         // Footer
         'footer.disclaimer.line1': 'Personal portfolio website. In case of discrepancies, my official CV is the most accurate and up-to-date version of my experience.',
@@ -843,10 +844,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '個人履歷',
-        'resume.modal.copy': '先快速預覽，再直接開啟完整 PDF 履歷。',
-        'resume.modal.hint': '點一下信件即可展開或收合履歷預覽。',
+        'resume.modal.copy': '只會在你選擇時打開履歷面板，PDF 不會自動載入。',
+        'resume.modal.hint': '點一下信件即可展開或收合履歷面板。',
         'resume.modal.open': '開啟 PDF',
         'resume.modal.download': '下載履歷',
+        'resume.modal.note': '履歷會保持關閉，直到你主動選擇開啟。此頁面不會自動下載任何檔案。',
         
         // Footer
         'footer.disclaimer.line1': '本網站僅作個人作品展示用途。如有任何不一致之處，請以本人正式履歷為最準確及最新版本。',
@@ -1471,10 +1473,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '个人履历',
-        'resume.modal.copy': '先快速预览，再直接打开完整 PDF 履历。',
-        'resume.modal.hint': '点一下信件即可展开或收起履历预览。',
+        'resume.modal.copy': '只有在你选择时才会打开履历面板，PDF 不会自动加载。',
+        'resume.modal.hint': '点一下信件即可展开或收起履历面板。',
         'resume.modal.open': '打开 PDF',
         'resume.modal.download': '下载履历',
+        'resume.modal.note': '履历会保持关闭，直到你主动选择打开。此页面不会自动下载任何文件。',
         
         // Footer
         'footer.disclaimer.line1': '本网站仅作个人作品展示用途。如有任何不一致之处，请以本人正式履历为最准确及最新版本。',
@@ -2099,10 +2102,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Currículum Vitae',
-        'resume.modal.copy': 'Una vista previa rápida del CV con acceso directo al PDF completo.',
-        'resume.modal.hint': 'Toca la carta para abrir o cerrar la vista previa del CV.',
+        'resume.modal.copy': 'Abre el panel del CV solo cuando lo quieras. El PDF ya no se carga automáticamente.',
+        'resume.modal.hint': 'Toca la carta para abrir o cerrar el panel del CV.',
         'resume.modal.open': 'Abrir PDF',
         'resume.modal.download': 'Descargar CV',
+        'resume.modal.note': 'El CV permanece cerrado hasta que decidas abrirlo. Esta página no descarga nada automáticamente.',
         
         // Footer
         'footer.disclaimer.line1': 'Este sitio web es un portafolio personal. En caso de discrepancias, mi CV oficial es la versión más precisa y actualizada de mi experiencia.',
@@ -2517,9 +2521,25 @@ const translations = {
     }
 };
 
+const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
+const prefsStorageKey = 'jason-portfolio-prefs';
+
+const persistPrefs = (nextPrefs = {}) => {
+    try {
+        const storedPrefs = JSON.parse(window.localStorage.getItem(prefsStorageKey) || '{}') || {};
+        window.localStorage.setItem(prefsStorageKey, JSON.stringify({
+            ...storedPrefs,
+            ...nextPrefs
+        }));
+    } catch (error) {
+        // Ignore storage failures so translations still work without persistence.
+    }
+};
+
 // Current language
-let currentLang = localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+let currentLang = runtimePrefs.language || document.documentElement.lang || 'en';
 document.documentElement.lang = currentLang;
+runtimePrefs.language = currentLang;
 
 // Initialize language on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -2582,8 +2602,9 @@ function toggleLangDropdown() {
 // Set language function
 function setLanguage(lang) {
     currentLang = lang;
-    localStorage.setItem('preferredLanguage', lang);
+    runtimePrefs.language = lang;
     document.documentElement.lang = lang;
+    persistPrefs({ language: lang });
     
     // Update active button
     document.querySelectorAll('.lang-btn').forEach(btn => {

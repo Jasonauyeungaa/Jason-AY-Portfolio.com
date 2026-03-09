@@ -2,6 +2,7 @@
 
 class JasonAssistant {
   constructor() {
+    this.runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
     this.conversationStart = new Date();
     this.messageCount = 0;
     this.knowledgeData = null;
@@ -22,7 +23,7 @@ class JasonAssistant {
     this.contextPromptMeta = new Map();
     this.contextPromptInteracting = false;
     this.initialIntroPromptActive = false;
-    this.introPromptStorageKey = 'jason-bot-home-intro-seen';
+    this.introPromptSeenInSession = false;
     this.sectionPromptMap = null;
     this.domContext = window.PortfolioDomContext ? new window.PortfolioDomContext({ page: this.page }) : null;
     this.engine = window.JasonAssistantEngine ? new window.JasonAssistantEngine({
@@ -81,20 +82,14 @@ class JasonAssistant {
   }
   
   detectLanguage() {
-    this.currentLang = localStorage.getItem('preferredLanguage') || 'en';
+    this.currentLang = this.runtimePrefs.language || document.documentElement.lang || 'en';
 
     const syncLanguage = (lang) => {
-      const nextLang = lang || localStorage.getItem('preferredLanguage') || 'en';
+      const nextLang = lang || this.runtimePrefs.language || document.documentElement.lang || 'en';
       if (nextLang === this.currentLang) return;
       this.currentLang = nextLang;
       this.refreshWelcomeMessage();
     };
-
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'preferredLanguage') {
-        syncLanguage(event.newValue);
-      }
-    });
 
     window.addEventListener('site:languagechange', (event) => {
       syncLanguage(event.detail?.lang);
@@ -2195,19 +2190,11 @@ class JasonAssistant {
   }
 
   hasSeenIntroContextPrompt() {
-    try {
-      return window.sessionStorage?.getItem(this.introPromptStorageKey) === '1';
-    } catch (error) {
-      return false;
-    }
+    return this.introPromptSeenInSession;
   }
 
   markIntroContextPromptSeen() {
-    try {
-      window.sessionStorage?.setItem(this.introPromptStorageKey, '1');
-    } catch (error) {
-      // Ignore storage failures and continue with in-memory behavior.
-    }
+    this.introPromptSeenInSession = true;
   }
 
   shouldShowInitialIntroPrompt() {

@@ -1,5 +1,6 @@
 (() => {
   const site = window.JasonSite || {};
+  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const videoContainer = document.querySelector('.video-container');
   const gallery = document.getElementById('hackathonGallery');
   const heroSection = document.querySelector('.hackathon-hero');
@@ -12,7 +13,7 @@
   const teamSummaries = Array.from(document.querySelectorAll('.team-focus-summary'));
   const videoPath = window.JasonMedia?.hackathonVideo?.src || 'assets/videos/demo.mp4';
   const mediaFiles = window.JasonMedia?.hackathonGallery || [];
-  const getCurrentLang = () => localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+  const getCurrentLang = () => runtimePrefs.language || document.documentElement.lang || 'en';
   const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
   const getLocalizedText = (value, fallback = '') => {
     if (!value) return fallback;

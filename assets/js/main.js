@@ -1,12 +1,14 @@
 (() => {
   const site = window.JasonSite || {};
+  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const root = document.documentElement;
   const body = document.body;
   const themeToggle = document.getElementById('themeToggle');
   const header = document.querySelector('.site-header');
   const nav = document.querySelector('.glass-nav');
   const langSwitcher = document.querySelector('.lang-switcher');
-  const savedTheme = localStorage.getItem('theme') || root.getAttribute('data-theme') || 'dark';
+  const savedTheme = runtimePrefs.theme || root.getAttribute('data-theme') || 'dark';
+  const prefsStorageKey = 'jason-portfolio-prefs';
   const prefersReducedMotion = Boolean(site.prefersReducedMotion);
   const currentPage = body?.dataset.page || 'home';
   const hasExpandableHeader = ['coop', 'hackathon'].includes(currentPage);
@@ -112,6 +114,18 @@
     themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
   };
 
+  const persistPrefs = (nextPrefs = {}) => {
+    try {
+      const storedPrefs = JSON.parse(window.localStorage.getItem(prefsStorageKey) || '{}') || {};
+      window.localStorage.setItem(prefsStorageKey, JSON.stringify({
+        ...storedPrefs,
+        ...nextPrefs
+      }));
+    } catch (error) {
+      // Ignore storage failures so the UI still works in restricted browsers.
+    }
+  };
+
   root.setAttribute('data-theme', savedTheme);
   updateThemeButton(savedTheme);
 
@@ -120,7 +134,8 @@
       const currentTheme = root.getAttribute('data-theme');
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', nextTheme);
-      localStorage.setItem('theme', nextTheme);
+      runtimePrefs.theme = nextTheme;
+      persistPrefs({ theme: nextTheme });
       updateThemeButton(nextTheme);
     });
   }
@@ -234,6 +249,28 @@
     const dropdown = document.querySelector('.lang-dropdown.show');
     dropdown?.classList.remove('show');
     langSwitcher?.classList.remove('is-open');
+  };
+
+  const syncResponsiveHeaderLabels = () => {
+    const useCompactLabels = window.matchMedia('(max-width: 768px)').matches;
+
+    document.querySelectorAll('[data-mobile-label]').forEach((element) => {
+      const compactLabel = element.dataset.mobileLabel?.trim();
+      const currentText = element.textContent?.trim();
+
+      if (!compactLabel || !currentText) return;
+
+      if (currentText !== compactLabel) {
+        element.dataset.fullLabel = currentText;
+      }
+
+      const fullLabel = element.dataset.fullLabel || currentText;
+      const nextLabel = useCompactLabels ? compactLabel : fullLabel;
+
+      if (currentText !== nextLabel) {
+        element.textContent = nextLabel;
+      }
+    });
   };
 
   const closeSideMenu = ({ restoreFocus = true } = {}) => {
@@ -800,6 +837,7 @@
   }
 
   window.addEventListener('site:languagechange', () => {
+    syncResponsiveHeaderLabels();
     renderSideMenu();
 
     const activeHash = document.querySelector('.nav-links a.is-active[href^="#"]')?.getAttribute('href')?.slice(1);
@@ -851,4 +889,7 @@
       });
     });
   }
+
+  syncResponsiveHeaderLabels();
+  window.addEventListener('resize', syncResponsiveHeaderLabels, { passive: true });
 })();

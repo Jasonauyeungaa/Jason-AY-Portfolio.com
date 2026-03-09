@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script>
         (() => {
             const root = document.documentElement;
+            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
+            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
+            const supportedThemes = new Set(['dark', 'light']);
+            let storedPrefs = {};
+
             try {
-                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
-                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
             } catch (error) {
-                root.lang = root.lang || 'en';
-                root.setAttribute('data-theme', 'dark');
+                storedPrefs = {};
             }
+
+            const language = supportedLanguages.has(storedPrefs.language)
+                ? storedPrefs.language
+                : (runtimePrefs.language || root.lang || 'en');
+            const theme = supportedThemes.has(storedPrefs.theme)
+                ? storedPrefs.theme
+                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
+
+            root.lang = language;
+            root.setAttribute('data-theme', theme);
+            runtimePrefs.language = root.lang;
+            runtimePrefs.theme = root.getAttribute('data-theme');
         })();
     </script>
     <title>Jason Au-Yeung | IEEM × Data × Tech</title>
@@ -33,7 +51,7 @@
     <header class="site-header">
     <nav class="glass-nav site-header-nav">
         <div class="nav-container site-header-bar">
-            <a href="#home" class="nav-brand site-header-brand" data-i18n="nav.brand">Jason Au-Yeung</a>
+            <a href="#home" class="nav-brand site-header-brand" data-i18n="nav.brand" data-mobile-label="Jason">Jason Au-Yeung</a>
             <ul class="nav-links site-header-links">
                 <li><a href="#home" data-i18n="nav.about">About</a></li>
                 <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
@@ -574,10 +592,12 @@
                 <div class="resume-preview-panel" id="resumePreviewPanel">
                     <div class="resume-preview-toolbar">
                         <a href="assets/images/CV/Jason Resume.pdf" class="resume-preview-action primary" target="_blank" rel="noopener noreferrer" data-i18n="resume.modal.open">Open PDF</a>
-                        <a href="assets/images/CV/Jason Resume.pdf" class="resume-preview-action" download data-i18n="resume.modal.download">Download CV</a>
                     </div>
-                    <div class="resume-preview-frame">
-                        <iframe src="assets/images/CV/Jason Resume.pdf#view=FitH" title="Jason Au-Yeung CV preview" loading="lazy"></iframe>
+                    <div class="resume-preview-frame resume-preview-placeholder">
+                        <div class="resume-preview-copy">
+                            <span class="resume-preview-badge">CV</span>
+                            <p class="resume-preview-note" data-i18n="resume.modal.note">The CV stays off until you choose to open it. Nothing downloads automatically from this page.</p>
+                        </div>
                     </div>
                 </div>
             </div>

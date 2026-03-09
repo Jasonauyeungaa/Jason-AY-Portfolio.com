@@ -1182,9 +1182,32 @@ body.side-menu-open {
   .nav-links {
     display: none;
   }
+
+  .site-header-bar {
+    gap: 0.6rem;
+  }
+
+  .site-header-brand {
+    max-width: min(9rem, calc(100vw - 13rem));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   
   .nav-controls {
     margin-left: auto;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .site-header-controls .control-btn,
+  .site-header-controls .lang-toggle {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    padding: 0;
+    justify-content: center;
+    font-size: 1.05rem;
   }
 
   .side-menu-panel {
@@ -3414,6 +3437,46 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
   border-color: rgba(173, 193, 223, 0.14);
 }
 
+.resume-preview-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: min(48vh, 420px);
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+
+.resume-preview-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  max-width: 26rem;
+  text-align: center;
+}
+
+.resume-preview-badge {
+  display: inline-flex;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  min-width: 4rem;
+  min-height: 4rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #244972 0%, #4a74aa 100%);
+  color: #f4f8ff;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 18px 32px rgba(36, 73, 114, 0.24);
+}
+
+.resume-preview-note {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
 .resume-preview-frame iframe {
   width: 100%;
   height: 100%;
@@ -3780,6 +3843,24 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
     padding: 0;
   }
 
+  .site-header-bar {
+    gap: 0.45rem;
+  }
+
+  .site-header-brand {
+    max-width: min(7rem, calc(100vw - 11.75rem));
+    font-size: 0.98rem;
+  }
+
+  .site-header-controls .control-btn,
+  .site-header-controls .lang-toggle {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 0.98rem;
+  }
+
   .side-menu-panel {
     width: 100%;
   }
@@ -3839,6 +3920,6 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
   }
 
   .site-header-title {
-    max-width: calc(100% - 132px);
+    max-width: calc(100% - 116px);
   }
 }

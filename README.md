@@ -20,7 +20,7 @@ The project is built with plain HTML, CSS, and JavaScript. There is no framework
 ## Core features
 
 - Responsive multi-page portfolio site
-- Light and dark theme toggle persisted with `localStorage`
+- Light and dark theme toggle saved in local browser storage
 - Four-language UI: English, Traditional Chinese, Simplified Chinese, and Spanish
 - Client-side section search with localized suggestions
 - Embedded portfolio assistant backed by local embedded knowledge data
@@ -139,7 +139,7 @@ Then open:
 ## Notes
 
 - The site is fully static; deployment can be done on any simple static host
-- Browser storage is used for theme and language preference persistence
+- Theme and language choices are saved in local browser storage and restored on reload
 - The assistant can run from a direct file open because its knowledge is embedded in JavaScript
 - Opening the site through a server is still the safest way to verify the full site behavior across browsers
 

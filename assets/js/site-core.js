@@ -1,4 +1,5 @@
 (() => {
+  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const escapeHtml = (value) => String(value)
@@ -13,7 +14,7 @@
     if (typeof value === 'string') return value;
     if (typeof value !== 'object') return String(value);
 
-    const currentLang = localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+    const currentLang = runtimePrefs.language || document.documentElement.lang || 'en';
     return value[currentLang] || value.en || Object.values(value)[0] || fallback;
   };
 
