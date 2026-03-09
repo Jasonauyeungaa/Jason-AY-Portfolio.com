@@ -1,258 +1,201 @@
-// Co-op Page JavaScript
+(() => {
+  const site = window.JasonSite || {};
+  const mediaGallery = document.getElementById('mediaGallery');
+  const categoryButtons = Array.from(document.querySelectorAll('.category-btn'));
+  const monthSections = Array.from(document.querySelectorAll('.month-section'));
+  const heroSection = document.querySelector('.coop-hero');
+  const heroStageImage = document.querySelector('.coop-browser-stage .browser-stage-image');
+  const mediaFiles = window.JasonMedia?.coop || [];
+  let activeCategory = 'all';
 
-// Media Gallery Functionality
-const mediaGallery = document.getElementById('mediaGallery');
-const categoryBtns = document.querySelectorAll('.category-btn');
+  const getCurrentLang = () => localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+  const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+  const getLocalizedText = (value, fallback = '') => {
+    if (!value) return fallback;
+    if (typeof value === 'string') return value;
 
-// Auto-load images from assets/images/coop/ folder
-const mediaFiles = [];
+    const currentLang = getCurrentLang();
+    return value[currentLang] || value.en || Object.values(value)[0] || fallback;
+  };
 
-// Automatically scan and load images
-async function loadMediaFiles() {
-  const coopDir = 'assets/images/coop/';
-  const categories = ['hackathon', 'leanday', 'techathon', 'events', 'reinvent'];
-  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-  const videoExtensions = ['mp4', 'mov', 'webm'];
-  
-  // Try to load images by attempting to fetch them
-  // This will work if files are named with category prefix
-  for (let i = 1; i <= 50; i++) {
-    for (const cat of categories) {
-      for (const ext of imageExtensions) {
-        const filename = `${cat}_${i}.${ext}`;
-        const path = `${coopDir}${filename}`;
-        
-        try {
-          const img = new Image();
-          img.src = path;
-          await new Promise((resolve) => {
-            img.onload = () => {
-              mediaFiles.push({
-                type: 'image',
-                src: path,
-                category: cat,
-                caption: filename.replace(/_/g, ' ').replace(/\.[^.]+$/, '')
-              });
-              resolve();
-            };
-            img.onerror = () => resolve();
-            setTimeout(resolve, 100);
-          });
-        } catch (e) {}
+  const renderMediaGallery = (category = activeCategory) => {
+    if (!mediaGallery) return;
+
+    activeCategory = category;
+    const filteredMedia = category === 'all'
+      ? mediaFiles
+      : mediaFiles.filter((item) => item.category === category);
+
+    mediaGallery.innerHTML = filteredMedia.map((item, index) => `
+      <article class="media-item glass-card is-visible" data-media-index="${index}" role="button" tabindex="0" aria-label="${getLocalizedText(item.caption, fallbackCaption(item.src))}">
+        <div class="media-frame">
+          ${item.type === 'video'
+            ? `<video src="${item.src}" muted loop playsinline></video>`
+            : `<img src="${item.src}" alt="${getLocalizedText(item.caption, fallbackCaption(item.src))}" loading="lazy">`
+          }
+        </div>
+        <div class="media-meta">
+          <span class="media-chip">${getLocalizedText(item.label, item.category)}</span>
+          <p class="media-caption">${getLocalizedText(item.caption, fallbackCaption(item.src))}</p>
+        </div>
+      </article>
+    `).join('');
+    site.bindMediaGallery?.(mediaGallery, filteredMedia);
+    site.applyNoBreakPhrases?.(mediaGallery);
+  };
+
+  const bindHeroImagePan = () => {
+    if (!heroSection || !heroStageImage) return;
+
+    const updatePosition = () => {
+      const rect = heroSection.getBoundingClientRect();
+      const stageRect = heroStageImage.parentElement?.getBoundingClientRect();
+      const stage = heroStageImage.parentElement;
+      const naturalWidth = heroStageImage.naturalWidth || 0;
+      const naturalHeight = heroStageImage.naturalHeight || 0;
+
+      if (!stage || !stageRect || !naturalWidth || !naturalHeight) return;
+
+      const scrollSpan = rect.height + window.innerHeight;
+      const progress = Math.min(Math.max((window.innerHeight - rect.top) / scrollSpan, 0), 1);
+      const imageRatio = naturalWidth / naturalHeight;
+      const stageRatio = stageRect.width / Math.max(stageRect.height, 1);
+      const panX = Number(heroStageImage.dataset.panX || 50);
+      const rangeStart = Number(heroStageImage.dataset.panStart || 8);
+      const rangeEnd = Number(heroStageImage.dataset.panEnd || 92);
+      const horizontalStart = Number(heroStageImage.dataset.panXStart || 8);
+      const horizontalEnd = Number(heroStageImage.dataset.panXEnd || 92);
+      const isNarrowViewport = window.innerWidth <= 768;
+      const scale = 1.045 + (progress * 0.03);
+      const overlayOpacity = 0.72 - (progress * 0.14);
+      const brightness = 0.95 + (progress * 0.05);
+      const saturate = 1.02 + (progress * 0.08);
+      const shiftY = isNarrowViewport ? (progress * -72) : 0;
+
+      if (site.prefersReducedMotion) {
+        stage.style.setProperty('--coop-image-scale', '1.045');
+        stage.style.setProperty('--coop-overlay-opacity', '0.68');
+        stage.style.setProperty('--coop-image-brightness', '0.95');
+        stage.style.setProperty('--coop-image-saturate', '1.02');
+        stage.style.setProperty('--coop-image-shift-y', '0px');
+        heroStageImage.style.objectPosition = imageRatio > stageRatio ? `${panX}% 50%` : `${panX}% ${rangeStart}%`;
+        return;
       }
-    }
-  }
-  
-  // Also check for files without numbering
-  for (const cat of categories) {
-    for (const ext of imageExtensions) {
-      const filename = `${cat}.${ext}`;
-      const path = `${coopDir}${filename}`;
-      
-      try {
-        const img = new Image();
-        img.src = path;
-        await new Promise((resolve) => {
-          img.onload = () => {
-            mediaFiles.push({
-              type: 'image',
-              src: path,
-              category: cat,
-              caption: cat.charAt(0).toUpperCase() + cat.slice(1)
-            });
-            resolve();
-          };
-          img.onerror = () => resolve();
-          setTimeout(resolve, 100);
-        });
-      } catch (e) {}
-    }
-  }
-  
-  if (mediaFiles.length > 0) {
-    renderMediaGallery('all');
-  }
-}
 
-// Render media gallery
-function renderMediaGallery(category) {
-  if (mediaFiles.length === 0) {
-    // Show upload placeholder
-    return;
-  }
+      stage.style.setProperty('--coop-image-scale', (scale + (isNarrowViewport ? 0.05 : 0)).toFixed(3));
+      stage.style.setProperty('--coop-overlay-opacity', overlayOpacity.toFixed(3));
+      stage.style.setProperty('--coop-image-brightness', brightness.toFixed(3));
+      stage.style.setProperty('--coop-image-saturate', saturate.toFixed(3));
+      stage.style.setProperty('--coop-image-shift-y', `${shiftY.toFixed(1)}px`);
 
-  const filteredMedia = category === 'all' 
-    ? mediaFiles 
-    : mediaFiles.filter(item => item.category === category);
+      if (imageRatio > stageRatio && !isNarrowViewport) {
+        const x = horizontalStart + ((horizontalEnd - horizontalStart) * progress);
+        heroStageImage.style.objectPosition = `${x}% 50%`;
+        return;
+      }
 
-  mediaGallery.innerHTML = filteredMedia.map((item, index) => {
-    if (item.type === 'image') {
-      return `
-        <div class="media-item glass-card" data-index="${index}">
-          <img src="${item.src}" alt="${item.caption}" loading="lazy">
-          <div class="media-overlay">
-            <p>${item.caption}</p>
-          </div>
-        </div>
-      `;
-    } else if (item.type === 'video') {
-      return `
-        <div class="media-item glass-card" data-index="${index}">
-          <video src="${item.src}" muted loop></video>
-          <div class="media-overlay">
-            <p>${item.caption}</p>
-          </div>
-        </div>
-      `;
-    }
-  }).join('');
+      const y = rangeStart + ((rangeEnd - rangeStart) * progress);
+      heroStageImage.style.objectPosition = `${panX}% ${y}%`;
+    };
 
-  // Add click handlers for lightbox
-  document.querySelectorAll('.media-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const index = item.dataset.index;
-      openLightbox(mediaFiles[index]);
-    });
-
-    // Play video on hover
-    const video = item.querySelector('video');
-    if (video) {
-      item.addEventListener('mouseenter', () => video.play());
-      item.addEventListener('mouseleave', () => {
-        video.pause();
-        video.currentTime = 0;
+    let ticking = false;
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        updatePosition();
       });
+    };
+
+    if (heroStageImage.complete) {
+      updatePosition();
+    } else {
+      heroStageImage.addEventListener('load', updatePosition, { once: true });
     }
-  });
-}
 
-// Category filter
-categoryBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    categoryBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const category = btn.dataset.category;
-    renderMediaGallery(category);
-  });
-});
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+  };
 
-// Lightbox functionality
-function openLightbox(media) {
-  const lightbox = document.createElement('div');
-  lightbox.className = 'lightbox active';
-  
-  const content = media.type === 'image'
-    ? `<img src="${media.src}" alt="${media.caption}">`
-    : `<video src="${media.src}" controls autoplay></video>`;
-  
-  lightbox.innerHTML = `
-    <button class="lightbox-close" onclick="this.parentElement.remove()">×</button>
-    <div class="lightbox-content">
-      ${content}
-      <p style="color: white; text-align: center; margin-top: 1rem; font-size: 1.1rem;">${media.caption}</p>
-    </div>
-  `;
-  
-  document.body.appendChild(lightbox);
-  
-  // Close on background click
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      lightbox.remove();
+  const updateMonthHeaderState = (section) => {
+    const trigger = section.querySelector('.month-trigger');
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', String(section.classList.contains('expanded')));
     }
-  });
-  
-  // Close on Escape key
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') {
-      lightbox.remove();
-      document.removeEventListener('keydown', escHandler);
-    }
-  });
-}
+  };
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  loadMediaFiles();
-  console.log('To add media files:');
-  console.log('1. Create folder: assets/images/coop/');
-  console.log('2. Add files with naming: hackathon_1.jpg, leanday_1.jpg, etc.');
-});
+  const toggleMonth = (element) => {
+    monthSections.forEach((section) => {
+      const isTarget = section === element;
+      const shouldExpand = isTarget ? section.classList.contains('collapsed') : false;
 
-// Smooth scroll for timeline
-document.querySelectorAll('.month-badge').forEach(badge => {
-  badge.style.cursor = 'pointer';
-  badge.addEventListener('click', () => {
-    badge.closest('.month-section').scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start' 
+      section.classList.toggle('expanded', shouldExpand);
+      section.classList.toggle('collapsed', !shouldExpand);
+      updateMonthHeaderState(section);
+    });
+  };
+
+  categoryButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      categoryButtons.forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      renderMediaGallery(button.dataset.category || 'all');
     });
   });
-});
 
-// Scroll-based title animation
-const navTitle = document.querySelector('.nav-page-title');
-const heroSection = document.querySelector('.coop-hero');
+  monthSections.forEach((section) => {
+    const trigger = section.querySelector('.month-trigger');
+    const details = section.querySelector('.month-details');
 
-window.addEventListener('scroll', () => {
-  if (!heroSection || !navTitle) return;
-  
-  const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-  const scrolled = window.scrollY;
-  
-  // Show nav title when scrolled past hero
-  if (scrolled > heroBottom - 100) {
-    navTitle.classList.add('visible');
-  } else {
-    navTitle.classList.remove('visible');
-  }
-});
+    if (trigger) {
+      if (details) {
+        const detailsId = details.id || `coop-month-details-${monthSections.indexOf(section) + 1}`;
+        details.id = detailsId;
+        trigger.setAttribute('aria-controls', detailsId);
+      }
 
-// Click nav title to scroll to top
-if (navTitle) {
-  navTitle.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}
-
-// Add animation to task items on scroll
-const taskObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateX(0)';
+      updateMonthHeaderState(section);
+      trigger.addEventListener('click', () => toggleMonth(section));
     }
   });
-}, { threshold: 0.1 });
 
-document.querySelectorAll('.task-item').forEach((item, index) => {
-  item.style.opacity = '0';
-  item.style.transform = 'translateX(-20px)';
-  item.style.transition = `opacity 0.5s ease ${index * 0.05}s, transform 0.5s ease ${index * 0.05}s`;
-  taskObserver.observe(item);
-});
-
-console.log('HAECO Co-op Experience Page - Loaded Successfully ✓');
-console.log('Upload your photos and videos to: assets/images/coop/');
-
-// Toggle month sections
-function toggleMonth(element) {
-  const allMonths = document.querySelectorAll('.month-section');
-  
-  // Close all other months
-  allMonths.forEach(month => {
-    if (month !== element && month.classList.contains('expanded')) {
-      month.classList.remove('expanded');
-      month.classList.add('collapsed');
-    }
+  site.bindTitleReveal?.({
+    titleSelector: '.site-header-title',
+    heroSelector: '.coop-hero',
+    scrollThreshold: 48
   });
-  
-  // Toggle clicked month
-  if (element.classList.contains('collapsed')) {
-    element.classList.remove('collapsed');
-    element.classList.add('expanded');
-  } else {
-    element.classList.remove('expanded');
-    element.classList.add('collapsed');
+
+  bindHeroImagePan();
+
+  if (mediaFiles.length) {
+    renderMediaGallery(activeCategory);
   }
-}
+
+  window.addEventListener('site:languagechange', () => {
+    renderMediaGallery(activeCategory);
+  });
+
+  const taskItems = document.querySelectorAll('.task-item');
+  if (site.prefersReducedMotion || !('IntersectionObserver' in window)) {
+    taskItems.forEach((item) => {
+      item.style.opacity = '1';
+      item.style.transform = 'translateX(0)';
+    });
+  } else {
+    const taskObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+      });
+    }, { threshold: 0.1 });
+
+    taskItems.forEach((item, index) => {
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(-20px)';
+      item.style.transition = `opacity 0.5s ease ${index * 0.05}s, transform 0.5s ease ${index * 0.05}s`;
+      taskObserver.observe(item);
+    });
+  }
+})();

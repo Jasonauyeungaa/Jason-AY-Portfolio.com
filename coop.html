@@ -3,67 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (() => {
+            const root = document.documentElement;
+            try {
+                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
+                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+            } catch (error) {
+                root.lang = root.lang || 'en';
+                root.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <title>HAECO Co-op Experience | Jason Au-Yeung</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/coop.css">
     <link rel="stylesheet" href="assets/css/chat.css">
     <script src="assets/js/translations.js"></script>
 </head>
-<body>
-    <nav class="glass-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-brand-logo" title="Back to Portfolio">
+<body data-page="coop">
+    <div class="scroll-progress" aria-hidden="true">
+        <div class="scroll-progress-bar"></div>
+    </div>
+    <header class="site-header">
+    <nav class="glass-nav site-header-nav">
+        <div class="nav-container site-header-bar">
+            <a href="index.html" class="nav-brand-logo site-header-back" title="Back to Portfolio">
                 <img src="assets/images/logos/back-button.png" alt="Back" class="back-arrow">
             </a>
-            <div class="nav-page-title">
+            <div class="site-header-title">
                 <img src="assets/images/logos/haeco-logo.png" alt="HAECO" class="title-logo">
                 <h1 data-i18n="coop.nav.title">HAECO Co-op Experience</h1>
             </div>
-            <div class="nav-controls">
+            <div class="site-header-shortcuts" aria-label="Co-op section shortcuts">
+                <ul class="nav-links site-header-links site-header-shortcut-list">
+                    <li><a href="#overview" data-i18n="coop.nav.overview">Overview</a></li>
+                    <li><a href="#highlights" data-i18n="coop.nav.highlights">Highlights</a></li>
+                    <li><a href="#timeline" data-i18n="coop.nav.timeline">Timeline</a></li>
+                    <li><a href="#gallery" data-i18n="coop.nav.gallery">Gallery</a></li>
+                    <li><a href="#learnings" data-i18n="coop.nav.learnings">Learnings</a></li>
+                </ul>
+            </div>
+            <div class="nav-controls site-header-controls">
+                <button id="siteSearchToggle" class="control-btn search-toggle" type="button">🔎</button>
                 <div class="lang-switcher">
-                    <button class="lang-toggle" onclick="toggleLangDropdown()">🌐</button>
+                    <button class="lang-toggle" type="button">🌐</button>
                     <div class="lang-dropdown">
-                        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
-                        <button class="lang-btn" data-lang="zh-TW" onclick="setLanguage('zh-TW')">繁體中文</button>
-                        <button class="lang-btn" data-lang="zh-CN" onclick="setLanguage('zh-CN')">简体中文</button>
-                        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">Español</button>
+                        <button class="lang-btn active" type="button" data-lang="en">English</button>
+                        <button class="lang-btn" type="button" data-lang="zh-TW">繁體中文</button>
+                        <button class="lang-btn" type="button" data-lang="zh-CN">简体中文</button>
+                        <button class="lang-btn" type="button" data-lang="es">Español</button>
                     </div>
                 </div>
                 <button id="themeToggle" class="control-btn">🌙</button>
             </div>
         </div>
     </nav>
+    </header>
 
-    <main>
+    <main class="site-main">
         <!-- Hero Section -->
-        <section class="coop-hero">
+        <section id="overview" class="coop-hero">
             <div class="container">
-                <div class="hero-content glass-card">
-                    <div class="coop-badge" data-i18n="coop.hero.badge">✅ Completed</div>
-                    <h1><img src="assets/images/logos/haeco-logo.png" alt="HAECO" class="title-logo"> <span data-i18n="coop.hero.title">HAECO Co-op Experience</span></h1>
-                    <h2 data-i18n="coop.hero.department">Technology Innovation | Transformation & Technology Department</h2>
-                    <p class="coop-period" data-i18n="coop.hero.period">September 2025 - January 2026 | 5 Months</p>
-                    <p class="coop-intro" data-i18n="coop.hero.intro">An intensive 5-month journey working on AI-driven and data-driven solutions for operations optimization and digital transformation at Hong Kong Aircraft Engineering Company Limited (HAECO).</p>
-                </div>
+                <article class="hero-content coop-cinematic-hero" aria-label="HAECO co-op highlight">
+                    <div class="browser-stage coop-browser-stage">
+                        <img
+                            src="assets/images/coop/events_8.jpg"
+                            alt="Jason during the HAECO internship"
+                            data-pan-x="62"
+                            data-pan-start="24"
+                            data-pan-end="70"
+                            class="browser-stage-image"
+                        >
+                        <div class="browser-stage-copy">
+                            <div class="coop-badge" data-i18n="coop.hero.badge">Completed</div>
+                            <h1 data-i18n="coop.hero.title">HAECO Co-op Experience</h1>
+                            <h2 data-i18n="coop.hero.department">Technology Innovation | Transformation & Technology Department</h2>
+                            <p class="coop-period" data-i18n="coop.hero.period">September 2025 - January 2026 | 5 Months</p>
+                            <p class="coop-intro" data-i18n="coop.hero.intro">An intensive 5-month journey working on AI-driven and data-driven solutions for operations optimization and digital transformation at Hong Kong Aircraft Engineering Company Limited (HAECO).</p>
+                        </div>
+                        <div class="coop-snapshot" aria-label="Co-op snapshot">
+                            <span class="coop-snapshot-kicker" data-i18n="coop.hero.snapshot">Placement Snapshot</span>
+                            <div class="coop-snapshot-list">
+                                <span class="coop-snapshot-item">
+                                    <strong>5</strong>
+                                    <span data-i18n="coop.hero.panel.months">Months at HAECO</span>
+                                </span>
+                                <span class="coop-snapshot-item">
+                                    <strong>6</strong>
+                                    <span data-i18n="coop.hero.panel.milestones">Major milestones</span>
+                                </span>
+                                <span class="coop-snapshot-item">
+                                    <strong>AI + Data</strong>
+                                    <span data-i18n="coop.hero.panel.focus">Transformation and innovation focus</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
         <!-- Key Highlights -->
-        <section class="section">
+        <section id="highlights" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="coop.highlights.title">🌟 Key Highlights</h2>
+                <h2 class="section-title" data-i18n="coop.highlights.title">Key Highlights</h2>
                 <div class="highlights-grid">
                     <div class="highlight-card glass-card">
                         <div class="highlight-icon">🏆</div>
                         <h3 data-i18n="coop.highlights.hackathon.title">AWS AI Hackathon Champion</h3>
                         <p data-i18n="coop.highlights.hackathon.desc">Grand Prize Winner among 130+ teams. Developed HAECO Bay Management System within 14 days.</p>
                     </div>
-                    <div class="highlight-card glass-card">
+                    <div id="techathon" class="highlight-card glass-card">
                         <div class="highlight-icon">💡</div>
                         <h3 data-i18n="coop.highlights.techathon.title">Techathon Lead Organizer</h3>
                         <p data-i18n="coop.highlights.techathon.desc">Solely planned and organized HAECO's first Techathon, building a framework for future innovation programs.</p>
                     </div>
-                    <div class="highlight-card glass-card">
+                    <div id="leanday" class="highlight-card glass-card">
                         <div class="highlight-icon">🎤</div>
                         <h3 data-i18n="coop.highlights.leanday.title">Lean Day MC</h3>
                         <p data-i18n="coop.highlights.leanday.desc">Master of Ceremony at HAECO Lean Day 2025, engaging executives in the Annual Kaizen showcase.</p>
@@ -88,17 +144,19 @@
         </section>
 
         <!-- Monthly Timeline -->
-        <section class="section">
+        <section id="timeline" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="coop.timeline.title">📅 5-Month Journey Timeline</h2>
+                <h2 class="section-title" data-i18n="coop.timeline.title">5-Month Journey Timeline</h2>
                 
                 <!-- September -->
-                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
-                    <div class="month-header">
-                        <h3 data-i18n="coop.timeline.sep.header">📍 September 2025 - Getting Started</h3>
-                        <span class="month-badge" data-i18n="coop.timeline.sep.badge">Month 1</span>
-                    </div>
-                    <div class="month-summary" data-i18n="coop.timeline.sep.summary">LMS orientation, AWS Hackathon prep & delivery, Techathon brainstorming</div>
+                <div class="month-section glass-card collapsed">
+                    <button class="month-trigger" type="button">
+                        <div class="month-header">
+                            <h3 data-i18n="coop.timeline.sep.header">September 2025 - Getting Started</h3>
+                            <span class="month-badge" data-i18n="coop.timeline.sep.badge">Month 1</span>
+                        </div>
+                        <div class="month-summary" data-i18n="coop.timeline.sep.summary">LMS orientation, AWS Hackathon prep & delivery, Techathon brainstorming</div>
+                    </button>
                     <div class="month-details">
                     <div class="week-group">
                         <h4 data-i18n="coop.timeline.sep.week1">Week 1-2 (Sep 1-12)</h4>
@@ -165,12 +223,14 @@
                 </div>
 
                 <!-- October -->
-                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
-                    <div class="month-header">
-                        <h3 data-i18n="coop.timeline.oct.header">📍 October 2025 - Framework Design</h3>
-                        <span class="month-badge" data-i18n="coop.timeline.oct.badge">Month 2</span>
-                    </div>
-                    <div class="month-summary" data-i18n="coop.timeline.oct.summary">Grand Prize win, 4-year Techathon roadmap, Lean Day prep, GM pitches</div>
+                <div class="month-section glass-card collapsed">
+                    <button class="month-trigger" type="button">
+                        <div class="month-header">
+                            <h3 data-i18n="coop.timeline.oct.header">October 2025 - Framework Design</h3>
+                            <span class="month-badge" data-i18n="coop.timeline.oct.badge">Month 2</span>
+                        </div>
+                        <div class="month-summary" data-i18n="coop.timeline.oct.summary">Grand Prize win, 4-year Techathon roadmap, Lean Day prep, GM pitches</div>
+                    </button>
                     <div class="month-details">
                     <div class="week-group">
                         <h4 data-i18n="coop.timeline.oct.week1">Week 1-2 (Oct 1-17)</h4>
@@ -257,12 +317,14 @@
                 </div>
 
                 <!-- November -->
-                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
-                    <div class="month-header">
-                        <h3 data-i18n="coop.timeline.nov.header">📍 November 2025 - Interviews & Events</h3>
-                        <span class="month-badge" data-i18n="coop.timeline.nov.badge">Month 3</span>
-                    </div>
-                    <div class="month-summary" data-i18n="coop.timeline.nov.summary">Media interviews, 75th Anniversary, Lean Day MC, Techathon teaser video</div>
+                <div class="month-section glass-card collapsed">
+                    <button class="month-trigger" type="button">
+                        <div class="month-header">
+                            <h3 data-i18n="coop.timeline.nov.header">November 2025 - Interviews & Events</h3>
+                            <span class="month-badge" data-i18n="coop.timeline.nov.badge">Month 3</span>
+                        </div>
+                        <div class="month-summary" data-i18n="coop.timeline.nov.summary">Media interviews, 75th Anniversary, Lean Day MC, Techathon teaser video</div>
+                    </button>
                     <div class="month-details">
                     <div class="week-group">
                         <h4 data-i18n="coop.timeline.nov.week1">Week 1-2 (Nov 1-14)</h4>
@@ -372,12 +434,14 @@
                 </div>
 
                 <!-- December -->
-                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
-                    <div class="month-header">
-                        <h3 data-i18n="coop.timeline.dec.header">📍 December 2025 - Innovation & Exploration</h3>
-                        <span class="month-badge" data-i18n="coop.timeline.dec.badge">Month 4</span>
-                    </div>
-                    <div class="month-summary" data-i18n="coop.timeline.dec.summary">AWS re:Invent, AI team teaser, Techathon 2026 structure, AR/VR exploration</div>
+                <div class="month-section glass-card collapsed">
+                    <button class="month-trigger" type="button">
+                        <div class="month-header">
+                            <h3 data-i18n="coop.timeline.dec.header">December 2025 - Innovation & Exploration</h3>
+                            <span class="month-badge" data-i18n="coop.timeline.dec.badge">Month 4</span>
+                        </div>
+                        <div class="month-summary" data-i18n="coop.timeline.dec.summary">AWS re:Invent, AI team teaser, Techathon 2026 structure, AR/VR exploration</div>
+                    </button>
                     <div class="month-details">
                     <div class="week-group">
                         <h4 data-i18n="coop.timeline.dec.week1">Week 1-2 (Dec 1-12)</h4>
@@ -489,12 +553,14 @@
                 </div>
 
                 <!-- January (Final Month) -->
-                <div class="month-section glass-card collapsed" onclick="toggleMonth(this)">
-                    <div class="month-header">
-                        <h3 data-i18n="coop.timeline.jan.header">📍 January 2026 - Completion & Handover</h3>
-                        <span class="month-badge" data-i18n="coop.timeline.jan.badge">Month 5</span>
-                    </div>
-                    <div class="month-summary" data-i18n="coop.timeline.jan.summary">Techathon handover package, Co-op completion</div>
+                <div class="month-section glass-card collapsed">
+                    <button class="month-trigger" type="button">
+                        <div class="month-header">
+                            <h3 data-i18n="coop.timeline.jan.header">January 2026 - Completion & Handover</h3>
+                            <span class="month-badge" data-i18n="coop.timeline.jan.badge">Month 5</span>
+                        </div>
+                        <div class="month-summary" data-i18n="coop.timeline.jan.summary">Techathon handover package, Co-op completion</div>
+                    </button>
                     <div class="month-details">
                     <div class="task-item">
                         <span class="task-status">📦</span>
@@ -529,9 +595,9 @@
         </section>
 
         <!-- Media Gallery -->
-        <section class="section">
+        <section id="gallery" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="coop.gallery.title">📸 Photos & Videos</h2>
+                <h2 class="section-title" data-i18n="coop.gallery.title">Photos & Videos</h2>
                 <p class="gallery-intro" data-i18n="coop.gallery.intro">Visual highlights from my 5-month journey at HAECO</p>
                 
                 <div class="media-categories">
@@ -539,7 +605,7 @@
                     <button class="category-btn" data-category="hackathon" data-i18n="coop.gallery.hackathon">AWS Hackathon</button>
                     <button class="category-btn" data-category="leanday" data-i18n="coop.gallery.leanday">Lean Day</button>
                     <button class="category-btn" data-category="techathon" data-i18n="coop.gallery.techathon">Techathon</button>
-                    <button class="category-btn" data-category="events" data-i18n="coop.gallery.events">Team Building</button>
+                    <button class="category-btn" data-category="events" data-i18n="coop.gallery.events">Events</button>
                     <button class="category-btn" data-category="reinvent" data-i18n="coop.gallery.reinvent">re:Invent</button>
                 </div>
 
@@ -550,45 +616,46 @@
         </section>
 
         <!-- Key Learnings -->
-        <section class="section">
+        <section id="learnings" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="coop.learnings.title">💡 Key Learnings & Takeaways</h2>
+                <h2 class="section-title" data-i18n="coop.learnings.title">Personal Reflection</h2>
+                <p class="learnings-intro" data-i18n="coop.learnings.intro">How this internship changed me, what challenged me, and how I want to move forward after it.</p>
 
                 <div class="learnings-grid">
 
                     <div class="learning-card glass-card">
-                        <h3 data-i18n="coop.learnings.tech.title">🤖 Technology & AI Innovation</h3>
+                        <h3 data-i18n="coop.learnings.tech.title">How It Changed Me</h3>
                         <ul>
-                            <li data-i18n="coop.learnings.tech.item1">Applied AI-driven optimization to real operational challenges</li>
-                            <li data-i18n="coop.learnings.tech.item2">Utilized modern AI-assisted development tools to support rapid prototyping and iterative refinement</li>
-                            <li data-i18n="coop.learnings.tech.item3">Evaluated AR/VR technologies as potential enablers for aviation operations</li>
+                            <li data-i18n="coop.learnings.tech.item1">This internship changed how I think about engineering, from solving isolated technical problems to creating solutions that fit real operations, people, and business needs.</li>
+                            <li data-i18n="coop.learnings.tech.item2">It pushed me to become more confident in taking ownership, adapting quickly, and contributing beyond what was written in a role description.</li>
+                            <li data-i18n="coop.learnings.tech.item3">I left with a stronger sense that meaningful work happens when technical thinking is combined with execution, communication, and context.</li>
                         </ul>
                     </div>
 
                     <div class="learning-card glass-card">
-                        <h3 data-i18n="coop.learnings.strategy.title">📊 Strategy & Program Management</h3>
+                        <h3 data-i18n="coop.learnings.strategy.title">Challenges That Shaped Me</h3>
                         <ul>
-                            <li data-i18n="coop.learnings.strategy.item1">Planned and structured multi-year innovation roadmaps</li>
-                            <li data-i18n="coop.learnings.strategy.item2">Engaged senior management through structured executive pitches</li>
-                            <li data-i18n="coop.learnings.strategy.item3">Translated stakeholder input into feasible and executable plans</li>
+                            <li data-i18n="coop.learnings.strategy.item1">One of the biggest challenges was learning how to work in a fast-moving professional environment where expectations were higher and less predictable than in school.</li>
+                            <li data-i18n="coop.learnings.strategy.item2">I had to communicate clearly with different stakeholders, stay calm under pressure, and handle work that was visible to managers and executives.</li>
+                            <li data-i18n="coop.learnings.strategy.item3">Balancing technical work, planning, presentations, and event responsibilities taught me to be more disciplined, observant, and resilient.</li>
                         </ul>
                     </div>
 
                     <div class="learning-card glass-card">
-                        <h3 data-i18n="coop.learnings.leadership.title">🎤 Leadership & Executive Communication</h3>
+                        <h3 data-i18n="coop.learnings.leadership.title">What I Learned About Myself</h3>
                         <ul>
-                            <li data-i18n="coop.learnings.leadership.item1">Led and facilitated large-scale corporate events as Master of Ceremonies</li>
-                            <li data-i18n="coop.learnings.leadership.item2">Communicated complex ideas to executives and cross-functional audiences</li>
-                            <li data-i18n="coop.learnings.leadership.item3">Represented the organization in media and industry interviews</li>
+                            <li data-i18n="coop.learnings.leadership.item1">This experience showed me that I am most motivated when I work on problems that connect technology with real operational impact.</li>
+                            <li data-i18n="coop.learnings.leadership.item2">I discovered that I enjoy not only building ideas, but also explaining them, presenting them, and helping others understand their value.</li>
+                            <li data-i18n="coop.learnings.leadership.item3">It also showed me that I can contribute in different ways through analysis, prototyping, coordination, communication, and initiative.</li>
                         </ul>
                     </div>
 
                     <div class="learning-card glass-card">
-                        <h3 data-i18n="coop.learnings.innovation.title">🚀 Innovation Enablement & Entrepreneurship</h3>
+                        <h3 data-i18n="coop.learnings.innovation.title">What I Will Do Next</h3>
                         <ul>
-                            <li data-i18n="coop.learnings.innovation.item1">Designed frameworks to enable internal innovation programs</li>
-                            <li data-i18n="coop.learnings.innovation.item2">Structured funding, mentorship, and participation models</li>
-                            <li data-i18n="coop.learnings.innovation.item3">Contributed to building a sustainable innovation pipeline within HAECO</li>
+                            <li data-i18n="coop.learnings.innovation.item1">After this internship, I want to keep building at the intersection of operations, data, and AI.</li>
+                            <li data-i18n="coop.learnings.innovation.item2">I want to deepen my technical ability in system design, analytics, and practical AI applications while continuing to strengthen communication and leadership.</li>
+                            <li data-i18n="coop.learnings.innovation.item3">In the future, I hope to turn complex operational challenges into useful, real-world solutions that create measurable value.</li>
                         </ul>
                     </div>
 
@@ -597,18 +664,27 @@
         </section>
     </main>
 
-    <footer class="glass-footer">
+    <footer class="glass-footer site-footer">
         <div class="container">
             <p data-i18n="coop.footer.reference">Reference: Manager, Technology Innovation</p>
             <p data-i18n="coop.footer.dept">Transformation & Technology Department</p>
             <p data-i18n="coop.footer.tagline">🌟 HKUST - HAECO Co-op Experience | Sep 2025 - Jan 2026</p>
             <p data-i18n="coop.footer.copyright">&copy; 2026 Jason Au-Yeung. All rights reserved.</p>
             <p data-i18n="coop.footer.disclaimer.line">Content reflects my personal experience during my internship. It does not represent official views of any affiliated organization.</p>
+            <p class="footer-links">
+                <a href="policy.html" data-i18n="footer.policy">Policy &amp; Statement</a>
+                <a href="policy.html#chatbot" data-i18n="footer.chatbot">Chatbot Notice</a>
+            </p>
         </div>
     </footer>
 
+    <script src="assets/js/site-core.js"></script>
+    <script src="assets/js/media-data.js"></script>
+    <script src="assets/js/search.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/coop.js"></script>
+    <script src="assets/js/assistant-knowledge.js"></script>
+    <script src="assets/js/assistant-engine.js"></script>
     <script src="assets/js/assistant.js"></script>
 </body>
 </html>

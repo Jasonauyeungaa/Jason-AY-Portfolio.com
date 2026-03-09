@@ -1,168 +1,260 @@
-// Hackathon Page JavaScript
-
-// Load demo video
-const videoContainer = document.querySelector('.video-container');
-const videoPath = 'assets/videos/demo.mp4';
-
-async function loadDemoVideo() {
-  const video = document.createElement('video');
-  video.src = videoPath;
-  video.controls = true;
-  video.style.width = '100%';
-  video.style.maxWidth = '900px';
-  video.style.borderRadius = '16px';
-  video.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2)';
-  
-  video.onerror = () => {
-    console.log('Demo video not found. Place demo.mp4 in assets/videos/');
-  };
-  
-  videoContainer.innerHTML = '';
-  videoContainer.appendChild(video);
-}
-
-// Photo Gallery
-const hackathonGallery = document.getElementById('hackathonGallery');
-const mediaFiles = [];
-
-async function loadHackathonPhotos() {
-  const hackathonDir = 'assets/images/hackathon/';
-  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-  
-  // Try to load images
-  for (let i = 1; i <= 50; i++) {
-    for (const ext of imageExtensions) {
-      const filename = `${i}.${ext}`;
-      const path = `${hackathonDir}${filename}`;
-      
-      try {
-        const img = new Image();
-        img.src = path;
-        await new Promise((resolve) => {
-          img.onload = () => {
-            mediaFiles.push({
-              type: 'image',
-              src: path,
-              caption: `Hackathon Photo ${i}`
-            });
-            resolve();
-          };
-          img.onerror = () => resolve();
-          setTimeout(resolve, 100);
-        });
-      } catch (e) {}
-    }
-  }
-  
-  if (mediaFiles.length > 0) {
-    renderGallery();
-  }
-}
-
-function renderGallery() {
-  hackathonGallery.innerHTML = mediaFiles.map((item, index) => `
-    <div class="media-item glass-card" data-index="${index}">
-      <img src="${item.src}" alt="${item.caption}" loading="lazy">
-    </div>
-  `).join('');
-  
-  // Add click handlers for lightbox
-  document.querySelectorAll('.media-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const index = item.dataset.index;
-      openLightbox(mediaFiles[index]);
-    });
-  });
-}
-
-// Lightbox
-function openLightbox(media) {
-  const lightbox = document.createElement('div');
-  lightbox.className = 'lightbox active';
-  lightbox.style.cssText = `
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  `;
-  
-  lightbox.innerHTML = `
-    <button class="lightbox-close" style="
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: none;
-      color: white;
-      font-size: 2rem;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    " onclick="this.parentElement.remove()">×</button>
-    <div class="lightbox-content" style="max-width: 90%; max-height: 90%;">
-      <img src="${media.src}" alt="${media.caption}" style="max-width: 100%; max-height: 90vh; border-radius: 8px;">
-      <p style="color: white; text-align: center; margin-top: 1rem; font-size: 1.1rem;">${media.caption}</p>
-    </div>
-  `;
-  
-  document.body.appendChild(lightbox);
-  
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) lightbox.remove();
-  });
-  
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') {
-      lightbox.remove();
-      document.removeEventListener('keydown', escHandler);
-    }
-  });
-}
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  loadDemoVideo();
-  loadHackathonPhotos();
-  console.log('To add media:');
-  console.log('1. Place demo.mp4 in assets/videos/');
-  console.log('2. Place photos as 1.jpg, 2.jpg, etc. in assets/images/hackathon/');
-});
-
-console.log('AWS Hackathon Page - Loaded Successfully ✓');
-
-// Sticky Navigation Title Animation
-window.addEventListener('scroll', () => {
-  const stickyTitle = document.querySelector('.nav-sticky-title');
+(() => {
+  const site = window.JasonSite || {};
+  const videoContainer = document.querySelector('.video-container');
+  const gallery = document.getElementById('hackathonGallery');
   const heroSection = document.querySelector('.hackathon-hero');
-  
-  if (heroSection && stickyTitle) {
-    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-    const scrollPosition = window.scrollY;
-    
-    if (scrollPosition > heroBottom - 100) {
-      stickyTitle.classList.add('visible');
-    } else {
-      stickyTitle.classList.remove('visible');
-    }
-  }
-});
+  const heroStageImage = document.querySelector('.hackathon-browser-stage .browser-stage-image');
+  const teamStage = document.querySelector('.team-stage');
+  const teamSteps = Array.from(document.querySelectorAll('[data-team-step]'));
+  const teamProgressItems = Array.from(document.querySelectorAll('[data-team-progress]'));
+  const teamFigures = Array.from(document.querySelectorAll('.team-figure[data-team-member]'));
+  const teamFocusCopies = Array.from(document.querySelectorAll('.team-focus-copy[data-team-member]'));
+  const teamSummaries = Array.from(document.querySelectorAll('.team-focus-summary'));
+  const videoPath = window.JasonMedia?.hackathonVideo?.src || 'assets/videos/demo.mp4';
+  const mediaFiles = window.JasonMedia?.hackathonGallery || [];
+  const getCurrentLang = () => localStorage.getItem('preferredLanguage') || document.documentElement.lang || 'en';
+  const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+  const getLocalizedText = (value, fallback = '') => {
+    if (!value) return fallback;
+    if (typeof value === 'string') return value;
 
-// Click nav title to scroll to top
-document.addEventListener('DOMContentLoaded', () => {
-  const stickyTitle = document.querySelector('.nav-sticky-title');
-  if (stickyTitle) {
-    stickyTitle.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const currentLang = getCurrentLang();
+    return value[currentLang] || value.en || Object.values(value)[0] || fallback;
+  };
+
+  const loadDemoVideo = () => {
+    if (!videoContainer) return;
+
+    const video = document.createElement('video');
+    video.src = videoPath;
+    video.controls = true;
+    video.preload = 'metadata';
+    video.playsInline = true;
+
+    video.addEventListener('error', () => {
+      videoContainer.innerHTML = '<p class="video-fallback">Demo video unavailable.</p>';
     });
-  }
-});
+
+    videoContainer.innerHTML = '';
+    videoContainer.appendChild(video);
+  };
+
+  const bindHeroImagePan = () => {
+    if (!heroSection || !heroStageImage) return;
+
+    const updatePosition = () => {
+      const rect = heroSection.getBoundingClientRect();
+      const stageRect = heroStageImage.parentElement?.getBoundingClientRect();
+      const stage = heroStageImage.parentElement;
+      const naturalWidth = heroStageImage.naturalWidth || 0;
+      const naturalHeight = heroStageImage.naturalHeight || 0;
+
+      if (!stage || !stageRect || !naturalWidth || !naturalHeight) return;
+
+      const scrollSpan = rect.height + window.innerHeight;
+      const progress = Math.min(Math.max((window.innerHeight - rect.top) / scrollSpan, 0), 1);
+      const imageRatio = naturalWidth / naturalHeight;
+      const stageRatio = stageRect.width / Math.max(stageRect.height, 1);
+      const panX = Number(heroStageImage.dataset.panX || 50);
+      const rangeStart = Number(heroStageImage.dataset.panStart || 8);
+      const rangeEnd = Number(heroStageImage.dataset.panEnd || 92);
+      const horizontalStart = Number(heroStageImage.dataset.panXStart || 8);
+      const horizontalEnd = Number(heroStageImage.dataset.panXEnd || 92);
+      const scale = 1.05 + (progress * 0.035);
+      const overlayOpacity = 0.78 - (progress * 0.14);
+      const brightness = 0.94 + (progress * 0.06);
+      const saturate = 1.02 + (progress * 0.1);
+
+      if (site.prefersReducedMotion) {
+        stage.style.setProperty('--hackathon-image-scale', '1.05');
+        stage.style.setProperty('--hackathon-overlay-opacity', '0.72');
+        stage.style.setProperty('--hackathon-image-brightness', '0.94');
+        stage.style.setProperty('--hackathon-image-saturate', '1.02');
+        heroStageImage.style.objectPosition = imageRatio > stageRatio ? `${panX}% 50%` : `${panX}% ${rangeStart}%`;
+        return;
+      }
+
+      stage.style.setProperty('--hackathon-image-scale', scale.toFixed(3));
+      stage.style.setProperty('--hackathon-overlay-opacity', overlayOpacity.toFixed(3));
+      stage.style.setProperty('--hackathon-image-brightness', brightness.toFixed(3));
+      stage.style.setProperty('--hackathon-image-saturate', saturate.toFixed(3));
+
+      if (imageRatio > stageRatio) {
+        const x = horizontalStart + ((horizontalEnd - horizontalStart) * progress);
+        heroStageImage.style.objectPosition = `${x}% 50%`;
+        return;
+      }
+
+      const y = rangeStart + ((rangeEnd - rangeStart) * progress);
+      heroStageImage.style.objectPosition = `${panX}% ${y}%`;
+    };
+
+    let ticking = false;
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        updatePosition();
+      });
+    };
+
+    if (heroStageImage.complete) {
+      updatePosition();
+    } else {
+      heroStageImage.addEventListener('load', updatePosition, { once: true });
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+  };
+
+  const renderGallery = () => {
+    if (!gallery || !mediaFiles.length) return;
+
+    gallery.innerHTML = mediaFiles.map((item, index) => `
+      <article class="media-item glass-card is-visible" data-media-index="${index}" role="button" tabindex="0" aria-label="${getLocalizedText(item.caption, fallbackCaption(item.src))}">
+        <div class="media-frame">
+          <img src="${item.src}" alt="${getLocalizedText(item.caption, fallbackCaption(item.src))}" loading="lazy">
+        </div>
+        <div class="media-meta">
+          <span class="media-chip">${getLocalizedText(item.label, 'Highlight')}</span>
+          <p class="media-caption">${getLocalizedText(item.caption, fallbackCaption(item.src))}</p>
+        </div>
+      </article>
+    `).join('');
+    site.bindMediaGallery?.(gallery, mediaFiles);
+    site.applyNoBreakPhrases?.(gallery);
+  };
+
+  const updateResponsiveTeamSummaries = () => {
+    if (!teamSummaries.length) return;
+
+    const isMobile = window.innerWidth <= 768;
+
+    teamSummaries.forEach((summary) => {
+      const memberId = summary.closest('.team-focus-copy')?.dataset.teamMember;
+      if (!memberId) return;
+
+      const key = isMobile
+        ? `hack.team.${memberId}.summaryShort`
+        : `hack.team.${memberId}.summary`;
+      const fallbackKey = `hack.team.${memberId}.summary`;
+      const translated = window.JasonI18n?.translate(key) || window.JasonI18n?.translate(fallbackKey);
+
+      if (translated) {
+        summary.textContent = translated;
+      }
+    });
+
+    site.applyNoBreakPhrases?.(teamStage || document.body);
+  };
+
+  const bindTeamScrollShowcase = () => {
+    if (!teamSteps.length || !teamStage) return;
+
+    let activeMemberId = null;
+
+    const setActiveMember = (memberId) => {
+      if (!memberId || memberId === activeMemberId) return;
+      activeMemberId = memberId;
+      const activeIndex = teamSteps.findIndex((step) => step.dataset.teamStep === memberId);
+
+      teamSteps.forEach((step) => {
+        step.classList.toggle('is-active', step.dataset.teamStep === memberId);
+      });
+
+      teamProgressItems.forEach((item, index) => {
+        const isCurrent = item.dataset.teamProgress === memberId;
+        item.classList.toggle('is-active', isCurrent);
+        item.classList.toggle('is-reached', activeIndex >= 0 && index <= activeIndex);
+      });
+
+      teamFigures.forEach((figure) => {
+        figure.classList.toggle('is-active', figure.dataset.teamMember === memberId);
+      });
+
+      teamFocusCopies.forEach((copy) => {
+        copy.classList.toggle('is-active', copy.dataset.teamMember === memberId);
+      });
+    };
+
+    const firstMember = teamSteps[0].dataset.teamStep;
+    if (firstMember) {
+      setActiveMember(firstMember);
+    }
+
+    if (site.prefersReducedMotion) {
+      return;
+    }
+
+    const updateFromScroll = () => {
+      const focusLine = window.innerWidth <= 768
+        ? window.innerHeight * 0.72
+        : window.innerWidth <= 980
+          ? Math.min(window.innerHeight * 0.42, 260)
+          : Math.min(window.innerHeight * 0.42, 240);
+
+      let closestStep = null;
+      let smallestDistance = Number.POSITIVE_INFINITY;
+
+      teamSteps.forEach((step) => {
+        const rect = step.getBoundingClientRect();
+        const stepAnchor = window.innerWidth <= 768
+          ? rect.top + (rect.height * 0.5)
+          : rect.top + Math.min(rect.height * 0.24, 180);
+        const distance = Math.abs(stepAnchor - focusLine);
+
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          closestStep = step;
+        }
+      });
+
+      if (closestStep) {
+        setActiveMember(closestStep.dataset.teamStep);
+      }
+    };
+
+    let ticking = false;
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        updateFromScroll();
+      });
+    };
+
+    updateFromScroll();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+  };
+
+  loadDemoVideo();
+  bindHeroImagePan();
+  renderGallery();
+  updateResponsiveTeamSummaries();
+  bindTeamScrollShowcase();
+
+  window.addEventListener('site:languagechange', () => {
+    renderGallery();
+    updateResponsiveTeamSummaries();
+  });
+
+  let summaryResizeTicking = false;
+  window.addEventListener('resize', () => {
+    if (summaryResizeTicking) return;
+    summaryResizeTicking = true;
+    window.requestAnimationFrame(() => {
+      summaryResizeTicking = false;
+      updateResponsiveTeamSummaries();
+    });
+  }, { passive: true });
+
+  site.bindTitleReveal?.({
+    titleSelector: '.site-header-title',
+    heroSelector: '.hackathon-hero',
+    scrollThreshold: 48
+  });
+})();

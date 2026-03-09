@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (() => {
+            const root = document.documentElement;
+            try {
+                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
+                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+            } catch (error) {
+                root.lang = root.lang || 'en';
+                root.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <title>Policy & Statement | Jason Au-Yeung</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <link rel="stylesheet" href="assets/css/policy.css">
+    <script src="assets/js/translations.js"></script>
+</head>
+<body data-page="policy">
+    <div class="scroll-progress" aria-hidden="true">
+        <div class="scroll-progress-bar"></div>
+    </div>
+    <header class="site-header">
+    <nav class="glass-nav site-header-nav">
+        <div class="nav-container site-header-bar">
+            <a href="index.html" class="nav-brand-logo site-header-back" title="Back to Portfolio">
+                <img src="assets/images/logos/back-button.png" alt="Back" class="back-arrow">
+            </a>
+            <div class="site-header-title visible" aria-hidden="false">
+                <h1 data-i18n="policy.nav.title">Policy & Statement</h1>
+            </div>
+            <div class="nav-controls site-header-controls">
+                <button id="siteSearchToggle" class="control-btn search-toggle" type="button">🔎</button>
+                <div class="lang-switcher">
+                    <button class="lang-toggle" type="button">🌐</button>
+                    <div class="lang-dropdown">
+                        <button class="lang-btn active" type="button" data-lang="en">English</button>
+                        <button class="lang-btn" type="button" data-lang="zh-TW">繁體中文</button>
+                        <button class="lang-btn" type="button" data-lang="zh-CN">简体中文</button>
+                        <button class="lang-btn" type="button" data-lang="es">Español</button>
+                    </div>
+                </div>
+                <button id="themeToggle" class="control-btn">🌙</button>
+            </div>
+        </div>
+    </nav>
+    </header>
+
+    <main class="site-main">
+        <section class="policy-hero">
+            <div class="container">
+                <div class="glass-card policy-hero-card">
+                    <span class="policy-kicker" data-i18n="policy.hero.kicker">Policy & Statement</span>
+                    <h1 data-i18n="policy.hero.title">Portfolio Policy, Disclaimer, and Chatbot Notice</h1>
+                    <p data-i18n="policy.hero.intro">This page explains how this portfolio should be read, what the chatbot can and cannot do, and the limits of the content published here.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="policy-grid">
+                    <article id="purpose" class="glass-card policy-card">
+                        <h2 data-i18n="policy.purpose.title">Purpose of This Website</h2>
+                        <div class="policy-copy" data-i18n-html="policy.purpose.body">
+                            <p>This website serves as a personal portfolio to showcase projects, technical work, academic learning, and professional experience. The content is intended for informational and presentation purposes.</p>
+                        </div>
+                    </article>
+
+                    <article id="accuracy" class="glass-card policy-card">
+                        <h2 data-i18n="policy.accuracy.title">Accuracy and CV Precedence</h2>
+                        <div class="policy-copy" data-i18n-html="policy.accuracy.body">
+                            <p>While efforts are made to keep this website accurate and updated, summaries, translations, and condensed descriptions may omit certain details. In case of discrepancy, my official CV or direct written confirmation should be considered the most accurate reference.</p>
+                        </div>
+                    </article>
+
+                    <article id="independence" class="glass-card policy-card">
+                        <h2 data-i18n="policy.independence.title">Personal Views and Independence</h2>
+                        <div class="policy-copy" data-i18n-html="policy.independence.body">
+                            <p>Unless explicitly stated otherwise, the content on this website reflects my personal work, learning, and experience. It does not represent the official views, policies, or positions of any employer, institution, client, competition organizer, or affiliated organization.</p>
+                        </div>
+                    </article>
+
+                    <article id="chatbot" class="glass-card policy-card">
+                        <h2 data-i18n="policy.chatbot.title">Chatbot Notice</h2>
+                        <div class="policy-copy" data-i18n-html="policy.chatbot.body">
+                            <p>The chatbot provided on this website is intended for convenience only. Responses may be AI-generated and probabilistic in nature. The chatbot may produce incomplete, simplified, outdated, or inaccurate information, including when summarizing projects, experience, timelines, or translations.</p>
+                            <p>Chatbot responses should not be treated as authoritative or relied upon as professional, legal, financial, aviation, or employment advice.</p>
+                        </div>
+                    </article>
+
+                    <article id="thirdparty" class="glass-card policy-card">
+                        <h2 data-i18n="policy.thirdparty.title">Third-Party Names and Materials</h2>
+                        <div class="policy-copy" data-i18n-html="policy.thirdparty.body">
+                            <p>Company names, logos, trademarks, event names, and external references are included for identification, context, or attribution only. All trademarks and brand assets remain the property of their respective owners, and their appearance does not imply endorsement.</p>
+                        </div>
+                    </article>
+
+                    <article id="advice" class="glass-card policy-card">
+                        <h2 data-i18n="policy.advice.title">No Professional Reliance</h2>
+                        <div class="policy-copy" data-i18n-html="policy.advice.body">
+                            <p>Nothing on this website should be interpreted as professional advice, official documentation, or a binding representation of capability, availability, or future engagement. This website is a portfolio summary and not a contractual or certified record.</p>
+                        </div>
+                    </article>
+
+                    <article id="contact" class="glass-card policy-card">
+                        <h2 data-i18n="policy.contact.title">Corrections and Contact</h2>
+                        <div class="policy-copy" data-i18n-html="policy.contact.body">
+                            <p>If you notice an error, require clarification, or need the most current formal version of my information, please contact me directly. Updated materials or my latest CV can be provided when appropriate.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer site-footer">
+        <div class="container">
+            <p data-i18n="policy.footer.tagline">Policy, disclaimer, and chatbot notice for this portfolio website.</p>
+            <p data-i18n="footer.copyright">&copy; 2026 Jason Au-Yeung. All rights reserved.</p>
+            <p class="footer-links">
+                <a href="policy.html" data-i18n="footer.policy">Policy &amp; Statement</a>
+                <a href="policy.html#chatbot" data-i18n="footer.chatbot">Chatbot Notice</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/site-core.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/assistant-knowledge.js"></script>
+    <script src="assets/js/assistant-engine.js"></script>
+    <script src="assets/js/assistant.js"></script>
+</body>
+</html>

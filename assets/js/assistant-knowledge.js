@@ -1,4 +1,4 @@
-{
+window.JASON_ASSISTANT_KNOWLEDGE = {
   "version": 2,
   "suggestedQueries": {
     "en": [
@@ -879,4 +879,4 @@
       "url": "assets/images/CV/Jason Resume.pdf"
     }
   ]
-}
+};

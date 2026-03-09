@@ -1,195 +1,155 @@
-# Jason Au-Yeung - Professional Portfolio
+# Jason Au-Yeung Portfolio
 
-A modern, multilingual portfolio website showcasing professional experience, projects, and achievements in AI, Data Science, and Operations Innovation.
+This repository contains a static personal portfolio website for Jason Au-Yeung. The site presents professional experience, featured projects, academic background, awards, and contact information across a small set of hand-authored HTML pages.
 
-## 🌟 Career Highlights
+The project is built with plain HTML, CSS, and JavaScript. There is no framework, package manager, or build step.
 
-- **AWS AI Hackathon Hong Kong 2025** - Grand Prize Winner (130+ shortlisted teams)
-- **HAECO Co-op Intern** - 5-month intensive internship in Technology Innovation
-- **HAECO Techathon 2026** - Lead Planner & Organizer
-- **HAECO Lean Day 2025** - Master of Ceremony
-- **AWS re:Invent** - Represented HAECO in Las Vegas
-- **4 Media Interviews** - SCMP, unwire.hk, AWS Hong Kong, HAECO
-- **Academic** - HKUST IEEM + HKU SPACE Data Science
+## What is in this repo
 
-## 🎨 Design Features
+- `index.html`: main landing page and portfolio overview
+- `coop.html`: detailed HAECO co-op experience page
+- `hackathon.html`: AWS AI Hackathon project showcase
+- `policy.html`: policy, statement, and chatbot notice page
+- `assets/css/`: shared and page-specific styles
+- `assets/js/`: site behavior, translations, search, and assistant logic
+- `assets/images/`: resume, portrait, logos, and gallery media
+- `assets/videos/demo.mp4`: hackathon demo video
+- `assets/bot/knowledge.json`: source copy of structured assistant knowledge
+- `assets/js/assistant-knowledge.js`: embedded assistant knowledge for offline use
 
-### Premium Design
-- Glassmorphism effects with backdrop blur
-- Smooth animations and scroll effects
-- Dark/Light theme toggle with persistence
-- Fully responsive layout (desktop, tablet, mobile)
-- Company logos integrated throughout
-- Dynamic photo galleries with lightbox viewer
-- Multilingual support (English, 繁體中文, 简体中文, Español)
+## Core features
 
-### Main Pages
-1. **index.html** - Main portfolio with all sections
-2. **hackathon.html** - Detailed AWS AI Hackathon showcase
-3. **coop.html** - Complete 5-month HAECO Co-op journey
+- Responsive multi-page portfolio site
+- Light and dark theme toggle persisted with `localStorage`
+- Four-language UI: English, Traditional Chinese, Simplified Chinese, and Spanish
+- Client-side section search with localized suggestions
+- Embedded portfolio assistant backed by local embedded knowledge data
+- Media galleries and lightbox interactions on detail pages
+- No external runtime dependencies
 
-### Portfolio Sections (index.html)
-1. **Hero** - Introduction with avatar and quick links
-2. **Awards & Achievements** - 4 major accomplishments
-3. **Professional Experience** - Timeline with 3 positions
-4. **Featured Projects** - 4 projects with detailed descriptions
-5. **Education** - HKUST and HKU SPACE with courses
-6. **Skills & Expertise** - 6 categories including certifications
-7. **Contact** - Email, Resume, GitHub
+## Local development
 
-## 📋 Content Overview
+The assistant now reads embedded knowledge from `assets/js/assistant-knowledge.js`, so the site can still function when opened directly with `file://`.
 
-### Experience
-- **HAECO Co-op Intern** (Sep 2025 - Jan 2026)
-  - Technology Innovation | Transformation & Technology Department
-  - AI-driven solutions, Bay Management System, Techathon planning
-  - Lean Day MC, AWS re:Invent representative
-  - Detailed 5-month timeline available in coop.html
-  
-- **HKUST ITSO Internship** (Feb 2026 - Jun 2026)
-  - IT support, asset management, Computer Barns
-  
-- **Speedy Group IT Support** (Jul 2021 - Present)
-  - IT operations, MDM, digital media production
+Using a local HTTP server is still useful for normal browser testing, but it is no longer required for the assistant itself.
 
-### Featured Projects
-- **HAECO Bay Management System** - AWS AI Hackathon Grand Prize
-- **Inventory Control Research** - HKUST Final Year Project
-- **Christmas Effects Study** - HKU SPACE Data Science
-- **YouTube Database System** - SQLite project
+Example:
 
-### Education
-- **HKUST** - BEng Industrial Engineering and Engineering Management
-  - Minor: Big Data Technology
-  - FYP: Efficient Data-Driven Methods for Inventory Control
-  - Courses: Queueing Models, Stochastic Modeling, Data-Driven Optimization
-  
-- **HKU SPACE** - Higher Diploma in Data Science
-  - Awards: Academic Excellence, Principal's Honours List
-  - Leadership: Class Representative (80+ students)
-  - Courses: Machine Learning, Data Mining, Big Data Analytics, InfoSec
-
-### Skills
-- **Programming**: Python, R, Octave, SQLite, SQL
-- **AI Tools**: AWS Q Developer, Krio, OpenAI Codex, AutoML
-- **Creative**: MS Office, Canva, Adobe Creative, Photo/Video Editing
-- **Soft Skills**: Critical Thinking, Decision Making, Leadership, Teamwork, Negotiation
-- **Languages**: English, Cantonese, Mandarin
-
-### Certifications
-- Certificate of Outstanding Achievement and Innovation - HAECO, 2025
-- SEN, Disability & Equality in Higher Education (Module 1-3) - HKUST, 2025
-
-## 🚀 Quick Start
-
-1. Open `index.html` in your browser
-2. Navigate using the top menu or scroll through sections
-3. Toggle theme (🌙/☀️) in the top-right corner
-4. Switch language (🌐) to view in different languages
-5. Click "🏆 AWS Hackathon" or "🌟 Co-op Experience" for detailed pages
-
-## 🎯 Key Features
-
-### Interactive Elements
-- **Smooth Scrolling** - Seamless navigation between sections
-- **Scroll Animations** - Cards fade in as you scroll
-- **Hover Effects** - Interactive 3D transforms on cards
-- **Theme Toggle** - Dark/Light mode with localStorage persistence
-- **Language Switcher** - 4 languages with i18n support
-- **Dynamic Galleries** - Auto-loading photo albums with lightbox
-- **AI Assistant** - Built-in chatbot for navigation help
-
-### Responsive Design
-- **Desktop**: Full layout with all features
-- **Tablet**: Adjusted grid layouts and navigation
-- **Mobile**: Single column, optimized touch interactions
-
-## 🛠️ Technology Stack
-
-- **HTML5** - Semantic markup
-- **CSS3** - Grid, Flexbox, Backdrop Filter, Animations
-- **JavaScript** - Vanilla JS for all interactions
-- **i18n** - Custom translation system (translations.js)
-- **No Dependencies** - Pure web technologies, no frameworks
-
-## 📁 Project Structure
-
+```bash
+python3 -m http.server 8000
 ```
+
+Then open:
+
+- `http://localhost:8000/index.html`
+- `http://localhost:8000/coop.html`
+- `http://localhost:8000/hackathon.html`
+- `http://localhost:8000/policy.html`
+
+## Project structure
+
+```text
 .
-├── index.html              # Main portfolio page
-├── hackathon.html          # AWS AI Hackathon detailed page
-├── coop.html               # HAECO Co-op experience page
-├── README.md               # This file
-├── assets/
-│   ├── css/
-│   │   ├── styles.css      # Main styles
-│   │   ├── hackathon.css   # Hackathon page styles
-│   │   ├── coop.css        # Co-op page styles
-│   │   └── chat.css        # AI assistant styles
-│   ├── js/
-│   │   ├── main.js         # Core functionality
-│   │   ├── hackathon.js    # Hackathon page logic
-│   │   ├── coop.js         # Co-op page logic
-│   │   ├── translations.js # i18n translations
-│   │   └── assistant.js    # AI chatbot
-│   ├── images/
-│   │   ├── logos/          # Company logos
-│   │   ├── hackathon/      # Hackathon photos
-│   │   ├── coop/           # Co-op photos
-│   │   └── CV/             # Resume and profile photo
-│   ├── videos/
-│   │   └── demo.mp4        # Demo video
-│   └── bot/
-│       └── knowledge.json  # AI assistant knowledge base
+├── index.html
+├── coop.html
+├── hackathon.html
+├── policy.html
+└── assets
+    ├── bot
+    │   └── knowledge.json
+    ├── css
+    │   ├── chat.css
+    │   ├── coop.css
+    │   ├── hackathon.css
+    │   ├── policy.css
+    │   └── styles.css
+    ├── images
+    │   ├── CV
+    │   ├── coop
+    │   ├── hackathon
+    │   └── logos
+    ├── js
+    │   ├── assistant-knowledge.js
+    │   ├── assistant-engine.js
+    │   ├── assistant.js
+    │   ├── coop.js
+    │   ├── hackathon.js
+    │   ├── main.js
+    │   ├── media-data.js
+    │   ├── search.js
+    │   ├── site-core.js
+    │   └── translations.js
+    └── videos
+        └── demo.mp4
 ```
 
-## 🌍 Multilingual Support
+## How the site is organized
 
-The website supports 4 languages:
-- **English** (en)
-- **繁體中文** (zh-TW)
-- **简体中文** (zh-CN)
-- **Español** (es)
+### Shared frontend layer
 
-All content is translated using the i18n system in `translations.js`.
+- `assets/css/styles.css` defines the shared visual system and layout
+- `assets/js/site-core.js` contains reusable UI helpers such as scrolling, header behavior, and lightbox support
+- `assets/js/main.js` powers shared page interactions including theme switching and section reveal behavior
 
-## 📝 Customization
+### Page-specific behavior
 
-### Update Content
-1. Open the HTML file you want to edit
-2. Find elements with `data-i18n` attributes
-3. Update translations in `assets/js/translations.js`
-4. Save and refresh your browser
+- `assets/css/coop.css` and `assets/js/coop.js` support the co-op story page
+- `assets/css/hackathon.css` and `assets/js/hackathon.js` support the hackathon showcase
+- `assets/css/policy.css` styles the policy page
 
-### Add Photos
-1. Place images in `assets/images/coop/` or `assets/images/hackathon/`
-2. Photos are automatically loaded by the gallery scripts
-3. Supported formats: JPG, PNG, GIF
+### Content systems
 
-### Modify Styles
-1. Edit `assets/css/styles.css` for global styles
-2. Edit page-specific CSS files for individual pages
-3. CSS variables are defined in `:root` for easy theming
+- `assets/js/translations.js` stores the localized copy used across the site
+- `assets/js/assistant-knowledge.js` embeds assistant knowledge for direct file/offline usage
+- `assets/js/search.js` builds the in-browser search index and localized suggestions
+- `assets/js/assistant.js` powers the chatbot UI shell and legacy fallback logic
+- `assets/js/assistant-engine.js` handles local retrieval, summaries, and response composition
+- `assets/js/media-data.js` holds structured media metadata for gallery rendering
+- `assets/bot/knowledge.json` stores the structured knowledge source data
 
-## 🎨 Color Scheme
+## Editing guide
 
-**Light Mode:**
-- Background: Soft gray gradient (#f5f7fa → #c3cfe2)
-- Glass: White with 25% opacity + backdrop blur
-- Text: Dark gray (#333)
-- Accent: Black gradient
+### Update page copy
 
-**Dark Mode:**
-- Background: Black gradient (#000000 → #1d1d1f)
-- Glass: White with 8% opacity + backdrop blur
-- Text: Light gray (#e0e0e0)
-- Accent: White/Light gray
+- Edit the relevant HTML page for structure and non-translated markup
+- Edit `assets/js/translations.js` for anything controlled by `data-i18n`
 
-## 📄 License
+### Add or change the onsite assistant
 
-All content reflects personal experience and learning during my internship and does not represent official statements of any organization.
-© 2026 Jason Au-Yeung. All rights reserved.
+- Update `assets/js/assistant-knowledge.js` for the runtime assistant dataset used by browsers
+- Update `assets/bot/knowledge.json` if you want to keep the source copy of the structured knowledge in sync
+- Update `assets/js/assistant-engine.js` for retrieval scoring, summaries, and response composition
+- Update `assets/js/assistant.js` for chat UI behavior, fallback responses, and interaction wiring
+- Update `assets/css/chat.css` when the assistant interface needs visual changes
 
----
+### Update search behavior
 
-**Built with ❤️ | IEEM × Data × Tech**
+- Edit `assets/js/search.js` to adjust aliases, canned suggestions, or indexed content
+
+### Add media
+
+- Place new files in the appropriate folder under `assets/images/` or `assets/videos/`
+- Update `assets/js/media-data.js` when gallery content needs metadata such as labels and captions
+
+### Change styling
+
+- Use `assets/css/styles.css` for shared design changes
+- Use the page-specific stylesheet when the change is isolated to one page
+
+## Notes
+
+- The site is fully static; deployment can be done on any simple static host
+- Browser storage is used for theme and language preference persistence
+- The assistant can run from a direct file open because its knowledge is embedded in JavaScript
+- Opening the site through a server is still the safest way to verify the full site behavior across browsers
+
+## Assistant notes
+
+The portfolio assistant is part of the main site, not a separate package. Its runtime behavior depends on:
+
+- `assets/js/assistant.js` for UI and interaction logic
+- `assets/js/assistant-knowledge.js` for embedded offline knowledge
+- `assets/js/assistant-engine.js` for retrieval and composition logic
+- `assets/bot/knowledge.json` for the source copy of structured knowledge
+- `assets/js/translations.js` for multilingual assistant labels and copy
+- `assets/css/chat.css` for chat styling

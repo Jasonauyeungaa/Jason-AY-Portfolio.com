@@ -3,72 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (() => {
+            const root = document.documentElement;
+            try {
+                root.lang = localStorage.getItem('preferredLanguage') || root.lang || 'en';
+                root.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+            } catch (error) {
+                root.lang = root.lang || 'en';
+                root.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <title>AWS AI Hackathon 2025 - Grand Prize Winner | Jason Au-Yeung</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/hackathon.css">
     <link rel="stylesheet" href="assets/css/chat.css">
     <script src="assets/js/translations.js"></script>
 </head>
-<body>
-    <nav class="glass-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-brand-logo" title="Back to Portfolio">
+<body data-page="hackathon">
+    <div class="scroll-progress" aria-hidden="true">
+        <div class="scroll-progress-bar"></div>
+    </div>
+    <header class="site-header">
+    <nav class="glass-nav site-header-nav">
+        <div class="nav-container site-header-bar">
+            <a href="index.html" class="nav-brand-logo site-header-back" title="Back to Portfolio">
                 <img src="assets/images/logos/back-button.png" alt="Back" class="back-arrow">
             </a>
-            <div class="nav-sticky-title">
+            <div class="site-header-title">
                 <img src="assets/images/logos/aws-logo.png" alt="AWS" class="title-logo">
                 <h1 data-i18n="hack.nav.title">AWS AI Hackathon Hong Kong 2025</h1>
             </div>
-            <div class="nav-controls">
+            <div class="site-header-shortcuts" aria-label="Hackathon section shortcuts">
+                <ul class="nav-links site-header-links site-header-shortcut-list">
+                    <li><a href="#award" data-i18n="hack.nav.award">Award</a></li>
+                    <li><a href="#challenge" data-i18n="hack.nav.challenge">Challenge</a></li>
+                    <li><a href="#solution" data-i18n="hack.nav.solution">Solution</a></li>
+                    <li><a href="#demo" data-i18n="hack.nav.demo">Demo</a></li>
+                    <li><a href="#features" data-i18n="hack.nav.features">Features</a></li>
+                    <li><a href="#links" data-i18n="hack.nav.links">Team</a></li>
+                    <li><a href="#media" data-i18n="hack.nav.impact">Impact</a></li>
+                </ul>
+            </div>
+            <div class="nav-controls site-header-controls">
+                <button id="siteSearchToggle" class="control-btn search-toggle" type="button">🔎</button>
                 <div class="lang-switcher">
-                    <button class="lang-toggle" onclick="toggleLangDropdown()">🌐</button>
+                    <button class="lang-toggle" type="button">🌐</button>
                     <div class="lang-dropdown">
-                        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
-                        <button class="lang-btn" data-lang="zh-TW" onclick="setLanguage('zh-TW')">繁體中文</button>
-                        <button class="lang-btn" data-lang="zh-CN" onclick="setLanguage('zh-CN')">简体中文</button>
-                        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">Español</button>
+                        <button class="lang-btn active" type="button" data-lang="en">English</button>
+                        <button class="lang-btn" type="button" data-lang="zh-TW">繁體中文</button>
+                        <button class="lang-btn" type="button" data-lang="zh-CN">简体中文</button>
+                        <button class="lang-btn" type="button" data-lang="es">Español</button>
                     </div>
                 </div>
                 <button id="themeToggle" class="control-btn">🌙</button>
             </div>
         </div>
     </nav>
+    </header>
 
-    <main>
+    <main class="site-main">
         <!-- Hero Section -->
-        <section class="hackathon-hero">
+        <section id="award" class="hackathon-hero">
             <div class="container">
-                <div class="hero-content glass-card">
-                    <div class="champion-badge" data-i18n="hack.hero.badge">🏆 Grand Prize Winner</div>
-                    <h1><img src="assets/images/logos/aws-logo.png" alt="AWS" class="title-logo"> <span data-i18n="hack.hero.title">AWS AI Hackathon Hong Kong 2025</span></h1>
-                    <h2 data-i18n="hack.hero.subtitle">HAECO Bay Management System</h2>
-                    <p class="hackathon-subtitle" data-i18n="hack.hero.tagline">Built in 14 days • 130+ shortlisted teams • Hong Kong's first and largest AWS AI Hackathon</p>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">🏆</div>
-                            <div class="stat-label" data-i18n="hack.hero.stat1">Grand Prize</div>
+                <article class="hero-content hackathon-cinematic-hero" aria-label="AWS AI Hackathon highlight">
+                    <div class="browser-stage hackathon-browser-stage">
+                        <img
+                            src="assets/images/hackathon/13.jpg"
+                            alt="HAECO CEO presenting the Outstanding Innovation Certificate"
+                            data-pan-x="38"
+                            data-pan-start="18"
+                            data-pan-end="78"
+                            class="browser-stage-image"
+                        >
+                        <div class="browser-stage-copy">
+                            <div class="champion-badge" data-i18n="hack.hero.badge">Grand Prize Winner</div>
+                            <h1 data-i18n="hack.hero.title">AWS AI Hackathon Hong Kong 2025</h1>
+                            <h2 data-i18n="hack.hero.subtitle">HAECO Bay Management System</h2>
+                            <p class="hackathon-subtitle" data-i18n="hack.hero.tagline">Built in 14 days • 130+ shortlisted teams • Hong Kong's first and largest AWS AI Hackathon</p>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-number">130+</div>
-                            <div class="stat-label" data-i18n="hack.hero.stat2">Teams</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">14</div>
-                            <div class="stat-label" data-i18n="hack.hero.stat3">Days</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">4</div>
-                            <div class="stat-label" data-i18n="hack.hero.stat4">Interviews</div>
+                        <div class="hackathon-snapshot" aria-label="Hackathon snapshot">
+                            <span class="hackathon-snapshot-kicker" data-i18n="hack.hero.snapshot">Project Snapshot</span>
+                            <div class="hackathon-snapshot-list">
+                                <span class="hackathon-snapshot-item">
+                                    <strong>🏆</strong>
+                                    <span data-i18n="hack.hero.stat1">Grand Prize</span>
+                                </span>
+                                <span class="hackathon-snapshot-item">
+                                    <strong>130+</strong>
+                                    <span data-i18n="hack.hero.stat2">Teams</span>
+                                </span>
+                                <span class="hackathon-snapshot-item">
+                                    <strong>14</strong>
+                                    <span data-i18n="hack.hero.stat3">Days</span>
+                                </span>
+                                <span class="hackathon-snapshot-item">
+                                    <strong>4</strong>
+                                    <span data-i18n="hack.hero.stat4">Interviews</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
         <!-- Problem Statement -->
-        <section class="section">
+        <section id="challenge" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.challenge.title">🎯 The Challenge</h2>
+                <h2 class="section-title" data-i18n="hack.challenge.title">The Challenge</h2>
                 <div class="problem-card glass-card">
                     <h3 data-i18n="hack.challenge.heading">Aircraft Bay Assignment at HAECO</h3>
                     <p data-i18n="hack.challenge.desc">HAECO operates in a large-scale aircraft base maintenance environment, delivering maintenance services under complex operational, regulatory, and resource constraints. Effective bay assignment requires balancing aircraft compatibility, task urgency, and dynamic operational changes.</p>
@@ -101,9 +145,9 @@
         </section>
 
         <!-- Solution Overview -->
-        <section class="section">
+        <section id="solution" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.solution.title">💡 Our Solution</h2>
+                <h2 class="section-title" data-i18n="hack.solution.title">Our Solution</h2>
                 <div class="solution-grid">
                     <div class="solution-card glass-card">
                         <div class="solution-icon">🤖</div>
@@ -132,7 +176,7 @@
         <!-- Demo Video Section -->
         <section id="demo" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.demo.title">🎥 3-Minute Demo Video</h2>
+                <h2 class="section-title" data-i18n="hack.demo.title">3-Minute Demo Video</h2>
                 <div class="video-container glass-card">
                     <!-- Video will be dynamically loaded from assets/videos/ folder -->
                 </div>
@@ -140,9 +184,9 @@
         </section>
 
         <!-- Photo Gallery -->
-        <section class="section">
+        <section id="gallery" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.gallery.title">📸 Photo Gallery</h2>
+                <h2 class="section-title" data-i18n="hack.gallery.title">Photo Gallery</h2>
                 <div id="hackathonGallery" class="media-gallery">
                     <!-- Album will be dynamically loaded from assets/images/hackathon/ folder -->
                 </div>
@@ -150,14 +194,14 @@
         </section>
 
         <!-- Key Features -->
-        <section class="section">
+        <section id="features" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.features.title">✨ Key Features</h2>
+                <h2 class="section-title" data-i18n="hack.features.title">Key Features</h2>
                 <div class="features-timeline">
                     <div class="feature-item glass-card">
                         <div class="feature-number">1</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f1.title">📊 Dashboard</h3>
+                            <h3 data-i18n="hack.features.f1.title">Dashboard</h3>
                             <p data-i18n="hack.features.f1.desc">Zero-install web app opens directly in browser. Planners instantly see upcoming aircraft, bay utilization, and system statistics—all in one place.</p>
                         </div>
                     </div>
@@ -165,7 +209,7 @@
                     <div class="feature-item glass-card">
                         <div class="feature-number">2</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f2.title">📥 Data Import</h3>
+                            <h3 data-i18n="hack.features.f2.title">Data Import</h3>
                             <p data-i18n="hack.features.f2.desc">Download CSV template, fill in aircraft registration and task details, then import. System validates and processes everything locally—fast and secure.</p>
                         </div>
                     </div>
@@ -173,7 +217,7 @@
                     <div class="feature-item glass-card">
                         <div class="feature-number">3</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f3.title">🎯 Schedule & Optimization</h3>
+                            <h3 data-i18n="hack.features.f3.title">Schedule & Optimization</h3>
                             <p data-i18n="hack.features.f3.desc">Bay assignments generated automatically. System considers aircraft model constraints, bay dependencies, and task urgency. Fewer errors, reduced unnecessary movements, operational efficiency insights.</p>
                             <ul class="feature-list">
                                 <li data-i18n="hack.features.f3.list1">Consistent and stable assignment outcomes during testing</li>
@@ -186,7 +230,7 @@
                     <div class="feature-item glass-card">
                         <div class="feature-number">4</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f4.title">🏢 Bay Status & Layout</h3>
+                            <h3 data-i18n="hack.features.f4.title">Bay Status & Layout</h3>
                             <p data-i18n="hack.features.f4.desc">Real-time bay availability and aircraft assignments. Digital replica of HAECO hangar layout with daily view.</p>
                             <ul class="feature-list">
                                 <li data-i18n="hack.features.f4.list1">Bay Utilization Timeline (7-day rolling window)</li>
@@ -199,7 +243,7 @@
                     <div class="feature-item glass-card">
                         <div class="feature-number">5</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f5.title">📈 Analytics & Reports</h3>
+                            <h3 data-i18n="hack.features.f5.title">Analytics & Reports</h3>
                             <p data-i18n="hack.features.f5.desc">Clear insights into bay utilization, cost reports, and operational trends. Managers make confident, data-driven decisions.</p>
                             <ul class="feature-list">
                                 <li data-i18n="hack.features.f5.list1">Bay Type Utilization charts</li>
@@ -213,7 +257,7 @@
                     <div class="feature-item glass-card">
                         <div class="feature-number">6</div>
                         <div class="feature-content">
-                            <h3 data-i18n="hack.features.f6.title">💬 AI Assistant</h3>
+                            <h3 data-i18n="hack.features.f6.title">AI Assistant</h3>
                             <p data-i18n="hack.features.f6.desc">Built-in chatbot responds instantly to questions like: "How do I assign an aircraft to a bay?" "What are today's conflicts?" "Show me optimization statistics"</p>
                             <ul class="feature-list" style="display:none;">
                                 <li>"How do I assign an aircraft to a bay?"</li>
@@ -227,9 +271,9 @@
         </section>
 
         <!-- Tech Stack -->
-        <section class="section">
+        <section id="tech" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.tech.title">🛠️ Technology Stack</h2>
+                <h2 class="section-title" data-i18n="hack.tech.title">Technology Stack</h2>
                 <div class="tech-grid">
                     <div class="tech-card glass-card">
                         <h3 data-i18n="hack.tech.frontend">Frontend</h3>
@@ -249,9 +293,9 @@
                     <div class="tech-card glass-card">
                         <h3 data-i18n="hack.tech.features">Features</h3>
                         <div class="tech-tags">
-                            <span class="tag">AI Optimization</span>
-                            <span class="tag">Real-time Viz</span>
-                            <span class="tag">Analytics</span>
+                            <span class="tag" data-i18n="hack.tech.feature1">AI Optimization</span>
+                            <span class="tag" data-i18n="hack.tech.feature2">Real-time Viz</span>
+                            <span class="tag" data-i18n="hack.tech.feature3">Analytics</span>
                         </div>
                     </div>
                 </div>
@@ -259,24 +303,24 @@
         </section>
 
         <!-- Development Process -->
-        <section class="section">
+        <section id="development" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.sprint.title">⚡ 14-Day Sprint</h2>
+                <h2 class="section-title" data-i18n="hack.sprint.title">14-Day Sprint</h2>
                 <div class="sprint-grid">
                     <div class="sprint-card glass-card">
-                        <h3 data-i18n="hack.sprint.s1.title">📋 Requirements & Design</h3>
+                        <h3 data-i18n="hack.sprint.s1.title">Requirements & Design</h3>
                         <p data-i18n="hack.sprint.s1.desc">Used Krio to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.</p>
                     </div>
                     <div class="sprint-card glass-card">
-                        <h3 data-i18n="hack.sprint.s2.title">💻 Development</h3>
+                        <h3 data-i18n="hack.sprint.s2.title">Development</h3>
                         <p data-i18n="hack.sprint.s2.desc">Built web-based solution with HTML, CSS, JavaScript. Leveraged Kiro's support to streamline development and focus on core logic and UX.</p>
                     </div>
                     <div class="sprint-card glass-card">
-                        <h3 data-i18n="hack.sprint.s3.title">🤖 AI Integration</h3>
+                        <h3 data-i18n="hack.sprint.s3.title">AI Integration</h3>
                         <p data-i18n="hack.sprint.s3.desc">Integrated AWS Q Developer for intelligent bay assignment. Implemented optimization engine with comprehensive rule-based planning.</p>
                     </div>
                     <div class="sprint-card glass-card">
-                        <h3 data-i18n="hack.sprint.s4.title">🎬 Demo & Presentation</h3>
+                        <h3 data-i18n="hack.sprint.s4.title">Demo & Presentation</h3>
                         <p data-i18n="hack.sprint.s4.desc">Created 3-minute demo video, prepared presentation materials, and delivered system walkthrough with UI design showcase.</p>
                     </div>
                 </div>
@@ -284,94 +328,207 @@
         </section>
 
         <!-- Team -->
-        <section class="section">
+        <section id="links" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.team.title">👥 Team HAECO</h2>
+                <h2 class="section-title" data-i18n="hack.team.title">Team HAECO</h2>
 
-                <div class="team-grid">
+                <div class="team-scroll-layout">
+                    <div class="team-stage glass-card">
+                        <div class="team-formation" aria-label="Hackathon team members">
+                            <article class="team-figure is-active" data-team-member="jason">
+                                <div class="team-figure-portrait">
+                                    <img src="assets/images/hackathon/JA.png" alt="Jason Au-Yeung" class="team-figure-avatar">
+                                </div>
+                                <h3 class="team-figure-name">Jason Au-Yeung</h3>
+                            </article>
 
-                    <!-- Jason -->
-                    <div class="team-card glass-card">
-                        <img src="assets/images/hackathon/JA.png" alt="Jason Au-Yeung" class="hero-avatar">
+                            <article class="team-figure" data-team-member="derek">
+                                <div class="team-figure-portrait">
+                                    <img src="assets/images/hackathon/DE.png" alt="Derek Szeto" class="team-figure-avatar">
+                                </div>
+                                <h3 class="team-figure-name">Derek Szeto</h3>
+                            </article>
 
-                        <h3 class="team-name">Jason Au Yeung</h3>
+                            <article class="team-figure" data-team-member="peter">
+                                <div class="team-figure-portrait">
+                                    <img src="assets/images/hackathon/PE.png" alt="Peter Yuen" class="team-figure-avatar">
+                                </div>
+                                <h3 class="team-figure-name">Peter Yuen</h3>
+                            </article>
 
-                        <p class="team-main-role">
-                            <strong data-i18n="hack.team.jason.role">Developer & Demo Presenter</strong>
-                        </p>
+                            <article class="team-figure" data-team-member="sahil">
+                                <div class="team-figure-portrait">
+                                    <img src="assets/images/hackathon/SA.png" alt="Sahil Kunder" class="team-figure-avatar">
+                                </div>
+                                <h3 class="team-figure-name">Sahil Kunder</h3>
+                            </article>
+                        </div>
 
-                        <ul class="team-details">
-                            <li data-i18n="hack.team.jason.desc1">Solution architecture & core development</li>
-                            <li data-i18n="hack.team.jason.desc2">System integration & live demo presentation</li>
-                        </ul>
+                        <div class="team-focus-panel" aria-live="polite">
+                            <article class="team-focus-copy is-active" data-team-member="jason">
+                                <div class="team-focus-topline">
+                                    <span class="team-focus-index" aria-hidden="true">01</span>
+                                    <p class="team-main-role">
+                                        <strong data-i18n="hack.team.jason.role">Developer & Demo Presenter</strong>
+                                    </p>
+                                </div>
+                                <h3 class="team-name">Jason Au-Yeung</h3>
+                                <p class="team-focus-summary" data-i18n="hack.team.jason.summary">Led the technical direction of the hackathon build, connecting solution design, implementation, and the final live presentation into one coherent story.</p>
+                                <div class="team-focus-grid">
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.contribution">Key Contributions</span>
+                                        <ul class="team-details">
+                                            <li data-i18n="hack.team.jason.desc1">Solution architecture & core development</li>
+                                            <li data-i18n="hack.team.jason.desc2">System integration & live demo presentation</li>
+                                        </ul>
+                                    </section>
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.context">Team Context</span>
+                                        <p class="team-org">
+                                            <span data-i18n="hack.team.jason.org">Transformation & Technology</span><br>
+                                            <span data-i18n="hack.team.jason.team">Technology Innovation Team</span>
+                                        </p>
+                                    </section>
+                                </div>
+                            </article>
 
-                        <p class="team-org">
-                            <span data-i18n="hack.team.jason.org">Transformation & Technology</span><br>
-                            <span data-i18n="hack.team.jason.team">Technology Innovation Team</span>
-                        </p>
+                            <article class="team-focus-copy" data-team-member="derek">
+                                <div class="team-focus-topline">
+                                    <span class="team-focus-index" aria-hidden="true">02</span>
+                                    <p class="team-main-role">
+                                        <strong data-i18n="hack.team.derek.role">Developer – Testing & Documentation</strong>
+                                    </p>
+                                </div>
+                                <h3 class="team-name">Derek Szeto</h3>
+                                <p class="team-focus-summary" data-i18n="hack.team.derek.summary">Strengthened the build through validation, debugging, and documentation support so the prototype stayed stable, explainable, and presentation-ready.</p>
+                                <div class="team-focus-grid">
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.contribution">Key Contributions</span>
+                                        <ul class="team-details">
+                                            <li data-i18n="hack.team.derek.desc1">Debugging & testing for system stability</li>
+                                            <li data-i18n="hack.team.derek.desc2">Technical documentation & QA support</li>
+                                        </ul>
+                                    </section>
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.context">Team Context</span>
+                                        <p class="team-org">
+                                            <span data-i18n="hack.team.jason.org">Transformation & Technology</span><br>
+                                            <span data-i18n="hack.team.jason.team">Technology Innovation Team</span>
+                                        </p>
+                                    </section>
+                                </div>
+                            </article>
+
+                            <article class="team-focus-copy" data-team-member="peter">
+                                <div class="team-focus-topline">
+                                    <span class="team-focus-index" aria-hidden="true">03</span>
+                                    <p class="team-main-role">
+                                        <strong data-i18n="hack.team.peter.role">Business Analyst</strong>
+                                    </p>
+                                </div>
+                                <h3 class="team-name">Peter Yuen</h3>
+                                <p class="team-focus-summary" data-i18n="hack.team.peter.summary">Grounded the project in business requirements and workflow logic, helping the team shape a solution that matched real operational use cases.</p>
+                                <div class="team-focus-grid">
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.contribution">Key Contributions</span>
+                                        <ul class="team-details">
+                                            <li data-i18n="hack.team.peter.desc1">Business requirements & use-case definition</li>
+                                            <li data-i18n="hack.team.peter.desc2">Advisory on workflow & solution feasibility</li>
+                                        </ul>
+                                    </section>
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.context">Team Context</span>
+                                        <p class="team-org">
+                                            <span data-i18n="hack.team.peter.org">Transformation & Technology</span>
+                                        </p>
+                                    </section>
+                                </div>
+                            </article>
+
+                            <article class="team-focus-copy" data-team-member="sahil">
+                                <div class="team-focus-topline">
+                                    <span class="team-focus-index" aria-hidden="true">04</span>
+                                    <p class="team-main-role">
+                                        <strong data-i18n="hack.team.sahil.role">Subject Matter Expert (SME)</strong>
+                                    </p>
+                                </div>
+                                <h3 class="team-name">Sahil Kunder</h3>
+                                <p class="team-focus-summary" data-i18n="hack.team.sahil.summary">Brought real maintenance knowledge into the build so the concept stayed connected to actual bay operations, data realities, and on-the-ground constraints.</p>
+                                <div class="team-focus-grid">
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.contribution">Key Contributions</span>
+                                        <ul class="team-details">
+                                            <li data-i18n="hack.team.sahil.desc1">Operational expertise & maintenance insights</li>
+                                            <li data-i18n="hack.team.sahil.desc2">Data source & real-world constraints</li>
+                                        </ul>
+                                    </section>
+                                    <section class="team-focus-block">
+                                        <span class="team-focus-label" data-i18n="hack.team.label.context">Team Context</span>
+                                        <p class="team-org">
+                                            <span data-i18n="hack.team.sahil.org">Base Maintenance</span>
+                                        </p>
+                                    </section>
+                                </div>
+                            </article>
+                        </div>
                     </div>
 
-                    <!-- Derek -->
-                    <div class="team-card glass-card">
-                        <img src="assets/images/hackathon/DE.png" alt="Derek Szeto" class="hero-avatar">
+                    <div class="team-scroll-steps">
+                        <div class="team-progress-rail glass-card">
+                            <article class="team-progress-item is-active" data-team-progress="jason">
+                                <span class="team-step-index" aria-hidden="true">01</span>
+                                <h3 class="team-step-name">Jason Au-Yeung</h3>
+                                <p class="team-step-role" data-i18n="hack.team.jason.role">Developer & Demo Presenter</p>
+                            </article>
+                            <article class="team-progress-item" data-team-progress="derek">
+                                <span class="team-step-index" aria-hidden="true">02</span>
+                                <h3 class="team-step-name">Derek Szeto</h3>
+                                <p class="team-step-role" data-i18n="hack.team.derek.role">Developer – Testing & Documentation</p>
+                            </article>
+                            <article class="team-progress-item" data-team-progress="peter">
+                                <span class="team-step-index" aria-hidden="true">03</span>
+                                <h3 class="team-step-name">Peter Yuen</h3>
+                                <p class="team-step-role" data-i18n="hack.team.peter.role">Business Analyst</p>
+                            </article>
+                            <article class="team-progress-item" data-team-progress="sahil">
+                                <span class="team-step-index" aria-hidden="true">04</span>
+                                <h3 class="team-step-name">Sahil Kunder</h3>
+                                <p class="team-step-role" data-i18n="hack.team.sahil.role">Subject Matter Expert (SME)</p>
+                            </article>
+                        </div>
 
-                        <h3 class="team-name">Derek Szeto</h3>
+                        <article class="team-step is-active" data-team-step="jason">
+                            <div class="team-step-copy">
+                                <span class="team-step-index" aria-hidden="true">01</span>
+                                <h3 class="team-step-name">Jason Au-Yeung</h3>
+                                <p class="team-step-role" data-i18n="hack.team.jason.role">Developer & Demo Presenter</p>
+                            </div>
+                        </article>
 
-                        <p class="team-main-role">
-                            <strong data-i18n="hack.team.derek.role">Developer – Testing & Documentation</strong>
-                        </p>
+                        <article class="team-step" data-team-step="derek">
+                            <div class="team-step-copy">
+                                <span class="team-step-index" aria-hidden="true">02</span>
+                                <h3 class="team-step-name">Derek Szeto</h3>
+                                <p class="team-step-role" data-i18n="hack.team.derek.role">Developer – Testing & Documentation</p>
+                            </div>
+                        </article>
 
-                        <ul class="team-details">
-                            <li data-i18n="hack.team.derek.desc1">Debugging & testing for system stability</li>
-                            <li data-i18n="hack.team.derek.desc2">Technical documentation & QA support</li>
-                        </ul>
+                        <article class="team-step" data-team-step="peter">
+                            <div class="team-step-copy">
+                                <span class="team-step-index" aria-hidden="true">03</span>
+                                <h3 class="team-step-name">Peter Yuen</h3>
+                                <p class="team-step-role" data-i18n="hack.team.peter.role">Business Analyst</p>
+                            </div>
+                        </article>
 
-                        <p class="team-org">
-                            <span data-i18n="hack.team.jason.org">Transformation & Technology</span><br>
-                            <span data-i18n="hack.team.jason.team">Technology Innovation Team</span>
-                        </p>
+                        <article class="team-step" data-team-step="sahil">
+                            <div class="team-step-copy">
+                                <span class="team-step-index" aria-hidden="true">04</span>
+                                <h3 class="team-step-name">Sahil Kunder</h3>
+                                <p class="team-step-role" data-i18n="hack.team.sahil.role">Subject Matter Expert (SME)</p>
+                            </div>
+                        </article>
                     </div>
-
-                    <!-- Peter -->
-                    <div class="team-card glass-card">
-                        <img src="assets/images/hackathon/PE.png" alt="Peter Yuen" class="hero-avatar">
-
-                        <h3 class="team-name">Peter Yuen</h3>
-
-                        <p class="team-main-role">
-                            <strong data-i18n="hack.team.peter.role">Business Analyst</strong>
-                        </p>
-
-                        <ul class="team-details">
-                            <li data-i18n="hack.team.peter.desc1">Business requirements & use-case definition</li>
-                            <li data-i18n="hack.team.peter.desc2">Advisory on workflow & solution feasibility</li>
-                        </ul>
-
-                        <p class="team-org">
-                            <span data-i18n="hack.team.peter.org">Transformation & Technology</span>
-                        </p>
-                    </div>
-
-                    <!-- Sahil -->
-                    <div class="team-card glass-card">
-                        <img src="assets/images/hackathon/SA.png" alt="Sahil Kunder" class="hero-avatar">
-
-                        <h3 class="team-name">Sahil Kunder</h3>
-
-                        <p class="team-main-role">
-                            <strong data-i18n="hack.team.sahil.role">Subject Matter Expert (SME)</strong>
-                        </p>
-
-                        <ul class="team-details">
-                            <li data-i18n="hack.team.sahil.desc1">Operational expertise & maintenance insights</li>
-                            <li data-i18n="hack.team.sahil.desc2">Data source & real-world constraints</li>
-                        </ul>
-
-                        <p class="team-org">
-                            <span data-i18n="hack.team.sahil.org">Base Maintenance</span>
-                        </p>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -379,14 +536,14 @@
         <!-- Hackathon Details -->
         <section class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.details.title">🎪 Hackathon Details</h2>
+                <h2 class="section-title" data-i18n="hack.details.title">Hackathon Details</h2>
                 <div class="hackathon-info glass-card">
                     <h3 data-i18n="hack.details.heading">AWS AI Hackathon Hong Kong 2025</h3>
                     <p class="hackathon-tagline" data-i18n="hack.details.tagline">"Build Tomorrow's Hong Kong with AI"</p>
                     
                     <div class="info-grid">
                         <div class="info-item">
-                            <h4 data-i18n="hack.details.timeline">📅 Timeline</h4>
+                            <h4 data-i18n="hack.details.timeline">Timeline</h4>
                             <ul>
                                 <li data-i18n="hack.details.timeline.brief">Briefing: August 26, 2025</li>
                                 <li data-i18n="hack.details.timeline.submit">Submission: Aug 15 - Sep 30, 2025</li>
@@ -395,7 +552,7 @@
                             </ul>
                         </div>
                         <div class="info-item">
-                            <h4 data-i18n="hack.details.requirements">🎯 Requirements</h4>
+                            <h4 data-i18n="hack.details.requirements">Requirements</h4>
                             <ul>
                                 <li data-i18n="hack.details.req1">Use Amazon Q Developer or Kiro</li>
                                 <li data-i18n="hack.details.req2">Choose theme or freestyle</li>
@@ -404,7 +561,7 @@
                             </ul>
                         </div>
                         <div class="info-item">
-                            <h4 data-i18n="hack.details.judging">⚖️ Judging Criteria</h4>
+                            <h4 data-i18n="hack.details.judging">Judging Criteria</h4>
                             <ul>
                                 <li data-i18n="hack.details.judge1">Business Value & Use Case</li>
                                 <li data-i18n="hack.details.judge2">Implementation Quality</li>
@@ -412,7 +569,7 @@
                             </ul>
                         </div>
                         <div class="info-item">
-                            <h4 data-i18n="hack.details.statistics">📊 Statistics</h4>
+                            <h4 data-i18n="hack.details.statistics">Statistics</h4>
                             <ul>
                                 <li data-i18n="hack.details.stat1">841 total participants</li>
                                 <li data-i18n="hack.details.stat2">130+ shortlisted teams</li>
@@ -426,9 +583,9 @@
         </section>
 
         <!-- Impact & Recognition -->
-        <section class="section">
+        <section id="media" class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.impact.title">🌟 Impact & Recognition</h2>
+                <h2 class="section-title" data-i18n="hack.impact.title">Impact & Recognition</h2>
                 <div class="impact-grid">
                     <div class="impact-card glass-card">
                         <div class="impact-icon">🎙️</div>
@@ -440,7 +597,7 @@
                             <li data-i18n="hack.impact.media.item4"><strong>AWS Hong Kong</strong> - Official interview</li>
                         </ul>
                     </div>
-                    <div class="impact-card glass-card">
+                    <div id="reinvent" class="impact-card glass-card">
                         <div class="impact-icon">🌍</div>
                         <h3 data-i18n="hack.impact.global.title">Global Exposure</h3>
                         <p data-i18n="hack.impact.global.desc1">
@@ -452,7 +609,7 @@
                             Demonstrated ability to explain complex operational systems to a global audience.
                         </p>
                         <a href="https://youtu.be/BDJEDqSPP8M?si=n8KmWvZS1GzSXCOI&t=539"
-                        class="project-link" target="_blank" data-i18n="hack.impact.global.link">▶️ YouTube Interview</a>
+                        class="project-link" target="_blank" rel="noopener noreferrer" data-i18n="hack.impact.global.link">▶️ YouTube Interview</a>
                     </div>
                     <div class="impact-card glass-card">
                         <div class="impact-icon">💼</div>
@@ -477,22 +634,43 @@
             </div>
         </section>
 
+        <section id="reflection" class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="hack.reflection.title">Reflection</h2>
+                <p class="reflection-intro" data-i18n="hack.reflection.intro">A short reflection on what this project taught me and how it shaped the way I approach building.</p>
+                <div class="reflection-grid">
+                    <div class="reflection-card glass-card">
+                        <h3 data-i18n="hack.reflection.meaning.title">What This Experience Meant</h3>
+                        <p data-i18n="hack.reflection.meaning.body">This hackathon was more than a competition for me. It was the first time I experienced how quickly an idea could move from concept to a working prototype when the goal was clear and the team was fully committed. Winning the project gave me confidence, but more importantly, it showed me that I enjoy building solutions that respond to real operational needs.</p>
+                    </div>
+                    <div class="reflection-card glass-card">
+                        <h3 data-i18n="hack.reflection.challenge.title">What Challenged Me</h3>
+                        <p data-i18n="hack.reflection.challenge.body">The biggest challenge was working under a very short timeline while still trying to make the project practical, presentable, and meaningful. It was not only about building a system, but also about explaining the logic clearly, shaping the story of the project, and making the final output understandable to others.</p>
+                    </div>
+                    <div class="reflection-card glass-card">
+                        <h3 data-i18n="hack.reflection.future.title">What I Will Carry Forward</h3>
+                        <p data-i18n="hack.reflection.future.body">After this experience, I want to keep developing projects that combine operations, data, and AI in a practical way. I also want to keep improving how I communicate ideas, present systems, and turn technical work into something that creates visible value for real users.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Links -->
         <section class="section">
             <div class="container">
-                <h2 class="section-title" data-i18n="hack.links.title">🔗 Relevant Links</h2>
+                <h2 class="section-title" data-i18n="hack.links.title">Relevant Links</h2>
                 <div class="links-grid">
-                    <a href="https://devpost.com/software/aircraft-bay-management" class="link-card glass-card" target="_blank">
+                    <a href="https://devpost.com/software/aircraft-bay-management" class="link-card glass-card" target="_blank" rel="noopener noreferrer">
                         <div class="link-icon">📱</div>
                         <h3 data-i18n="hack.links.devpost">Devpost</h3>
                         <p data-i18n="hack.links.devpost.desc">View project submission</p>
                     </a>
-                    <a href="https://www.scmp.com/presented/tech/topics/generative-ai-and-cloud-services/article/3330885/genai-pioneers-tackle-hong-kongs-challenges-first-aws-ai-hackathon" class="link-card glass-card" target="_blank">
+                    <a href="https://www.scmp.com/presented/tech/topics/generative-ai-and-cloud-services/article/3330885/genai-pioneers-tackle-hong-kongs-challenges-first-aws-ai-hackathon" class="link-card glass-card" target="_blank" rel="noopener noreferrer">
                         <div class="link-icon">📰</div>
                         <h3 data-i18n="hack.links.scmp">SCMP Article</h3>
                         <p data-i18n="hack.links.scmp.desc">Media coverage</p>
                     </a>
-                    <a href="https://unwire.hk/2025/12/04/aws_reinvent2025/unwire_podcast/" class="link-card glass-card" target="_blank">
+                    <a href="https://unwire.hk/2025/12/04/aws_reinvent2025/unwire_podcast/" class="link-card glass-card" target="_blank" rel="noopener noreferrer">
                         <div class="link-icon">🎥</div>
                         <h3 data-i18n="hack.links.unwire">unwire.hk</h3>
                         <p data-i18n="hack.links.unwire.desc">re:Invent interview</p>
@@ -507,17 +685,26 @@
         </section>
     </main>
 
-    <footer class="glass-footer">
+    <footer class="glass-footer site-footer">
         <div class="container">
             <p data-i18n="hack.footer.tagline">🏆 AWS AI Hackathon Hong Kong 2025 - Grand Prize Winner</p>
             <p data-i18n="hack.footer.copyright">&copy; 2026 Jason Au-Yeung. All rights reserved.</p>
             <p data-i18n="hack.footer.disclaimer.line1">Hackathon information is based on publicly available sources.</p>
             <p data-i18n="hack.footer.disclaimer.line2">Project descriptions reflect team collaboration and my individual contributions.</p>
+            <p class="footer-links">
+                <a href="policy.html" data-i18n="footer.policy">Policy &amp; Statement</a>
+                <a href="policy.html#chatbot" data-i18n="footer.chatbot">Chatbot Notice</a>
+            </p>
         </div>
     </footer>
 
+    <script src="assets/js/site-core.js"></script>
+    <script src="assets/js/media-data.js"></script>
+    <script src="assets/js/search.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/hackathon.js"></script>
+    <script src="assets/js/assistant-knowledge.js"></script>
+    <script src="assets/js/assistant-engine.js"></script>
     <script src="assets/js/assistant.js"></script>
 </body>
 </html>

@@ -4,103 +4,101 @@ class JasonAssistant {
   constructor() {
     this.conversationStart = new Date();
     this.messageCount = 0;
+    this.knowledgeData = null;
     this.knowledgeBase = [];
     this.knowledgeIndex = null;
     this.intentHistory = [];
     this.lastIntentPicks = {};
     this.currentLang = 'en';
+    this.eyeReactionTimer = null;
+    this.pointerX = window.innerWidth * 0.5;
+    this.pointerY = window.innerHeight * 0.5;
+    this.page = document.body?.dataset.page || 'home';
+    this.activeSectionId = null;
+    this.contextPromptTimer = null;
+    this.contextIdlePromptTimer = null;
+    this.contextPromptHideTimer = null;
+    this.contextPromptSeen = new Set();
+    this.contextPromptMeta = new Map();
+    this.contextPromptInteracting = false;
+    this.initialIntroPromptActive = false;
+    this.introPromptStorageKey = 'jason-bot-home-intro-seen';
+    this.sectionPromptMap = null;
+    this.domContext = window.PortfolioDomContext ? new window.PortfolioDomContext({ page: this.page }) : null;
+    this.engine = window.JasonAssistantEngine ? new window.JasonAssistantEngine({
+      page: this.page,
+      domContext: this.domContext
+    }) : null;
     this.loadKnowledge();
     this.detectLanguage();
     
-    this.knowledge = {
-      profile: {
-        name: "Jason Au-Yeung",
-        title: "IEEM × Data × Tech | AI & Operations Innovation",
-        education: "HKUST BEng IEEM + Minor in Big Data Technology",
-        currentStatus: "Completed 5-month Co-op at HAECO (Sep 2025 - Jan 2026)"
-      },
-      
-      funFacts: [
-        "🎬 Jason produced the 3-minute demo video for the AWS Hackathon project.",
-        "🎤 Jason served as MC at HAECO Lean Day 2025, engaging with executives and attendees.",
-        "🌍 Jason attended AWS re:Invent in Las Vegas and was interviewed on-site.",
-        "💡 Jason organized HAECO's first Techathon, including framework design and GM presentations.",
-        "📊 Jason served as Class Representative for 80+ students in the Data Science program.",
-        "🏆 Jason's team competed against 130+ teams in the AWS AI Hackathon Hong Kong 2025.",
-        "⚡ The Bay Management System was developed in 14 days during the hackathon.",
-        "🎉 Jason participated in HAECO's 75th Anniversary celebration.",
-        "🤖 Jason uses AI tools like AWS Q Developer and Krio for development.",
-        "🌏 Jason communicates in three languages: English, Cantonese, and Mandarin.",
-        "📸 Jason has experience in photo and video editing with Adobe Creative Suite.",
-        "🎯 Jason's Final Year Project focuses on Inventory Control using data-driven methods."
-      ],
-      
-      awards: [
-        "Grand Prize - AWS AI Hackathon Hong Kong 2025 (130+ teams)",
-        "Master of Ceremony - HAECO Lean Day 2025",
-        "Lead Organizer - HAECO Techathon 2026",
-        "Academic Excellence Award - HKU SPACE",
-        "Principal's Honor List - HKU SPACE"
-      ],
-      
-      skills: {
-        programming: ["Python", "R", "Octave", "SQLite", "SQL"],
-        ai: ["AWS Q Developer", "Krio", "OpenAI Codex", "AutoML"],
-        tools: ["MS Office", "Canva", "Adobe Creative"],
-        soft: ["Critical Thinking", "Leadership", "Teamwork", "Negotiation"],
-        languages: ["English", "Cantonese", "Mandarin"]
-      }
-    };
-    
     this.init();
   }
-
-  getGreeting() {
-    const hour = new Date().getHours();
-    if (hour < 12) return '🌅 Good morning';
-    if (hour < 18) return '☀️ Good afternoon';
-    return '🌙 Good evening';
-  }
   
-  async loadKnowledge() {
-    try {
-      const response = await fetch('assets/bot/knowledge.json');
-      const data = await response.json();
-      this.knowledgeBase = data.snippets;
-      this.buildIndex();
-    } catch (error) {
-      console.warn('Knowledge base not loaded, using fallback');
+  loadKnowledge() {
+    const embeddedData = window.JASON_ASSISTANT_KNOWLEDGE;
+    if (!embeddedData) {
+      console.warn('Embedded assistant knowledge not found, using fallback');
+      this.knowledgeData = null;
       this.knowledgeBase = [];
+      this.engine?.setKnowledge({});
+      return;
     }
+
+    this.knowledgeData = embeddedData;
+    this.knowledgeBase = Array.isArray(embeddedData.snippets)
+      ? embeddedData.snippets
+      : (embeddedData.entries || []).map((entry) => this.toLegacySnippet(entry)).filter(Boolean);
+    this.buildIndex();
+    this.engine?.setKnowledge(embeddedData);
+  }
+
+  toLegacySnippet(entry) {
+    if (!entry) return null;
+
+    const text = entry.summary_long || entry.summary_short || entry.title;
+    const tags = [
+      entry.topic,
+      ...(entry.keywords || []),
+      ...(entry.aliases || [])
+    ].filter(Boolean);
+
+    return {
+      id: entry.id,
+      title: entry.title || entry.id,
+      text,
+      tags,
+      url: entry.url || (entry.page ? `${entry.page}${entry.section ? `#${entry.section}` : ''}` : '')
+    };
   }
   
   buildIndex() {
     this.knowledgeIndex = this.knowledgeBase.map(snippet => ({
       id: snippet.id,
-      tokens: this.tokenize(snippet.text + ' ' + snippet.tags.join(' ')),
+      tokens: this.tokenize(`${snippet.text || ''} ${(snippet.tags || []).join(' ')}`),
       snippet
     }));
   }
   
   detectLanguage() {
     this.currentLang = localStorage.getItem('preferredLanguage') || 'en';
-    
-    // Listen for language changes
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'preferredLanguage') {
-        this.currentLang = e.newValue || 'en';
-        this.refreshWelcomeMessage();
+
+    const syncLanguage = (lang) => {
+      const nextLang = lang || localStorage.getItem('preferredLanguage') || 'en';
+      if (nextLang === this.currentLang) return;
+      this.currentLang = nextLang;
+      this.refreshWelcomeMessage();
+    };
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'preferredLanguage') {
+        syncLanguage(event.newValue);
       }
     });
-    
-    // Check periodically for language changes
-    setInterval(() => {
-      const newLang = localStorage.getItem('preferredLanguage') || 'en';
-      if (newLang !== this.currentLang) {
-        this.currentLang = newLang;
-        this.refreshWelcomeMessage();
-      }
-    }, 1000);
+
+    window.addEventListener('site:languagechange', (event) => {
+      syncLanguage(event.detail?.lang);
+    });
   }
   
   refreshWelcomeMessage() {
@@ -118,11 +116,13 @@ class JasonAssistant {
     const chatStatus = document.getElementById('chatStatus');
     const suggestionsTitle = document.getElementById('suggestionsTitle');
     const chatInput = document.getElementById('chatInput');
+    const chatInputNote = document.getElementById('chatInputNote');
     
     if (chatTitle) chatTitle.textContent = this.t('chatTitle');
     if (chatStatus) chatStatus.textContent = this.t('chatStatus');
-    if (suggestionsTitle) suggestionsTitle.textContent = '💡 ' + this.t('suggestedQuestions');
+    if (suggestionsTitle) suggestionsTitle.textContent = this.t('suggestedQuestions');
     if (chatInput) chatInput.placeholder = this.t('inputPlaceholder');
+    if (chatInputNote) chatInputNote.textContent = this.t('inputNote');
     
     // Update suggestion buttons text and queries
     const suggest1 = document.getElementById('suggest1');
@@ -156,6 +156,617 @@ class JasonAssistant {
       suggest6.textContent = this.t('suggestionChatTime');
       suggest6.dataset.query = 'queryChatTime';
     }
+
+    this.updateDynamicSuggestionButtons();
+    this.refreshContextPrompt();
+  }
+
+  getSuggestionCatalog() {
+    return {
+      aboutJason: {
+        en: 'Tell me about Jason',
+        'zh-TW': '告訴我關於Jason',
+        'zh-CN': '告诉我关于Jason',
+        es: 'Cuéntame sobre Jason'
+      },
+      funFact: {
+        en: 'Fun fact',
+        'zh-TW': '趣事',
+        'zh-CN': '趣事',
+        es: 'Dato curioso'
+      },
+      tellFunFact: {
+        en: 'Tell me a fun fact',
+        'zh-TW': '告訴我一個趣事',
+        'zh-CN': '告诉我一个趣事',
+        es: 'Cuéntame un dato curioso'
+      },
+      anotherFunFact: {
+        en: 'Another fun fact',
+        'zh-TW': '另一個趣事',
+        'zh-CN': '另一个趣事',
+        es: 'Otro dato curioso'
+      },
+      whatTime: {
+        en: 'What time is it?',
+        'zh-TW': '現在幾點？',
+        'zh-CN': '现在几点？',
+        es: '¿Qué hora es?'
+      },
+      chatStats: {
+        en: 'Chat stats',
+        'zh-TW': '聊天統計',
+        'zh-CN': '聊天统计',
+        es: 'Estadisticas del chat'
+      },
+      awsHackathon: {
+        en: 'AWS Hackathon',
+        'zh-TW': 'AWS黑客松',
+        'zh-CN': 'AWS黑客松',
+        es: 'AWS Hackathon'
+      },
+      awsHackathonDetails: {
+        en: 'AWS Hackathon details',
+        'zh-TW': 'AWS黑客松詳情',
+        'zh-CN': 'AWS黑客松详情',
+        es: 'Detalles del AWS Hackathon'
+      },
+      awsHackathonStory: {
+        en: 'AWS Hackathon story',
+        'zh-TW': 'AWS黑客松故事',
+        'zh-CN': 'AWS黑客松故事',
+        es: 'Historia del AWS Hackathon'
+      },
+      haecoCoop: {
+        en: 'HAECO Co-op',
+        'zh-TW': '港機Co-op',
+        'zh-CN': '港机Co-op',
+        es: 'Co-op en HAECO'
+      },
+      haecoCoopDetails: {
+        en: 'HAECO Co-op details',
+        'zh-TW': '港機Co-op詳情',
+        'zh-CN': '港机Co-op详情',
+        es: 'Detalles del Co-op en HAECO'
+      },
+      haecoCoopExperience: {
+        en: 'HAECO Co-op experience',
+        'zh-TW': '港機Co-op經驗',
+        'zh-CN': '港机Co-op经验',
+        es: 'Experiencia Co-op en HAECO'
+      },
+      haecoExperience: {
+        en: 'Tell me about HAECO',
+        'zh-TW': '告訴我關於港機',
+        'zh-CN': '告诉我关于港机',
+        es: 'Cuentame sobre HAECO'
+      },
+      techathonDetails: {
+        en: 'Techathon details',
+        'zh-TW': '創科馬拉松詳情',
+        'zh-CN': '创科马拉松详情',
+        es: 'Detalles del Techathon'
+      },
+      leanDayMc: {
+        en: 'Lean Day MC',
+        'zh-TW': '精益日司儀',
+        'zh-CN': '精益日司仪',
+        es: 'MC de Lean Day'
+      },
+      skills: {
+        en: 'Skills',
+        'zh-TW': '技能',
+        'zh-CN': '技能',
+        es: 'Habilidades'
+      },
+      skillsOverview: {
+        en: 'Skills overview',
+        'zh-TW': '技能概覽',
+        'zh-CN': '技能概览',
+        es: 'Resumen de habilidades'
+      },
+      hisSkills: {
+        en: 'What are his skills?',
+        'zh-TW': '他的技能是什麼？',
+        'zh-CN': '他的技能是什么？',
+        es: 'Cuales son sus habilidades'
+      },
+      education: {
+        en: 'Education',
+        'zh-TW': '教育',
+        'zh-CN': '教育',
+        es: 'Educacion'
+      },
+      educationBackground: {
+        en: 'Education background',
+        'zh-TW': '教育背景',
+        'zh-CN': '教育背景',
+        es: 'Formacion academica'
+      },
+      projects: {
+        en: 'Projects',
+        'zh-TW': '項目',
+        'zh-CN': '项目',
+        es: 'Proyectos'
+      },
+      awards: {
+        en: 'Awards',
+        'zh-TW': '獎項',
+        'zh-CN': '奖项',
+        es: 'Premios'
+      },
+      contact: {
+        en: 'Contact',
+        'zh-TW': '聯絡',
+        'zh-CN': '联络',
+        es: 'Contacto'
+      },
+      contactInfo: {
+        en: 'Contact info',
+        'zh-TW': '聯絡資訊',
+        'zh-CN': '联络信息',
+        es: 'Informacion de contacto'
+      },
+      experience: {
+        en: 'Experience',
+        'zh-TW': '經驗',
+        'zh-CN': '经验',
+        es: 'Experiencia'
+      },
+      bayManagementSystem: {
+        en: 'What is the Bay Management System?',
+        'zh-TW': '什麼是機位管理系統？',
+        'zh-CN': '什么是机位管理系统？',
+        es: 'Que es el Sistema de Gestion de Bahias'
+      },
+      awsWhen: {
+        en: 'When was the AWS Hackathon?',
+        'zh-TW': 'AWS黑客松是什麼時候？',
+        'zh-CN': 'AWS黑客松是什么时候？',
+        es: 'Cuando fue el AWS Hackathon'
+      },
+      awsTeams: {
+        en: 'How many teams were in the hackathon?',
+        'zh-TW': '黑客松有多少隊伍？',
+        'zh-CN': '黑客松有多少队伍？',
+        es: 'Cuantos equipos habia en el hackathon'
+      },
+      downloadCv: {
+        en: "Download Jason's CV",
+        'zh-TW': '下載Jason的履歷',
+        'zh-CN': '下载Jason的履历',
+        es: 'Descargar CV de Jason'
+      }
+    };
+  }
+
+  getSuggestionKey(text) {
+    const normalized = this.normalize(text);
+    const catalog = this.getSuggestionCatalog();
+
+    for (const [key, labels] of Object.entries(catalog)) {
+      for (const label of Object.values(labels)) {
+        if (this.normalize(label) === normalized) {
+          return key;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  translateSuggestion(text) {
+    const key = this.getSuggestionKey(text);
+    if (!key) return text;
+
+    const labels = this.getSuggestionCatalog()[key];
+    return labels[this.currentLang] || labels.en || text;
+  }
+
+  getPromptQueryCatalog() {
+    return {
+      tell_me_about_jason: {
+        en: 'Tell me about Jason',
+        'zh-TW': '告訴我關於Jason',
+        'zh-CN': '告诉我关于Jason',
+        es: 'Cuéntame sobre Jason'
+      },
+      what_awards_has_jason_won: {
+        en: 'What awards has Jason won?',
+        'zh-TW': 'Jason 獲得了哪些獎項？',
+        'zh-CN': 'Jason 获得了哪些奖项？',
+        es: '¿Qué premios ha ganado Jason?'
+      },
+      experience: {
+        en: 'Experience',
+        'zh-TW': '經驗',
+        'zh-CN': '经验',
+        es: 'Experiencia'
+      },
+      what_is_jasons_experience: {
+        en: "What is Jason's experience?",
+        'zh-TW': 'Jason 的經驗是什麼？',
+        'zh-CN': 'Jason 的经验是什么？',
+        es: '¿Cuál es la experiencia de Jason?'
+      },
+      projects: {
+        en: 'Projects',
+        'zh-TW': '項目',
+        'zh-CN': '项目',
+        es: 'Proyectos'
+      },
+      what_projects_should_i_look_at_first: {
+        en: 'What projects should I look at first?',
+        'zh-TW': '我應該先看哪些項目？',
+        'zh-CN': '我应该先看哪些项目？',
+        es: '¿Qué proyectos debería ver primero?'
+      },
+      education_background: {
+        en: 'Education background',
+        'zh-TW': '教育背景',
+        'zh-CN': '教育背景',
+        es: 'Formación académica'
+      },
+      what_is_jasons_education_background: {
+        en: "What is Jason's education background?",
+        'zh-TW': 'Jason 的教育背景是什麼？',
+        'zh-CN': 'Jason 的教育背景是什么？',
+        es: '¿Cuál es la formación académica de Jason?'
+      },
+      what_are_jasons_skills: {
+        en: "What are Jason's skills?",
+        'zh-TW': 'Jason 有哪些技能？',
+        'zh-CN': 'Jason 有哪些技能？',
+        es: '¿Cuáles son las habilidades de Jason?'
+      },
+      techathon_details: {
+        en: 'Techathon details',
+        'zh-TW': '創科馬拉松詳情',
+        'zh-CN': '创科马拉松详情',
+        es: 'Detalles del Techathon'
+      },
+      contact_info: {
+        en: 'Contact info',
+        'zh-TW': '聯絡資訊',
+        'zh-CN': '联络信息',
+        es: 'Información de contacto'
+      },
+      how_can_i_contact_jason: {
+        en: 'How can I contact Jason?',
+        'zh-TW': '我可以怎樣聯絡 Jason？',
+        'zh-CN': '我可以怎样联系 Jason？',
+        es: '¿Cómo puedo contactar a Jason?'
+      },
+      haeco_coop_experience: {
+        en: 'HAECO Co-op experience',
+        'zh-TW': 'HAECO Co-op 經驗',
+        'zh-CN': 'HAECO Co-op 经验',
+        es: 'Experiencia Co-op en HAECO'
+      },
+      haeco_coop_details: {
+        en: 'HAECO Co-op details',
+        'zh-TW': 'HAECO Co-op 詳情',
+        'zh-CN': 'HAECO Co-op 详情',
+        es: 'Detalles del Co-op en HAECO'
+      },
+      what_did_jason_do_at_haeco: {
+        en: 'What did Jason do at HAECO?',
+        'zh-TW': 'Jason 在港機做了什麼？',
+        'zh-CN': 'Jason 在港机做了什么？',
+        es: '¿Qué hizo Jason en HAECO?'
+      },
+      summarize_this_page: {
+        en: 'Summarize this page',
+        'zh-TW': '總結這一頁',
+        'zh-CN': '总结这一页',
+        es: 'Resume esta página'
+      },
+      summarize_this_section: {
+        en: 'Summarize this section',
+        'zh-TW': '總結這個部分',
+        'zh-CN': '总结这个部分',
+        es: 'Resume esta sección'
+      },
+      summarize_timeline_section: {
+        en: 'Summarize the timeline section',
+        'zh-TW': '總結時間線部分',
+        'zh-CN': '总结时间线部分',
+        es: 'Resume la sección de cronología'
+      },
+      tell_me_about_this_section: {
+        en: 'Tell me about this section',
+        'zh-TW': '告訴我這個部分的重點',
+        'zh-CN': '告诉我这个部分的重点',
+        es: 'Cuéntame sobre esta sección'
+      },
+      whats_the_story_behind_these_photos: {
+        en: "What's the story behind these photos?",
+        'zh-TW': '這些照片背後有什麼故事？',
+        'zh-CN': '这些照片背后有什么故事？',
+        es: '¿Cuál es la historia detrás de estas fotos?'
+      },
+      what_did_jason_learn_from_haeco: {
+        en: 'What did Jason learn from HAECO?',
+        'zh-TW': 'Jason 從 HAECO 學到了什麼？',
+        'zh-CN': 'Jason 从 HAECO 学到了什么？',
+        es: '¿Qué aprendió Jason en HAECO?'
+      },
+      aws_hackathon_details: {
+        en: 'AWS Hackathon details',
+        'zh-TW': 'AWS 黑客松詳情',
+        'zh-CN': 'AWS 黑客松详情',
+        es: 'Detalles del AWS Hackathon'
+      },
+      aws_hackathon_story: {
+        en: 'AWS Hackathon story',
+        'zh-TW': 'AWS 黑客松故事',
+        'zh-CN': 'AWS 黑客松故事',
+        es: 'Historia del AWS Hackathon'
+      },
+      why_did_hackathon_project_win: {
+        en: 'Why did the hackathon project win?',
+        'zh-TW': '為什麼這個黑客松項目會得獎？',
+        'zh-CN': '为什么这个黑客松项目会得奖？',
+        es: '¿Por qué ganó el proyecto del hackathon?'
+      },
+      what_is_bay_management_system: {
+        en: 'What is the Bay Management System?',
+        'zh-TW': '什麼是機位管理系統？',
+        'zh-CN': '什么是机位管理系统？',
+        es: '¿Qué es el Sistema de Gestión de Bahías?'
+      },
+      what_was_the_challenge: {
+        en: 'What was the challenge?',
+        'zh-TW': '當時的挑戰是什麼？',
+        'zh-CN': '当时的挑战是什么？',
+        es: '¿Cuál fue el desafío?'
+      },
+      who_made_demo_video: {
+        en: 'Who made the demo video?',
+        'zh-TW': '誰製作了示範影片？',
+        'zh-CN': '谁制作了示范视频？',
+        es: '¿Quién hizo el video demo?'
+      },
+      what_are_the_key_features: {
+        en: 'What are the key features?',
+        'zh-TW': '主要功能是什麼？',
+        'zh-CN': '主要功能是什么？',
+        es: '¿Cuáles son las funciones clave?'
+      },
+      what_impact_did_project_have: {
+        en: 'What impact did the project have?',
+        'zh-TW': '這個項目帶來了什麼影響？',
+        'zh-CN': '这个项目带来了什么影响？',
+        es: '¿Qué impacto tuvo el proyecto?'
+      },
+      tell_me_about_reinvent: {
+        en: 'Tell me about re:Invent',
+        'zh-TW': '告訴我關於 re:Invent',
+        'zh-CN': '告诉我关于 re:Invent',
+        es: 'Cuéntame sobre re:Invent'
+      },
+      download_jasons_cv: {
+        en: "Download Jason's CV",
+        'zh-TW': '下載Jason的履歷',
+        'zh-CN': '下载Jason的履历',
+        es: 'Descargar CV de Jason'
+      },
+      what_are_the_main_takeaways: {
+        en: 'What are the main takeaways?',
+        'zh-TW': '主要收穫是什麼？',
+        'zh-CN': '主要收获是什么？',
+        es: '¿Cuáles son los principales aprendizajes?'
+      }
+    };
+  }
+
+  localizePromptQuery(query) {
+    const normalized = this.normalize(query);
+    const catalog = this.getPromptQueryCatalog();
+
+    for (const labels of Object.values(catalog)) {
+      if (Object.values(labels).some((label) => this.normalize(label) === normalized)) {
+        return labels[this.currentLang] || labels.en || query;
+      }
+    }
+
+    return query;
+  }
+
+  updateDynamicSuggestionButtons() {
+    document.querySelectorAll('.suggest-btn').forEach((button) => {
+      const original = button.dataset.originalSuggestion || button.textContent.trim();
+      button.dataset.originalSuggestion = original;
+      const translated = this.translateSuggestion(original);
+      button.textContent = translated;
+      button.dataset.q = translated;
+    });
+  }
+
+  getLocaleCode() {
+    const locales = {
+      en: 'en-US',
+      'zh-TW': 'zh-HK',
+      'zh-CN': 'zh-CN',
+      es: 'es-ES'
+    };
+
+    return locales[this.currentLang] || locales.en;
+  }
+
+  getReplyCopy() {
+    const copy = {
+      en: {
+        calculatorTitle: 'Calculator',
+        coopDurationTitle: 'Co-op Duration',
+        coopDurationText: "Jason's HAECO Co-op lasted",
+        daysUntilTitle: 'Days Until',
+        daysSinceTitle: 'Days Since',
+        days: 'days',
+        daysAgo: 'days ago',
+        takeHackathon: 'Taking you to the AWS Hackathon page...',
+        takeCoop: 'Taking you to the HAECO Co-op page...',
+        takeHome: 'Taking you to the home page...',
+        goHome: 'Go to Home',
+        viewHackathonProject: 'View AWS Hackathon Project',
+        viewCoopExperience: 'View Co-op Experience',
+        learnMoreJason: 'Learn More About Jason',
+        viewHackathonDetails: 'View Full Project Details',
+        watchDemo: 'Watch Demo Video',
+        viewCoopTimeline: 'View 5-Month Timeline',
+        seeCoopMedia: 'See Photos & Videos',
+        viewFullCv: 'View Full CV',
+        viewEducationDetails: 'View Education Details',
+        viewProjects: 'View All Projects',
+        viewAchievements: 'View All Achievements',
+        sendEmail: 'Send Email',
+        viewGithub: 'View GitHub',
+        openResume: 'Open Jason Resume',
+        viewExperience: 'View Full Experience',
+        viewProjectSection: 'View Projects Section',
+        techathonText: "💡 **HAECO Techathon**\n\nJason helped organize HAECO's first Techathon during his Co-op in the Technology Innovation team.\n\n• Designed the event framework and planning flow\n• Prepared materials for multiple GM-level meetings\n• Supported innovation pitching and cross-team coordination\n\nIt was one of the key initiatives highlighted during his HAECO experience.",
+        leanDayText: "🎤 **HAECO Lean Day 2025**\n\nJason served as Master of Ceremony for HAECO Lean Day 2025.\n\n• Hosted the event and engaged with executives and attendees\n• Supported event flow and stage coordination\n• Added communication and presentation leadership to his Co-op experience",
+        bayManagementText: "⚡ **HAECO Bay Management System**\n\nThe Bay Management System was Jason's AWS Hackathon project.\n\n• An AI-based aircraft bay scheduling optimization platform\n• Built in 14 days during the competition\n• Designed to automate bay assignment, improve scheduling, and support real-time operational visibility",
+        hackathonScaleText: "🏆 **AWS Hackathon Scale**\n\nJason's team won the Grand Prize among **130+ shortlisted teams** in AWS AI Hackathon Hong Kong 2025.",
+        hackathonWhenText: "📅 **AWS AI Hackathon Hong Kong 2025**\n\nThe portfolio identifies this achievement as **AWS AI Hackathon Hong Kong 2025**.\n\nThe project itself was built in **14 days** for the competition.",
+        fypText: "🎯 **Jason's Final Year Project**\n\nJason's HKUST Final Year Project focuses on inventory control using efficient data-driven methods.\n\n• Research area: inventory optimization\n• Methods mentioned in the portfolio include JIT, Monte Carlo, AutoML, and multi-agent systems\n• It is positioned as a data and operations-focused academic project",
+        projectsText: "🚀 **Featured Projects**\n\n**1. HAECO Bay Management System** 🏆\n• Grand Prize Winner - AWS AI Hackathon\n• AI-based aircraft bay scheduling\n• Built in 14 days\n\n**2. Inventory Control Research**\n• HKUST Final Year Project\n• JIT, Monte Carlo, AutoML, Multi-Agent Systems\n\n**3. Christmas Effects Study**\n• Data Science project analyzing livestock pricing\n\n**4. YouTube Database System**\n• SQLite database design and implementation",
+        awardsText: "🏆 **Awards & Achievements**\n\n• **Grand Prize Winner** - AWS AI Hackathon Hong Kong 2025 (130+ teams)\n• **Master of Ceremony** - HAECO Lean Day 2025\n• **Lead Organizer** - HAECO Techathon 2026\n• **Academic Excellence Award** - HKU SPACE\n• **Principal's Honor List** - HKU SPACE\n• **Class Representative** - Data Science (80+ students)\n• **Certificate of Outstanding Achievement** - HAECO 2025",
+        githubText: "💻 **Jason's GitHub**\n\nGitHub: **github.com/Jasonauyeungaa**\n\nYou can use it to review Jason's coding work and project repositories.",
+        contactText: "📬 **Get in Touch with Jason**\n\nInterested in AI-driven solutions, operations optimization, or innovation projects?\n\n📧 **Email:** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub:** github.com/jasonauyeungaa",
+        cvText: "📄 **Jason's CV / Resume**\n\nFor formal and up-to-date professional details, Jason's CV is the most accurate source.\n\nYou can open the latest resume directly from the portfolio.",
+        experienceText: "💼 **Professional Experience**\n\n**1. HAECO Co-op Intern** (Sep 2025 - Jan 2026)\n• Technology Innovation department\n• AI-driven solutions for operations\n• Won AWS Hackathon Grand Prize\n\n**2. HKUST ITSO Internship** (Feb 2026 - Jun 2026)\n• IT support and asset management\n\n**3. Speedy Group IT Support** (Jul 2021 - Present)\n• Part-time IT operations\n• Digital media production",
+        defaultText: "I'm Jason's AI assistant.\n\nI can help you learn about:\n\n• **AWS Hackathon**\n• **HAECO Co-op**\n• **Skills**\n• **Education**\n• **Experience**\n• **Fun Facts**\n• **Contact**\n• **Time & Date**\n• **Chat Stats**"
+      },
+      'zh-TW': {
+        calculatorTitle: '計算結果',
+        coopDurationTitle: 'Co-op時長',
+        coopDurationText: 'Jason在港機的Co-op實習共歷時',
+        daysUntilTitle: '距離',
+        daysSinceTitle: '自從',
+        days: '天',
+        daysAgo: '天前',
+        takeHackathon: '帶你前往AWS黑客松頁面...',
+        takeCoop: '帶你前往港機Co-op頁面...',
+        takeHome: '帶你前往主頁...',
+        goHome: '前往主頁',
+        viewHackathonProject: '查看AWS黑客松項目',
+        viewCoopExperience: '查看Co-op經驗',
+        learnMoreJason: '了解更多Jason資訊',
+        viewHackathonDetails: '查看完整項目詳情',
+        watchDemo: '觀看示範影片',
+        viewCoopTimeline: '查看5個月時間線',
+        seeCoopMedia: '查看照片與影片',
+        viewFullCv: '查看完整履歷',
+        viewEducationDetails: '查看教育背景',
+        viewProjects: '查看所有項目',
+        viewAchievements: '查看所有成就',
+        sendEmail: '發送電郵',
+        viewGithub: '查看GitHub',
+        openResume: '打開Jason履歷',
+        viewExperience: '查看完整經驗',
+        viewProjectSection: '查看項目部分',
+        techathonText: "💡 **港機創科馬拉松**\n\nJason在港機科技創新團隊Co-op期間，協助籌辦港機首個Techathon。\n\n• 設計活動框架與規劃流程\n• 為多次GM級別會議準備材料\n• 支援創新提案與跨團隊協調\n\n這是他港機實習期間其中一個重點項目。",
+        leanDayText: "🎤 **港機精益日2025**\n\nJason於港機精益日2025擔任司儀。\n\n• 主持活動並與管理層及參加者互動\n• 支援活動流程與台上協調\n• 展現其溝通與簡報領導能力",
+        bayManagementText: "⚡ **港機機位管理系統**\n\n機位管理系統是Jason團隊在AWS黑客松中的得獎項目。\n\n• 基於人工智能的飛機機位調度優化平台\n• 於比賽中14天內完成\n• 用於自動分配機位、優化排程及提升即時營運可視性",
+        hackathonScaleText: "🏆 **AWS黑客松規模**\n\nJason團隊在2025 AWS AI黑客松香港賽事中，於**130+支入圍隊伍**中奪得總冠軍。",
+        hackathonWhenText: "📅 **AWS AI黑客松香港2025**\n\n作品集將這項成就標示為**AWS AI黑客松香港2025**。\n\n該項目在比賽中以**14天**完成。",
+        fypText: "🎯 **Jason的畢業專題**\n\nJason於HKUST的畢業專題聚焦於以高效數據驅動方法進行庫存控制。\n\n• 研究方向：庫存優化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系統\n• 屬於數據與營運導向的學術項目",
+        projectsText: "🚀 **精選項目**\n\n**1. 港機機位管理系統** 🏆\n• AWS黑客松總冠軍項目\n• 基於AI的機位調度方案\n• 14天內完成\n\n**2. 庫存控制研究**\n• HKUST畢業專題\n• JIT、Monte Carlo、AutoML、多代理系統\n\n**3. 聖誕效應研究**\n• 數據科學項目，分析牲畜價格\n\n**4. YouTube資料庫系統**\n• SQLite資料庫設計與實作",
+        awardsText: "🏆 **獎項與成就**\n\n• **總冠軍** - AWS AI黑客松香港2025（130+隊伍）\n• **司儀** - 港機精益日2025\n• **首席籌辦者** - 港機Techathon 2026\n• **學術卓越獎** - HKU SPACE\n• **校長榮譽錄** - HKU SPACE\n• **班代表** - 數據科學（80+名學生）\n• **傑出成就證書** - 港機2025",
+        githubText: "💻 **Jason的GitHub**\n\nGitHub：**github.com/Jasonauyeungaa**\n\n你可以在這裡查看Jason的程式作品與項目儲存庫。",
+        contactText: "📬 **聯絡Jason**\n\n如果你對AI驅動方案、營運優化或創新項目有興趣，可以透過以下方式聯絡。\n\n📧 **電郵：** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub：** github.com/jasonauyeungaa",
+        cvText: "📄 **Jason的履歷**\n\n如需正式及最新的專業資料，Jason的履歷是最準確來源。\n\n你可以直接從作品集打開最新版本。",
+        experienceText: "💼 **專業經驗**\n\n**1. 港機Co-op實習生**（2025年9月 - 2026年1月）\n• 科技創新部門\n• 以AI驅動營運方案\n• 贏得AWS黑客松總冠軍\n\n**2. HKUST ITSO實習**（2026年2月 - 2026年6月）\n• IT支援與資產管理\n\n**3. 環速集團IT支援**（2021年7月 - 現在）\n• 兼職IT營運\n• 數碼媒體製作",
+        defaultText: "我是Jason的AI助理。\n\n我可以幫你了解：\n\n• **AWS黑客松**\n• **港機Co-op**\n• **技能**\n• **教育背景**\n• **工作經驗**\n• **趣事**\n• **聯絡方式**\n• **時間與日期**\n• **聊天統計**"
+      },
+      'zh-CN': {
+        calculatorTitle: '计算结果',
+        coopDurationTitle: 'Co-op时长',
+        coopDurationText: 'Jason在港机的Co-op实习共历时',
+        daysUntilTitle: '距离',
+        daysSinceTitle: '自从',
+        days: '天',
+        daysAgo: '天前',
+        takeHackathon: '带你前往AWS黑客松页面...',
+        takeCoop: '带你前往港机Co-op页面...',
+        takeHome: '带你前往主页...',
+        goHome: '前往主页',
+        viewHackathonProject: '查看AWS黑客松项目',
+        viewCoopExperience: '查看Co-op经验',
+        learnMoreJason: '了解更多Jason信息',
+        viewHackathonDetails: '查看完整项目详情',
+        watchDemo: '观看演示视频',
+        viewCoopTimeline: '查看5个月时间线',
+        seeCoopMedia: '查看照片与视频',
+        viewFullCv: '查看完整履历',
+        viewEducationDetails: '查看教育背景',
+        viewProjects: '查看所有项目',
+        viewAchievements: '查看所有成就',
+        sendEmail: '发送电邮',
+        viewGithub: '查看GitHub',
+        openResume: '打开Jason履历',
+        viewExperience: '查看完整经验',
+        viewProjectSection: '查看项目部分',
+        techathonText: "💡 **港机创科马拉松**\n\nJason在港机科技创新团队Co-op期间，协助筹办港机首个Techathon。\n\n• 设计活动框架与规划流程\n• 为多次GM级别会议准备材料\n• 支持创新提案与跨团队协调\n\n这是他港机实习期间其中一个重点项目。",
+        leanDayText: "🎤 **港机精益日2025**\n\nJason于港机精益日2025担任司仪。\n\n• 主持活动并与管理层及参与者互动\n• 支持活动流程与台上协调\n• 展现其沟通与演讲领导能力",
+        bayManagementText: "⚡ **港机机位管理系统**\n\n机位管理系统是Jason团队在AWS黑客松中的获奖项目。\n\n• 基于人工智能的飞机机位调度优化平台\n• 在比赛中14天内完成\n• 用于自动分配机位、优化排程并提升实时运营可视性",
+        hackathonScaleText: "🏆 **AWS黑客松规模**\n\nJason团队在2025 AWS AI黑客松香港赛事中，于**130+支入围队伍**中夺得总冠军。",
+        hackathonWhenText: "📅 **AWS AI黑客松香港2025**\n\n作品集将这项成就标示为**AWS AI黑客松香港2025**。\n\n该项目在比赛中以**14天**完成。",
+        fypText: "🎯 **Jason的毕业专题**\n\nJason在HKUST的毕业专题聚焦于以高效数据驱动方法进行库存控制。\n\n• 研究方向：库存优化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系统\n• 属于数据与运营导向的学术项目",
+        projectsText: "🚀 **精选项目**\n\n**1. 港机机位管理系统** 🏆\n• AWS黑客松总冠军项目\n• 基于AI的机位调度方案\n• 14天内完成\n\n**2. 库存控制研究**\n• HKUST毕业专题\n• JIT、Monte Carlo、AutoML、多代理系统\n\n**3. 圣诞效应研究**\n• 数据科学项目，分析牲畜价格\n\n**4. YouTube数据库系统**\n• SQLite数据库设计与实现",
+        awardsText: "🏆 **奖项与成就**\n\n• **总冠军** - AWS AI黑客松香港2025（130+队伍）\n• **司仪** - 港机精益日2025\n• **首席筹办者** - 港机Techathon 2026\n• **学术卓越奖** - HKU SPACE\n• **校长荣誉录** - HKU SPACE\n• **班代表** - 数据科学（80+名学生）\n• **杰出成就证书** - 港机2025",
+        githubText: "💻 **Jason的GitHub**\n\nGitHub：**github.com/Jasonauyeungaa**\n\n你可以在这里查看Jason的编程作品与项目仓库。",
+        contactText: "📬 **联系Jason**\n\n如果你对AI驱动方案、运营优化或创新项目有兴趣，可以通过以下方式联系。\n\n📧 **电邮：** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub：** github.com/jasonauyeungaa",
+        cvText: "📄 **Jason的履历**\n\n如需正式及最新的专业资料，Jason的履历是最准确来源。\n\n你可以直接从作品集打开最新版本。",
+        experienceText: "💼 **专业经验**\n\n**1. 港机Co-op实习生**（2025年9月 - 2026年1月）\n• 科技创新部门\n• 以AI驱动运营方案\n• 赢得AWS黑客松总冠军\n\n**2. HKUST ITSO实习**（2026年2月 - 2026年6月）\n• IT支持与资产管理\n\n**3. 环速集团IT支持**（2021年7月 - 现在）\n• 兼职IT运营\n• 数码媒体制作",
+        defaultText: "我是Jason的AI助理。\n\n我可以帮你了解：\n\n• **AWS黑客松**\n• **港机Co-op**\n• **技能**\n• **教育背景**\n• **工作经验**\n• **趣事**\n• **联系方式**\n• **时间与日期**\n• **聊天统计**"
+      },
+      es: {
+        calculatorTitle: 'Calculadora',
+        coopDurationTitle: 'Duracion del Co-op',
+        coopDurationText: 'El Co-op de Jason en HAECO duro',
+        daysUntilTitle: 'Dias hasta',
+        daysSinceTitle: 'Dias desde',
+        days: 'dias',
+        daysAgo: 'dias atras',
+        takeHackathon: 'Te llevo a la pagina del AWS Hackathon...',
+        takeCoop: 'Te llevo a la pagina del Co-op en HAECO...',
+        takeHome: 'Te llevo a la pagina principal...',
+        goHome: 'Ir al inicio',
+        viewHackathonProject: 'Ver proyecto del AWS Hackathon',
+        viewCoopExperience: 'Ver experiencia Co-op',
+        learnMoreJason: 'Conocer mas sobre Jason',
+        viewHackathonDetails: 'Ver detalles completos del proyecto',
+        watchDemo: 'Ver video demo',
+        viewCoopTimeline: 'Ver cronologia de 5 meses',
+        seeCoopMedia: 'Ver fotos y videos',
+        viewFullCv: 'Ver CV completo',
+        viewEducationDetails: 'Ver educacion',
+        viewProjects: 'Ver todos los proyectos',
+        viewAchievements: 'Ver todos los logros',
+        sendEmail: 'Enviar correo',
+        viewGithub: 'Ver GitHub',
+        openResume: 'Abrir CV de Jason',
+        viewExperience: 'Ver experiencia completa',
+        viewProjectSection: 'Ver seccion de proyectos',
+        techathonText: "💡 **Techathon de HAECO**\n\nJason ayudo a organizar el primer Techathon de HAECO durante su Co-op en el equipo de Innovacion Tecnologica.\n\n• Diseno el marco del evento y el flujo de planificacion\n• Preparo materiales para varias reuniones de nivel GM\n• Apoyo propuestas de innovacion y coordinacion entre equipos\n\nFue una de las iniciativas clave de su experiencia en HAECO.",
+        leanDayText: "🎤 **HAECO Lean Day 2025**\n\nJason fue maestro de ceremonias en HAECO Lean Day 2025.\n\n• Condujo el evento e interactuo con ejecutivos y asistentes\n• Apoyo el flujo del evento y la coordinacion en escenario\n• Aporto liderazgo en comunicacion y presentacion a su experiencia Co-op",
+        bayManagementText: "⚡ **Sistema de Gestion de Bahias de HAECO**\n\nEl Sistema de Gestion de Bahias fue el proyecto de Jason en el AWS Hackathon.\n\n• Plataforma de optimizacion de asignacion de bahias para aeronaves basada en IA\n• Desarrollada en 14 dias durante la competencia\n• Diseñada para automatizar asignaciones, mejorar la planificacion y ofrecer visibilidad operativa en tiempo real",
+        hackathonScaleText: "🏆 **Escala del AWS Hackathon**\n\nEl equipo de Jason gano el Gran Premio entre **130+ equipos preseleccionados** en AWS AI Hackathon Hong Kong 2025.",
+        hackathonWhenText: "📅 **AWS AI Hackathon Hong Kong 2025**\n\nEl portafolio identifica este logro como **AWS AI Hackathon Hong Kong 2025**.\n\nEl proyecto se construyo en **14 dias** para la competencia.",
+        fypText: "🎯 **Proyecto Final de Jason**\n\nEl Proyecto Final de Jason en HKUST se centra en control de inventario con metodos eficientes basados en datos.\n\n• Area de investigacion: optimizacion de inventario\n• El portafolio menciona JIT, Monte Carlo, AutoML y sistemas multiagente\n• Es un proyecto academico orientado a datos y operaciones",
+        projectsText: "🚀 **Proyectos destacados**\n\n**1. Sistema de Gestion de Bahias de HAECO** 🏆\n• Proyecto ganador del AWS Hackathon\n• Solucion de asignacion de bahias basada en IA\n• Desarrollado en 14 dias\n\n**2. Investigacion de control de inventario**\n• Proyecto final de HKUST\n• JIT, Monte Carlo, AutoML y sistemas multiagente\n\n**3. Estudio de efectos navidenos**\n• Proyecto de ciencia de datos sobre precios de ganado\n\n**4. Sistema de base de datos de YouTube**\n• Diseno e implementacion con SQLite",
+        awardsText: "🏆 **Premios y logros**\n\n• **Gran Premio** - AWS AI Hackathon Hong Kong 2025 (130+ equipos)\n• **Maestro de ceremonias** - HAECO Lean Day 2025\n• **Organizador principal** - HAECO Techathon 2026\n• **Premio a la excelencia academica** - HKU SPACE\n• **Lista de honor del director** - HKU SPACE\n• **Representante de clase** - Ciencia de Datos (80+ estudiantes)\n• **Certificado de logro destacado** - HAECO 2025",
+        githubText: "💻 **GitHub de Jason**\n\nGitHub: **github.com/Jasonauyeungaa**\n\nPuedes usarlo para revisar el trabajo tecnico y los repositorios de Jason.",
+        contactText: "📬 **Contactar a Jason**\n\nSi te interesan soluciones impulsadas por IA, optimizacion operativa o proyectos de innovacion, puedes contactarlo aqui.\n\n📧 **Correo:** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub:** github.com/jasonauyeungaa",
+        cvText: "📄 **CV de Jason**\n\nPara detalles formales y actualizados, el CV de Jason es la fuente mas precisa.\n\nPuedes abrir la version mas reciente directamente desde el portafolio.",
+        experienceText: "💼 **Experiencia profesional**\n\n**1. Co-op en HAECO** (Sep 2025 - Ene 2026)\n• Departamento de Innovacion Tecnologica\n• Soluciones operativas impulsadas por IA\n• Ganador del Gran Premio del AWS Hackathon\n\n**2. Practica en HKUST ITSO** (Feb 2026 - Jun 2026)\n• Soporte TI y gestion de activos\n\n**3. Soporte TI en Speedy Group** (Jul 2021 - Actualidad)\n• Operaciones TI a tiempo parcial\n• Produccion de medios digitales",
+        defaultText: "Soy el asistente de IA de Jason.\n\nPuedo ayudarte a conocer:\n\n• **AWS Hackathon**\n• **Co-op en HAECO**\n• **Habilidades**\n• **Educacion**\n• **Experiencia**\n• **Datos curiosos**\n• **Contacto**\n• **Hora y fecha**\n• **Estadisticas del chat**"
+      }
+    };
+
+    return copy[this.currentLang] || copy.en;
   }
   
   t(key) {
@@ -263,9 +874,11 @@ class JasonAssistant {
         fullPortfolio: 'View Full Portfolio',
         askAnything: 'Ask me anything!',
         // Chat UI
-        chatTitle: 'Jason AI Assistant',
+        chatTitle: 'Jason Bot',
         chatStatus: 'Online • Ready to help',
-        suggestedQuestions: 'Suggested Questions:',
+        chatKicker: 'Portfolio Intelligence',
+        chatBlurb: "Grounded in Jason's portfolio content.",
+        suggestedQuestions: 'Suggested prompts',
         suggestionAbout: 'Tell me about Jason',
         suggestionHackathon: 'AWS Hackathon',
         suggestionHaeco: 'HAECO experience',
@@ -273,6 +886,7 @@ class JasonAssistant {
         suggestionTime: 'What time?',
         suggestionChatTime: 'Chat time',
         inputPlaceholder: 'Ask me anything about Jason...',
+        inputNote: "Jason's CV is the most accurate source for formal details.",
         // Suggestion queries (what gets sent when clicked)
         queryAbout: 'Tell me about Jason',
         queryHackathon: 'What is the AWS Hackathon project?',
@@ -384,9 +998,11 @@ class JasonAssistant {
         fullPortfolio: '查看完整作品集',
         askAnything: '問我任何問題！',
         // Chat UI
-        chatTitle: 'Jason AI助理',
+        chatTitle: 'Jason Bot',
         chatStatus: '在線 • 準備協助',
-        suggestedQuestions: '建議問題：',
+        chatKicker: '作品集智能助理',
+        chatBlurb: '答案基於Jason網站內容。',
+        suggestedQuestions: '建議提示',
         suggestionAbout: '告訴我關於Jason',
         suggestionHackathon: 'AWS黑客松',
         suggestionHaeco: '港機經驗',
@@ -394,6 +1010,7 @@ class JasonAssistant {
         suggestionTime: '現在幾點？',
         suggestionChatTime: '聊天時間',
         inputPlaceholder: '問我任何關於Jason的問題...',
+        inputNote: '正式資料以Jason的履歷為最準確來源。',
         // Suggestion queries
         queryAbout: '告訴我關於Jason',
         queryHackathon: 'AWS黑客松項目是什麼？',
@@ -505,9 +1122,11 @@ class JasonAssistant {
         fullPortfolio: '查看完整作品集',
         askAnything: '问我任何问题！',
         // Chat UI
-        chatTitle: 'Jason AI助理',
+        chatTitle: 'Jason Bot',
         chatStatus: '在线 • 准备协助',
-        suggestedQuestions: '建议问题：',
+        chatKicker: '作品集智能助理',
+        chatBlurb: '回答基于Jason网站内容。',
+        suggestedQuestions: '建议提示',
         suggestionAbout: '告诉我关于Jason',
         suggestionHackathon: 'AWS黑客松',
         suggestionHaeco: '港机经验',
@@ -515,6 +1134,7 @@ class JasonAssistant {
         suggestionTime: '现在几点？',
         suggestionChatTime: '聊天时间',
         inputPlaceholder: '问我任何关于Jason的问题...',
+        inputNote: '正式资料以Jason的履历为最准确来源。',
         // Suggestion queries
         queryAbout: '告诉我关于Jason',
         queryHackathon: 'AWS黑客松项目是什么？',
@@ -626,9 +1246,11 @@ class JasonAssistant {
         fullPortfolio: 'Ver Portafolio Completo',
         askAnything: '¡Pregúntame lo que quieras!',
         // Chat UI
-        chatTitle: 'Asistente IA de Jason',
+        chatTitle: 'Jason Bot',
         chatStatus: 'En línea • Listo para ayudar',
-        suggestedQuestions: 'Preguntas Sugeridas:',
+        chatKicker: 'Inteligencia del portafolio',
+        chatBlurb: 'Respuestas basadas en el sitio de Jason.',
+        suggestedQuestions: 'Sugerencias',
         suggestionAbout: 'Cuéntame sobre Jason',
         suggestionHackathon: 'AWS Hackathon',
         suggestionHaeco: 'Experiencia HAECO',
@@ -636,6 +1258,7 @@ class JasonAssistant {
         suggestionTime: '¿Qué hora es?',
         suggestionChatTime: 'Tiempo de chat',
         inputPlaceholder: 'Pregúntame sobre Jason...',
+        inputNote: 'El CV de Jason es la fuente más precisa para datos formales.',
         // Suggestion queries
         queryAbout: 'Cuéntame sobre Jason',
         queryHackathon: '¿Cuál es el proyecto del AWS Hackathon?',
@@ -718,8 +1341,24 @@ class JasonAssistant {
       const now = new Date();
       
       if (query.includes('coop') || query.includes('co-op') || query.includes('internship')) {
+        const detailByLang = {
+          en: 'September 2025 to January 2026',
+          'zh-TW': '2025年9月至2026年1月',
+          'zh-CN': '2025年9月至2026年1月',
+          es: 'de septiembre de 2025 a enero de 2026'
+        };
+        const valueByLang = {
+          en: '5 months',
+          'zh-TW': '5個月',
+          'zh-CN': '5个月',
+          es: '5 meses'
+        };
         const months = Math.floor((coopEnd - coopStart) / (1000 * 60 * 60 * 24 * 30));
-        return { type: 'coop_duration', value: '5 months', detail: 'September 2025 to January 2026' };
+        return {
+          type: 'coop_duration',
+          value: valueByLang[this.currentLang] || valueByLang.en,
+          detail: detailByLang[this.currentLang] || detailByLang.en
+        };
       }
     }
     
@@ -740,7 +1379,12 @@ class JasonAssistant {
   }
   
   normalize(text) {
-    return text.toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    return text
+      .toLowerCase()
+      .normalize('NFKC')
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
   
   tokenize(text) {
@@ -845,7 +1489,8 @@ class JasonAssistant {
   pickVariant(intent, variants) {
     const lastPick = this.lastIntentPicks[intent] || -1;
     const available = variants.filter((_, i) => i !== lastPick);
-    const chosen = available[Math.floor(Math.random() * available.length)];
+    const pool = available.length ? available : variants;
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
     this.lastIntentPicks[intent] = variants.indexOf(chosen);
     return chosen;
   }
@@ -866,7 +1511,14 @@ class JasonAssistant {
     const diff = Math.floor((now - this.conversationStart) / 1000);
     const mins = Math.floor(diff / 60);
     const secs = diff % 60;
-    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+    const units = {
+      en: { min: 'm', sec: 's' },
+      'zh-TW': { min: '分', sec: '秒' },
+      'zh-CN': { min: '分', sec: '秒' },
+      es: { min: 'min', sec: 's' }
+    };
+    const unit = units[this.currentLang] || units.en;
+    return mins > 0 ? `${mins}${unit.min} ${secs}${unit.sec}` : `${secs}${unit.sec}`;
   }
   
   getRandomFunFact() {
@@ -930,67 +1582,926 @@ class JasonAssistant {
     };
     
     const facts = funFacts[this.currentLang] || funFacts.en;
-    return facts[Math.floor(Math.random() * facts.length)];
+    return this.pickVariant(`fun_fact_${this.currentLang}`, facts);
+  }
+
+  buildFunFactResponse() {
+    const reply = this.getReplyCopy();
+    return {
+      text: `🎉 **${this.t('funFact')}**\n\n${this.getRandomFunFact()}\n\n${this.t('anotherFact')}`,
+      actions: [{ text: `🏆 ${reply.learnMoreJason}`, link: 'index.html' }],
+      suggestions: ['Another fun fact', 'AWS Hackathon story', 'What time is it?', 'Chat stats']
+    };
+  }
+
+  getClarificationCopy() {
+    const copy = {
+      en: {
+        title: "I'm not fully sure what you mean yet.",
+        body: "Did you want Jason's HAECO work, the hackathon project, skills, education, awards, contact details, or a summary of this page or section?"
+      },
+      'zh-TW': {
+        title: '我未完全確定你想問哪一部分。',
+        body: '你是想問 Jason 在港機的工作、黑客松項目、技能、教育、獎項、聯絡方式，還是目前頁面或這個部分的摘要？'
+      },
+      'zh-CN': {
+        title: '我还不太确定你想问哪一部分。',
+        body: '你是想问 Jason 在港机的工作、黑客松项目、技能、教育、奖项、联系方式，还是当前页面或这个部分的摘要？'
+      },
+      es: {
+        title: 'Todavia no estoy totalmente seguro de lo que quieres decir.',
+        body: 'Quieres preguntar por el trabajo de Jason en HAECO, el proyecto del hackathon, habilidades, educacion, premios, contacto o un resumen de esta pagina o seccion?'
+      }
+    };
+
+    return copy[this.currentLang] || copy.en;
+  }
+
+  buildClarificationResponse() {
+    const copy = this.getClarificationCopy();
+    return {
+      text: `🤔 **${copy.title}**\n\n${copy.body}`,
+      actions: [],
+      suggestions: ['Tell me about Jason', 'What did Jason do at HAECO?', 'What is the Bay Management System?', 'Summarize this page']
+    };
+  }
+
+  getLoopCopy() {
+    const copy = {
+      en: {
+        title: "I'm still not fully sure which direction you want.",
+        variants: [
+          'Try one of these clearer prompts:',
+          'These options should help me answer more precisely:',
+          'Pick one of these and I can respond more directly:'
+        ],
+      },
+      'zh-TW': {
+        title: '我仲未完全確定你想問邊個方向。',
+        variants: [
+          '你可以試下用以下其中一個問法：',
+          '以下幾個問題會令我更容易答得準確：',
+          '揀其中一個方向，我可以答得更直接：'
+        ],
+      },
+      'zh-CN': {
+        title: '我还不太确定你想问哪个方向。',
+        variants: [
+          '你可以试试下面其中一种问法：',
+          '下面这些问题会让我更容易答准确：',
+          '选一个方向，我可以回答得更直接：'
+        ],
+      },
+      es: {
+        title: 'Todavia no tengo claro que direccion quieres tomar.',
+        variants: [
+          'Prueba una de estas preguntas mas claras:',
+          'Estas opciones me ayudaran a responder con mas precision:',
+          'Elige una de estas y te respondo de forma mas directa:'
+        ],
+      }
+    };
+
+    return copy[this.currentLang] || copy.en;
+  }
+
+  isFunFactRequest(message = '') {
+    const normalized = this.normalize(message);
+    const suggestionKey = this.getSuggestionKey(message);
+
+    if (suggestionKey === 'funFact' || suggestionKey === 'tellFunFact' || suggestionKey === 'anotherFunFact') {
+      return true;
+    }
+
+    return /(fun fact|another fun fact|tell me a fun fact|趣事|有趣的事|有趣的事情|dato curioso|dato interesante)/.test(normalized);
   }
   
   handleLoop(intent, snippets) {
-    const variants = [
-      `I notice you're asking about ${intent} again! 😊 Let me offer a different angle.`,
-      `Testing my variety? 🎯 Here's another perspective on ${intent}!`,
-      `You seem interested in ${intent}! Let me share something new.`
-    ];
+    const copy = this.getLoopCopy();
+    const examples = [
+      'Techathon details',
+      "What are Jason's skills?",
+      "Download Jason's CV"
+    ].map((query) => `• ${this.localizePromptQuery(query)}`).join('\n');
+
     return {
-      text: this.pickVariant('loop', variants) + '\n\nTry: "Tell me about Techathon" or "What are Jason\'s skills?" or "Download CV"',
+      text: `🤔 **${copy.title}**\n\n${this.pickVariant(`loop_${this.currentLang}`, copy.variants)}\n\n${examples}`,
       actions: [],
       suggestions: ['Techathon details', 'Skills overview', 'Education background', 'Fun fact']
     };
   }
 
+  getSectionPromptMap() {
+    const catalog = {
+      home: {
+        home: {
+          label: {
+            en: 'About Jason',
+            'zh-TW': '關於 Jason',
+            'zh-CN': '关于 Jason',
+            es: 'Sobre Jason'
+          },
+          question: {
+            en: 'Want a quick introduction to Jason and this portfolio?',
+            'zh-TW': '想快速了解 Jason 和這個作品集嗎？',
+            'zh-CN': '想快速了解 Jason 和这个作品集吗？',
+            es: '¿Quieres una introducción rápida a Jason y este portafolio?'
+          },
+          query: {
+            en: 'Tell me about Jason',
+            'zh-TW': '告訴我關於Jason',
+            'zh-CN': '告诉我关于Jason',
+            es: 'Cuéntame sobre Jason'
+          }
+        },
+        awards: {
+          label: {
+            en: 'Awards',
+            'zh-TW': '獎項',
+            'zh-CN': '奖项',
+            es: 'Premios'
+          },
+          question: {
+            en: 'Want the short version of Jason’s main awards and recognitions?',
+            'zh-TW': '想看 Jason 主要獎項與認可的精簡版嗎？',
+            'zh-CN': '想看 Jason 主要奖项与认可的精简版吗？',
+            es: '¿Quieres la versión corta de los premios y reconocimientos principales de Jason?'
+          },
+          query: {
+            en: 'What awards has Jason won?',
+            'zh-TW': 'Awards',
+            'zh-CN': 'Awards',
+            es: 'Awards'
+          }
+        },
+        experience: {
+          label: {
+            en: 'Experience',
+            'zh-TW': '經驗',
+            'zh-CN': '经验',
+            es: 'Experiencia'
+          },
+          question: {
+            en: 'Want a summary of Jason’s work experience so far?',
+            'zh-TW': '想看 Jason 目前工作經驗的摘要嗎？',
+            'zh-CN': '想看 Jason 目前工作经验的摘要吗？',
+            es: '¿Quieres un resumen de la experiencia profesional de Jason?'
+          },
+          query: {
+            en: 'Experience',
+            'zh-TW': 'Experience',
+            'zh-CN': 'Experience',
+            es: 'Experience'
+          }
+        },
+        projects: {
+          label: {
+            en: 'Projects',
+            'zh-TW': '項目',
+            'zh-CN': '项目',
+            es: 'Proyectos'
+          },
+          question: {
+            en: 'Want help choosing which project to open first?',
+            'zh-TW': '想讓我幫你判斷先看哪個項目嗎？',
+            'zh-CN': '想让我帮你判断先看哪个项目吗？',
+            es: '¿Quieres ayuda para decidir qué proyecto abrir primero?'
+          },
+          query: {
+            en: 'Projects',
+            'zh-TW': 'Projects',
+            'zh-CN': 'Projects',
+            es: 'Projects'
+          }
+        },
+        education: {
+          label: {
+            en: 'Education',
+            'zh-TW': '教育',
+            'zh-CN': '教育',
+            es: 'Educación'
+          },
+          question: {
+            en: 'Want the short academic background summary?',
+            'zh-TW': '想看精簡版的學歷背景嗎？',
+            'zh-CN': '想看精简版的学历背景吗？',
+            es: '¿Quieres el resumen corto de su formación académica?'
+          },
+          query: {
+            en: 'Education background',
+            'zh-TW': 'Education background',
+            'zh-CN': 'Education background',
+            es: 'Education background'
+          }
+        },
+        skills: {
+          label: {
+            en: 'Skills',
+            'zh-TW': '技能',
+            'zh-CN': '技能',
+            es: 'Habilidades'
+          },
+          question: {
+            en: 'Want a focused breakdown of Jason’s skills?',
+            'zh-TW': '想看 Jason 技能的重點整理嗎？',
+            'zh-CN': '想看 Jason 技能的重点整理吗？',
+            es: '¿Quieres un desglose enfocado de las habilidades de Jason?'
+          },
+          query: {
+            en: 'What are Jason’s skills?',
+            'zh-TW': 'Jason 有哪些技能？',
+            'zh-CN': 'Jason 有哪些技能？',
+            es: '¿Cuáles son las habilidades de Jason?'
+          }
+        },
+        contact: {
+          label: {
+            en: 'Contact',
+            'zh-TW': '聯絡',
+            'zh-CN': '联络',
+            es: 'Contacto'
+          },
+          question: {
+            en: 'Want the fastest way to contact Jason?',
+            'zh-TW': '想知道最快聯絡 Jason 的方式嗎？',
+            'zh-CN': '想知道最快联系 Jason 的方式吗？',
+            es: '¿Quieres la forma más rápida de contactar a Jason?'
+          },
+          query: {
+            en: 'Contact info',
+            'zh-TW': 'Contact info',
+            'zh-CN': 'Contact info',
+            es: 'Contact info'
+          }
+        }
+      },
+      coop: {
+        overview: {
+          label: {
+            en: 'Co-op overview',
+            'zh-TW': 'Co-op 概覽',
+            'zh-CN': 'Co-op 概览',
+            es: 'Resumen del Co-op'
+          },
+          question: {
+            en: 'Want the 30-second summary of Jason’s HAECO internship?',
+            'zh-TW': '想看 Jason 在 HAECO 實習的 30 秒摘要嗎？',
+            'zh-CN': '想看 Jason 在 HAECO 实习的 30 秒摘要吗？',
+            es: '¿Quieres el resumen de 30 segundos de la pasantía de Jason en HAECO?'
+          },
+          query: {
+            en: 'HAECO Co-op experience',
+            'zh-TW': 'HAECO Co-op experience',
+            'zh-CN': 'HAECO Co-op experience',
+            es: 'HAECO Co-op experience'
+          }
+        },
+        highlights: {
+          label: {
+            en: 'Key highlights',
+            'zh-TW': '重點亮點',
+            'zh-CN': '重点亮点',
+            es: 'Aspectos destacados'
+          },
+          question: {
+            en: 'Want me to explain the biggest Co-op highlights?',
+            'zh-TW': '想讓我解釋這段 Co-op 的主要亮點嗎？',
+            'zh-CN': '想让我解释这段 Co-op 的主要亮点吗？',
+            es: '¿Quieres que explique los aspectos destacados más importantes del Co-op?'
+          },
+          query: {
+            en: 'HAECO Co-op details',
+            'zh-TW': 'HAECO Co-op details',
+            'zh-CN': 'HAECO Co-op details',
+            es: 'HAECO Co-op details'
+          }
+        },
+        timeline: {
+          label: {
+            en: 'Timeline',
+            'zh-TW': '時間線',
+            'zh-CN': '时间线',
+            es: 'Cronología'
+          },
+          question: {
+            en: 'Want a quick walkthrough of the 5-month internship timeline?',
+            'zh-TW': '想快速看完這 5 個月實習的時間線嗎？',
+            'zh-CN': '想快速看完这 5 个月实习的时间线吗？',
+            es: '¿Quieres un recorrido rápido por la cronología de 5 meses de la pasantía?'
+          },
+          query: {
+            en: 'HAECO Co-op details',
+            'zh-TW': 'HAECO Co-op details',
+            'zh-CN': 'HAECO Co-op details',
+            es: 'HAECO Co-op details'
+          }
+        },
+        gallery: {
+          label: {
+            en: 'Gallery',
+            'zh-TW': '圖庫',
+            'zh-CN': '图库',
+            es: 'Galería'
+          },
+          question: {
+            en: 'These photos cover hackathon, Lean Day, Techathon and re:Invent. Want the story behind them?',
+            'zh-TW': '這些照片涵蓋黑客松、Lean Day、Techathon 和 re:Invent。想知道背後故事嗎？',
+            'zh-CN': '这些照片涵盖黑客松、Lean Day、Techathon 和 re:Invent。想知道背后故事吗？',
+            es: 'Estas fotos incluyen hackathon, Lean Day, Techathon y re:Invent. ¿Quieres conocer la historia detrás?'
+          },
+          query: {
+            en: 'HAECO Co-op experience',
+            'zh-TW': 'HAECO Co-op experience',
+            'zh-CN': 'HAECO Co-op experience',
+            es: 'HAECO Co-op experience'
+          }
+        },
+        learnings: {
+          label: {
+            en: 'Takeaways',
+            'zh-TW': '收穫',
+            'zh-CN': '收获',
+            es: 'Aprendizajes'
+          },
+          question: {
+            en: 'Want the key takeaways from the internship?',
+            'zh-TW': '想看這段實習的核心收穫嗎？',
+            'zh-CN': '想看这段实习的核心收获吗？',
+            es: '¿Quieres los aprendizajes clave de la pasantía?'
+          },
+          query: {
+            en: 'HAECO Co-op details',
+            'zh-TW': 'HAECO Co-op details',
+            'zh-CN': 'HAECO Co-op details',
+            es: 'HAECO Co-op details'
+          }
+        }
+      },
+      hackathon: {
+        award: {
+          label: {
+            en: 'Award',
+            'zh-TW': '獎項',
+            'zh-CN': '奖项',
+            es: 'Premio'
+          },
+          question: {
+            en: 'Want the quick version of why this project won Grand Prize?',
+            'zh-TW': '想看這個項目如何贏得總冠軍的精簡版嗎？',
+            'zh-CN': '想看这个项目如何赢得总冠军的精简版吗？',
+            es: '¿Quieres la versión corta de por qué este proyecto ganó el Gran Premio?'
+          },
+          query: {
+            en: 'AWS Hackathon details',
+            'zh-TW': 'AWS Hackathon details',
+            'zh-CN': 'AWS Hackathon details',
+            es: 'AWS Hackathon details'
+          }
+        },
+        challenge: {
+          label: {
+            en: 'Challenge',
+            'zh-TW': '挑戰',
+            'zh-CN': '挑战',
+            es: 'Desafío'
+          },
+          question: {
+            en: 'Want a plain-language explanation of the bay assignment problem?',
+            'zh-TW': '想看白話版的機位分配問題說明嗎？',
+            'zh-CN': '想看白话版的机位分配问题说明吗？',
+            es: '¿Quieres una explicación sencilla del problema de asignación de bahías?'
+          },
+          query: {
+            en: 'What is the Bay Management System?',
+            'zh-TW': 'What is the Bay Management System?',
+            'zh-CN': 'What is the Bay Management System?',
+            es: 'What is the Bay Management System?'
+          }
+        },
+        solution: {
+          label: {
+            en: 'Solution',
+            'zh-TW': '方案',
+            'zh-CN': '方案',
+            es: 'Solución'
+          },
+          question: {
+            en: 'Want the short explanation of how the solution works?',
+            'zh-TW': '想看這套方案如何運作的簡短說明嗎？',
+            'zh-CN': '想看这套方案如何运作的简短说明吗？',
+            es: '¿Quieres una explicación corta de cómo funciona la solución?'
+          },
+          query: {
+            en: 'What is the Bay Management System?',
+            'zh-TW': 'What is the Bay Management System?',
+            'zh-CN': 'What is the Bay Management System?',
+            es: 'What is the Bay Management System?'
+          }
+        },
+        demo: {
+          label: {
+            en: 'Demo',
+            'zh-TW': '演示',
+            'zh-CN': '演示',
+            es: 'Demo'
+          },
+          question: {
+            en: 'Want context before watching the demo video?',
+            'zh-TW': '想在看示範影片前先了解重點嗎？',
+            'zh-CN': '想在看示范影片前先了解重点吗？',
+            es: '¿Quieres contexto antes de ver el video demo?'
+          },
+          query: {
+            en: 'AWS Hackathon story',
+            'zh-TW': 'AWS Hackathon story',
+            'zh-CN': 'AWS Hackathon story',
+            es: 'AWS Hackathon story'
+          }
+        },
+        gallery: {
+          label: {
+            en: 'Gallery',
+            'zh-TW': '圖庫',
+            'zh-CN': '图库',
+            es: 'Galería'
+          },
+          question: {
+            en: 'Want the story behind these hackathon photos?',
+            'zh-TW': '想知道這些黑客松照片背後的故事嗎？',
+            'zh-CN': '想知道这些黑客松照片背后的故事吗？',
+            es: '¿Quieres conocer la historia detrás de estas fotos del hackathon?'
+          },
+          query: {
+            en: 'AWS Hackathon story',
+            'zh-TW': 'AWS Hackathon story',
+            'zh-CN': 'AWS Hackathon story',
+            es: 'AWS Hackathon story'
+          }
+        },
+        features: {
+          label: {
+            en: 'Features',
+            'zh-TW': '功能',
+            'zh-CN': '功能',
+            es: 'Funciones'
+          },
+          question: {
+            en: 'Want me to point out the most important product features?',
+            'zh-TW': '想讓我指出最重要的產品功能嗎？',
+            'zh-CN': '想让我指出最重要的产品功能吗？',
+            es: '¿Quieres que destaque las funciones más importantes del producto?'
+          },
+          query: {
+            en: 'What is the Bay Management System?',
+            'zh-TW': 'What is the Bay Management System?',
+            'zh-CN': 'What is the Bay Management System?',
+            es: 'What is the Bay Management System?'
+          }
+        },
+        media: {
+          label: {
+            en: 'Impact',
+            'zh-TW': '影響',
+            'zh-CN': '影响',
+            es: 'Impacto'
+          },
+          question: {
+            en: 'Want the short version of the media coverage and impact?',
+            'zh-TW': '想看媒體報導和影響力的精簡版嗎？',
+            'zh-CN': '想看媒体报道和影响力的精简版吗？',
+            es: '¿Quieres la versión corta de la cobertura mediática y el impacto?'
+          },
+          query: {
+            en: 'AWS Hackathon details',
+            'zh-TW': 'AWS Hackathon details',
+            'zh-CN': 'AWS Hackathon details',
+            es: 'AWS Hackathon details'
+          }
+        },
+        links: {
+          label: {
+            en: 'Links',
+            'zh-TW': '連結',
+            'zh-CN': '链接',
+            es: 'Enlaces'
+          },
+          question: {
+            en: 'Need help deciding which external link to open?',
+            'zh-TW': '需要我幫你判斷先開哪個外部連結嗎？',
+            'zh-CN': '需要我帮你判断先开哪个外部链接吗？',
+            es: '¿Necesitas ayuda para decidir qué enlace externo abrir?'
+          },
+          query: {
+            en: 'AWS Hackathon details',
+            'zh-TW': 'AWS Hackathon details',
+            'zh-CN': 'AWS Hackathon details',
+            es: 'AWS Hackathon details'
+          }
+        }
+      }
+    };
+
+    return catalog[this.page] || {};
+  }
+
+  getLocalizedPrompt(prompt) {
+    if (!prompt) return null;
+    const lang = this.currentLang;
+
+    return {
+      label: prompt.label?.[lang] || prompt.label?.en || '',
+      question: prompt.question?.[lang] || prompt.question?.en || '',
+      query: prompt.query?.[lang] || prompt.query?.en || '',
+      canonicalQuery: prompt.query?.en || prompt.query?.[lang] || ''
+    };
+  }
+
+  renderContextPrompt(nudge, prompt) {
+    if (!nudge || !prompt) return;
+
+    const label = prompt.label ? `<span class="chat-nudge-label">${prompt.label}</span>` : '';
+    const question = prompt.question ? `<span class="chat-nudge-question">${prompt.question}</span>` : '';
+    nudge.innerHTML = `<span class="chat-nudge-content">${label}${question}</span>`;
+    nudge.setAttribute('aria-label', prompt.question || prompt.label || '');
+  }
+
+  resolveContextPrompt(sectionId, mode = 'default') {
+    const localizedPrompt = this.getLocalizedPrompt(this.sectionPromptMap?.[sectionId]);
+    if (localizedPrompt?.query) {
+      return {
+        ...localizedPrompt,
+        canonicalQuery: localizedPrompt.canonicalQuery || localizedPrompt.query,
+        query: this.localizePromptQuery(localizedPrompt.query)
+      };
+    }
+
+    if (this.engine?.getSectionPrompt) {
+      const promptMeta = this.contextPromptMeta.get(sectionId);
+      const prompt = this.engine.getSectionPrompt({
+        sectionId,
+        lang: this.currentLang,
+        mode,
+        cycle: promptMeta?.count || 0
+      });
+      if (prompt?.query) {
+        return {
+          ...prompt,
+          canonicalQuery: prompt.query,
+          query: this.localizePromptQuery(prompt.query)
+        };
+      }
+    }
+
+    return null;
+  }
+
+  getIntroContextPrompt() {
+    const prompts = {
+      en: {
+        label: this.t('chatTitle'),
+        question: "I'm Jason Bot. I can walk you through Jason's projects, HAECO work, and hackathon story."
+      },
+      'zh-TW': {
+        label: this.t('chatTitle'),
+        question: '我是 Jason Bot，可以帶你快速了解 Jason 的項目、港機經驗和黑客松故事。'
+      },
+      'zh-CN': {
+        label: this.t('chatTitle'),
+        question: '我是 Jason Bot，可以带你快速了解 Jason 的项目、港机经历和黑客松故事。'
+      },
+      es: {
+        label: this.t('chatTitle'),
+        question: 'Soy Jason Bot. Puedo guiarte por los proyectos de Jason, su trabajo en HAECO y la historia del hackathon.'
+      }
+    };
+
+    return prompts[this.currentLang] || prompts.en;
+  }
+
+  hasSeenIntroContextPrompt() {
+    try {
+      return window.sessionStorage?.getItem(this.introPromptStorageKey) === '1';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  markIntroContextPromptSeen() {
+    try {
+      window.sessionStorage?.setItem(this.introPromptStorageKey, '1');
+    } catch (error) {
+      // Ignore storage failures and continue with in-memory behavior.
+    }
+  }
+
+  shouldShowInitialIntroPrompt() {
+    return this.page === 'home' && !this.hasSeenIntroContextPrompt();
+  }
+
+  refreshContextPrompt() {
+    const nudge = document.getElementById('chatNudge');
+    if (!nudge || !nudge.classList.contains('active')) return;
+    if (nudge.dataset.promptKind === 'intro') {
+      const introPrompt = this.getIntroContextPrompt();
+      this.renderContextPrompt(nudge, introPrompt);
+      return;
+    }
+    const sectionId = nudge.dataset.sectionId;
+    const mode = nudge.dataset.promptMode || 'default';
+    const prompt = this.resolveContextPrompt(sectionId, mode);
+    if (!prompt) return;
+
+    this.renderContextPrompt(nudge, prompt);
+    nudge.dataset.query = prompt.query;
+    nudge.dataset.canonicalQuery = prompt.canonicalQuery || prompt.query;
+  }
+
+  hideContextPrompt() {
+    const nudge = document.getElementById('chatNudge');
+    window.clearTimeout(this.contextPromptTimer);
+    window.clearTimeout(this.contextIdlePromptTimer);
+    window.clearTimeout(this.contextPromptHideTimer);
+    if (!nudge) return;
+    const wasIntroPrompt = nudge.classList.contains('active') && nudge.dataset.promptKind === 'intro';
+    this.contextPromptInteracting = false;
+    this.initialIntroPromptActive = false;
+    nudge.classList.remove('active');
+    delete nudge.dataset.sectionId;
+    delete nudge.dataset.promptMode;
+    delete nudge.dataset.query;
+    delete nudge.dataset.canonicalQuery;
+    delete nudge.dataset.promptKind;
+    if (wasIntroPrompt && !document.body.classList.contains('chat-open')) {
+      window.setTimeout(() => this.updateActiveSectionPrompt(), 120);
+    }
+  }
+
+  scheduleContextPromptHide(delay = 7200) {
+    window.clearTimeout(this.contextPromptHideTimer);
+
+    const nudge = document.getElementById('chatNudge');
+    if (!nudge?.classList.contains('active') || this.contextPromptInteracting || document.body.classList.contains('chat-open')) {
+      return;
+    }
+
+    this.contextPromptHideTimer = window.setTimeout(() => {
+      if (!this.contextPromptInteracting) {
+        this.hideContextPrompt();
+      }
+    }, delay);
+  }
+
+  setContextPromptInteraction(isInteracting) {
+    this.contextPromptInteracting = isInteracting;
+    if (isInteracting) {
+      window.clearTimeout(this.contextPromptHideTimer);
+      return;
+    }
+
+    this.scheduleContextPromptHide(2200);
+  }
+
+  showContextPrompt(sectionId, mode = 'default') {
+    const nudge = document.getElementById('chatNudge');
+    const prompt = this.resolveContextPrompt(sectionId, mode);
+    if (!nudge || !prompt || !prompt.query || document.body.classList.contains('chat-open') || this.initialIntroPromptActive) return;
+
+    this.renderContextPrompt(nudge, prompt);
+    nudge.dataset.sectionId = sectionId;
+    nudge.dataset.promptMode = mode;
+    nudge.dataset.query = prompt.query;
+    nudge.dataset.canonicalQuery = prompt.canonicalQuery || prompt.query;
+    nudge.dataset.promptKind = 'section';
+    nudge.classList.add('active');
+    this.contextPromptSeen.add(sectionId);
+    this.contextPromptMeta.set(sectionId, {
+      lastShownAt: Date.now(),
+      count: (this.contextPromptMeta.get(sectionId)?.count || 0) + 1
+    });
+    this.contextPromptInteracting = false;
+    this.scheduleContextPromptHide();
+  }
+
+  queueContextPrompt(sectionId) {
+    window.clearTimeout(this.contextPromptTimer);
+    window.clearTimeout(this.contextIdlePromptTimer);
+    window.clearTimeout(this.contextPromptHideTimer);
+
+    if (this.initialIntroPromptActive) return;
+
+    const prompt = this.resolveContextPrompt(sectionId, 'default');
+    const promptMeta = this.contextPromptMeta.get(sectionId);
+    const recentlyShown = promptMeta && Date.now() - promptMeta.lastShownAt < 45000;
+
+    if (!sectionId || !prompt || recentlyShown || document.body.classList.contains('chat-open')) {
+      this.hideContextPrompt();
+      return;
+    }
+
+    this.contextPromptTimer = window.setTimeout(() => this.showContextPrompt(sectionId, 'default'), 1200);
+  }
+
+  queueIdleContextPrompt(sectionId) {
+    window.clearTimeout(this.contextIdlePromptTimer);
+    if (this.initialIntroPromptActive) return;
+
+    const nudge = document.getElementById('chatNudge');
+    const prompt = this.resolveContextPrompt(sectionId, 'idle');
+    const promptMeta = this.contextPromptMeta.get(sectionId);
+    const recentlyShown = promptMeta && Date.now() - promptMeta.lastShownAt < 18000;
+    const alreadyVisibleForSection = nudge?.classList.contains('active') && nudge?.dataset.sectionId === sectionId;
+
+    if (!sectionId || !prompt || recentlyShown || alreadyVisibleForSection || document.body.classList.contains('chat-open')) {
+      return;
+    }
+
+    this.contextIdlePromptTimer = window.setTimeout(() => {
+      this.showContextPrompt(sectionId, 'idle');
+    }, 5200);
+  }
+
+  updateActiveSectionPrompt() {
+    if (this.initialIntroPromptActive) return;
+    const sections = Array.from(document.querySelectorAll('main section[id]'));
+    if (!sections.length) return;
+
+    const navHeight = document.querySelector('.glass-nav')?.offsetHeight || 0;
+    const anchor = navHeight + Math.min(window.innerHeight * 0.24, 180);
+
+    let bestSection = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    sections.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom <= navHeight + 24 || rect.top >= window.innerHeight) return;
+
+      const distance = Math.abs(rect.top - anchor);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestSection = section;
+      }
+    });
+
+    const nextSectionId = bestSection?.id || sections[0].id;
+    if (nextSectionId === this.activeSectionId) {
+      this.queueIdleContextPrompt(nextSectionId);
+      return;
+    }
+
+    this.activeSectionId = nextSectionId;
+    this.queueContextPrompt(nextSectionId);
+    this.queueIdleContextPrompt(nextSectionId);
+  }
+
+  showInitialIntroPrompt() {
+    const nudge = document.getElementById('chatNudge');
+    const introPrompt = this.getIntroContextPrompt();
+
+    if (!nudge || !introPrompt || document.body.classList.contains('chat-open')) return false;
+
+    this.renderContextPrompt(nudge, introPrompt);
+    nudge.dataset.promptKind = 'intro';
+    nudge.dataset.query = '';
+    nudge.classList.add('active');
+    this.initialIntroPromptActive = true;
+    this.contextPromptInteracting = false;
+    this.markIntroContextPromptSeen();
+    this.scheduleContextPromptHide(8200);
+    this.setReaction('happy', 900);
+    return true;
+  }
+
+  initContextualPrompts() {
+    this.sectionPromptMap = this.getSectionPromptMap();
+    const supportsSectionPrompts = Object.keys(this.sectionPromptMap).length > 0 || Boolean(this.engine?.getSectionPrompt);
+
+    if (this.shouldShowInitialIntroPrompt()) {
+      window.setTimeout(() => this.showInitialIntroPrompt(), 950);
+      if (!supportsSectionPrompts) return;
+    } else if (!supportsSectionPrompts) {
+      return;
+    }
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        this.updateActiveSectionPrompt();
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    if (!this.shouldShowInitialIntroPrompt()) {
+      window.setTimeout(() => this.updateActiveSectionPrompt(), 1200);
+    }
+  }
+
+  handleContextPromptClick() {
+    const nudge = document.getElementById('chatNudge');
+    if (nudge?.dataset.promptKind === 'intro') {
+      this.hideContextPrompt();
+      this.openChat();
+      return;
+    }
+    const displayQuery = nudge?.dataset.query?.trim();
+    const canonicalQuery = nudge?.dataset.canonicalQuery?.trim() || displayQuery;
+    if (!displayQuery) return;
+
+    this.hideContextPrompt();
+    this.openChat();
+    this.handleSend({
+      displayMessage: displayQuery,
+      responseMessage: canonicalQuery
+    });
+  }
+
   init() {
     this.createChatUI();
     this.attachEvents();
+    this.trackEyes(this.pointerX, this.pointerY);
     this.showWelcomeMessage();
+    this.initContextualPrompts();
+  }
+
+  getEyeMarkup(extraClass = '') {
+    return `
+      <span class="chat-bot-shell ${extraClass}" data-reaction="idle">
+        <span class="chat-bot-antenna" aria-hidden="true"></span>
+        <span class="chat-toggle-bot" aria-hidden="true"></span>
+        <span class="chat-bot-body" aria-hidden="true"></span>
+        <span class="chat-bot-feet" aria-hidden="true"><span></span><span></span></span>
+        <span class="chat-bot-brows" aria-hidden="true">
+          <span class="bot-brow"></span>
+          <span class="bot-brow"></span>
+        </span>
+        <span class="chat-bot-cheek bot-cheek-left" aria-hidden="true"></span>
+        <span class="chat-bot-cheek bot-cheek-right" aria-hidden="true"></span>
+        <span class="chat-eyes" aria-hidden="true">
+          <span class="bot-eye"><span class="bot-eye-core"></span></span>
+          <span class="bot-eye"><span class="bot-eye-core"></span></span>
+        </span>
+        <span class="chat-bot-mouth" aria-hidden="true"></span>
+      </span>
+    `;
   }
 
   createChatUI() {
     const chatHTML = `
-      <button id="chatToggle" class="chat-toggle" title="Ask Jason AI">
-        <span class="chat-icon">💬</span>
+      <button id="chatToggle" class="chat-toggle" title="${this.t('chatTitle')}" aria-label="${this.t('chatTitle')}">
+        <span class="chat-toggle-ring" aria-hidden="true"></span>
+        ${this.getEyeMarkup('chat-toggle-face')}
       </button>
-      
-      <div id="chatWindow" class="chat-window">
-        <div class="chat-header">
+
+      <button id="chatNudge" class="chat-nudge" type="button" aria-live="polite"></button>
+
+      <div id="chatBackdrop" class="chat-backdrop"></div>
+
+      <div id="chatWindow" class="chat-window" aria-hidden="true">
+            <div class="chat-header">
           <div class="chat-header-info">
-            <div class="chat-avatar">👨‍💻</div>
-            <div>
-              <h3 id="chatTitle">${this.t('chatTitle')}</h3>
+            <div class="chat-avatar">
+              ${this.getEyeMarkup('chat-avatar-face')}
+            </div>
+            <div class="chat-header-copy">
+              <div class="chat-title-row">
+                <h3 id="chatTitle">${this.t('chatTitle')}</h3>
+                <span class="chat-online-dot" aria-hidden="true"></span>
+              </div>
               <p class="chat-status" id="chatStatus">${this.t('chatStatus')}</p>
             </div>
           </div>
-          <button id="chatClose" class="chat-close">×</button>
+          <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
         </div>
-        
+
         <div class="chat-suggestions" id="chatSuggestions">
-          <p class="suggestions-title" id="suggestionsTitle">💡 ${this.t('suggestedQuestions')}</p>
-          <button class="suggestion-chip" data-query="queryAbout" id="suggest1">${this.t('suggestionAbout')}</button>
-          <button class="suggestion-chip" data-query="queryHackathon" id="suggest2">${this.t('suggestionHackathon')}</button>
-          <button class="suggestion-chip" data-query="queryHaeco" id="suggest3">${this.t('suggestionHaeco')}</button>
-          <button class="suggestion-chip" data-query="queryFunFact" id="suggest4">${this.t('suggestionFunFact')}</button>
-          <button class="suggestion-chip" data-query="queryTime" id="suggest5">${this.t('suggestionTime')}</button>
-          <button class="suggestion-chip" data-query="queryChatTime" id="suggest6">${this.t('suggestionChatTime')}</button>
+          <p class="suggestions-title" id="suggestionsTitle">${this.t('suggestedQuestions')}</p>
+          <div class="suggestions-grid">
+            <button class="suggestion-chip" data-query="queryAbout" id="suggest1">${this.t('suggestionAbout')}</button>
+            <button class="suggestion-chip" data-query="queryHackathon" id="suggest2">${this.t('suggestionHackathon')}</button>
+            <button class="suggestion-chip" data-query="queryHaeco" id="suggest3">${this.t('suggestionHaeco')}</button>
+            <button class="suggestion-chip" data-query="queryFunFact" id="suggest4">${this.t('suggestionFunFact')}</button>
+            <button class="suggestion-chip" data-query="queryTime" id="suggest5">${this.t('suggestionTime')}</button>
+            <button class="suggestion-chip" data-query="queryChatTime" id="suggest6">${this.t('suggestionChatTime')}</button>
+          </div>
         </div>
-        
+
         <div class="chat-messages" id="chatMessages"></div>
-        
+
         <div class="chat-input-area">
-          <input type="text" id="chatInput" class="chat-input" placeholder="${this.t('inputPlaceholder')}" />
-          <button id="chatSend" class="chat-send">
-            <span>➤</span>
-          </button>
+          <div class="chat-input-shell">
+            <input type="text" id="chatInput" class="chat-input" placeholder="${this.t('inputPlaceholder')}" />
+            <button id="chatSend" class="chat-send" aria-label="Send message">
+              <span>➤</span>
+            </button>
+          </div>
+          <p class="chat-input-note" id="chatInputNote">${this.t('inputNote')}</p>
         </div>
       </div>
     `;
-    
+
     document.body.insertAdjacentHTML('beforeend', chatHTML);
   }
 
@@ -999,67 +2510,207 @@ class JasonAssistant {
     const close = document.getElementById('chatClose');
     const send = document.getElementById('chatSend');
     const input = document.getElementById('chatInput');
-    const window = document.getElementById('chatWindow');
-    
-    toggle.addEventListener('click', () => {
-      window.classList.toggle('active');
-      if (window.classList.contains('active')) {
-        input.focus();
+    const chatWindow = document.getElementById('chatWindow');
+    const backdrop = document.getElementById('chatBackdrop');
+    const nudge = document.getElementById('chatNudge');
+
+    toggle.addEventListener('click', () => this.openChat());
+    close.addEventListener('click', () => this.closeChat());
+    backdrop.addEventListener('click', () => this.closeChat());
+    nudge?.addEventListener('click', () => this.handleContextPromptClick());
+    nudge?.addEventListener('mouseenter', () => this.setContextPromptInteraction(true));
+    nudge?.addEventListener('mouseleave', () => this.setContextPromptInteraction(false));
+    nudge?.addEventListener('focus', () => this.setContextPromptInteraction(true));
+    nudge?.addEventListener('blur', () => this.setContextPromptInteraction(false));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && chatWindow.classList.contains('active')) {
+        this.closeChat();
       }
     });
-    
-    close.addEventListener('click', () => {
-      window.classList.remove('active');
+
+    document.addEventListener('mousemove', (event) => {
+      this.trackEyes(event.clientX, event.clientY);
     });
-    
+
     send.addEventListener('click', () => this.handleSend());
-    
-    input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') this.handleSend();
+
+    input.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') this.handleSend();
     });
-    
-    // Smart autocomplete
-    input.addEventListener('input', (e) => this.handleAutocomplete(e));
-    
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+
+    input.addEventListener('focus', () => {
+      this.focusEyesOnElement(input);
+      this.setReaction('curious', 420);
+    });
+
+    input.addEventListener('input', (event) => {
+      this.focusEyesOnElement(input);
+      this.setReaction(event.target.value.trim() ? 'thinking' : 'idle', event.target.value.trim() ? 420 : 0);
+      this.handleAutocomplete(event);
+    });
+
+    input.addEventListener('blur', () => {
+      window.setTimeout(() => {
+        this.hideAutocomplete();
+        this.setReaction('idle');
+      }, 120);
+    });
+
+    document.querySelectorAll('.suggestion-chip').forEach((chip) => {
       chip.addEventListener('click', () => {
         const queryKey = chip.dataset.query;
-        const question = this.t(queryKey);
-        document.getElementById('chatInput').value = question;
-        this.handleSend();
+        this.handleSend(this.t(queryKey));
       });
     });
   }
 
-  handleSend() {
+  openChat() {
+    const chatWindow = document.getElementById('chatWindow');
+    const backdrop = document.getElementById('chatBackdrop');
+    const toggle = document.getElementById('chatToggle');
     const input = document.getElementById('chatInput');
-    const message = input.value.trim();
+
+    chatWindow.classList.add('active');
+    chatWindow.setAttribute('aria-hidden', 'false');
+    backdrop.classList.add('active');
+    toggle.classList.add('is-hidden');
+    document.body.classList.add('chat-open');
+    this.hideContextPrompt();
+    this.focusEyesOnElement(input);
+    this.setReaction('happy', 720);
+    input.focus();
+  }
+
+  closeChat() {
+    const chatWindow = document.getElementById('chatWindow');
+    const backdrop = document.getElementById('chatBackdrop');
+    const toggle = document.getElementById('chatToggle');
+
+    chatWindow.classList.remove('active');
+    chatWindow.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('active');
+    toggle.classList.remove('is-hidden');
+    document.body.classList.remove('chat-open');
+    this.hideAutocomplete();
+    this.setReaction('idle');
+    window.setTimeout(() => this.updateActiveSectionPrompt(), 800);
+  }
+
+  trackEyes(clientX, clientY) {
+    this.pointerX = clientX;
+    this.pointerY = clientY;
+
+    document.querySelectorAll('.chat-bot-shell').forEach((shell) => {
+      const head = shell.querySelector('.chat-toggle-bot');
+      const rect = head?.getBoundingClientRect() || shell.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const offsetX = Math.max(-3, Math.min(3, (clientX - centerX) / 18));
+      const offsetY = Math.max(-2.5, Math.min(2.5, (clientY - centerY) / 22));
+      shell.style.setProperty('--eye-shift-x', `${offsetX}px`);
+      shell.style.setProperty('--eye-shift-y', `${offsetY}px`);
+    });
+  }
+
+  focusEyesOnElement(element) {
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+    this.trackEyes(rect.left + rect.width * 0.72, rect.top + rect.height * 0.5);
+  }
+
+  setReaction(reaction = 'idle', duration = 0) {
+    if (this.eyeReactionTimer) {
+      clearTimeout(this.eyeReactionTimer);
+      this.eyeReactionTimer = null;
+    }
+
+    document.querySelectorAll('.chat-bot-shell').forEach((shell) => {
+      shell.dataset.reaction = reaction;
+      shell.classList.toggle('is-reacting', reaction !== 'idle');
+    });
+
+    if (reaction !== 'idle' && duration > 0) {
+      this.eyeReactionTimer = window.setTimeout(() => {
+        this.setReaction('idle');
+      }, duration);
+    }
+  }
+
+  getResponseReaction(message, response) {
+    const msg = this.normalize(message);
+
+    if (/(bye|goodbye|see you|再見|再见|adios|hasta luego)/.test(msg)) {
+      return 'sad';
+    }
+
+    if (/(hello|hi|hey|你好|您好|hola|thanks|thank you|多謝|谢谢|gracias)/.test(msg)) {
+      return 'happy';
+    }
+
+    if (/didn t get a strong match|i can still help with|我可以總結目前頁面|我可以总结当前页面|puedo resumir la pagina/i.test(this.normalize(response.text))) {
+      return 'questionable';
+    }
+
+    if (/i m not fully sure|i am not fully sure|did you want|我未完全確定|我还不太确定|todavia no estoy totalmente seguro/i.test(this.normalize(response.text))) {
+      return 'questionable';
+    }
+
+    if (/i can help you learn about|我可以幫你了解|我可以帮你了解|puedo ayudarte a conocer/i.test(response.text)) {
+      return 'curious';
+    }
+
+    if (/section summary|page summary|部分摘要|頁面摘要|页面摘要|resumen de la seccion|resumen de la pagina/i.test(this.normalize(response.text))) {
+      return 'thinking';
+    }
+
+    if (/(what|how|why|tell me about|explain|which|where|who|什麼|什么|為什麼|为什么|怎樣|怎么|cuentame|explica|por que|cual)/.test(msg)) {
+      return 'curious';
+    }
+
+    return 'happy';
+  }
+
+  handleSend(messageOverride = '') {
+    const input = document.getElementById('chatInput');
+    const displayMessage = typeof messageOverride === 'object'
+      ? (messageOverride.displayMessage || '').trim()
+      : (messageOverride || input.value || '').trim();
+    const responseMessage = typeof messageOverride === 'object'
+      ? (messageOverride.responseMessage || displayMessage).trim()
+      : displayMessage;
+    const message = displayMessage;
     
     if (!message) return;
     
     this.messageCount++;
     this.addMessage(message, 'user');
     input.value = '';
-    
+
     document.getElementById('chatSuggestions').style.display = 'none';
+    this.hideAutocomplete();
     this.showTyping();
     
     setTimeout(() => {
       this.hideTyping();
-      const response = this.generateResponse(message);
-      this.addMessage(response.text, 'bot', response.actions, response.suggestions);
+      const response = this.generateResponse(responseMessage);
+      this.addMessage(response.text, 'assistant', response.actions, response.suggestions);
+      this.setReaction(this.getResponseReaction(responseMessage, response), 1200);
     }, 800);
   }
 
-  generateResponse(message) {
+  generateLegacyResponse(message) {
     const msg = this.normalize(message);
     const snippets = this.retrieveSnippets(message);
+    const reply = this.getReplyCopy();
+    const locale = this.getLocaleCode();
     
     // Check for math calculation
     const mathResult = this.calculateMath(message);
     if (mathResult) {
       return {
-        text: `🧮 **Calculator:**\n\n${mathResult.num1} ${mathResult.operator} ${mathResult.num2} = **${mathResult.result}**\n\n${this.t('anythingElse')}`,
+        text: `🧮 **${reply.calculatorTitle}**\n\n${mathResult.num1} ${mathResult.operator} ${mathResult.num2} = **${mathResult.result}**\n\n${this.t('anythingElse')}`,
         actions: [],
         suggestions: ['Tell me about Jason', 'Fun fact', 'What time is it?', 'Chat stats']
       };
@@ -1070,11 +2721,11 @@ class JasonAssistant {
     if (dateResult) {
       let text = '';
       if (dateResult.type === 'coop_duration') {
-        text = `📅 **Co-op Duration:**\n\nJason's HAECO Co-op lasted **${dateResult.value}** (${dateResult.detail}).\n\n${this.t('anythingElse')}`;
+        text = `📅 **${reply.coopDurationTitle}**\n\n${reply.coopDurationText} **${dateResult.value}** (${dateResult.detail}).\n\n${this.t('anythingElse')}`;
       } else if (dateResult.type === 'days_until') {
-        text = `📅 **Days Until ${dateResult.event}:**\n\n**${dateResult.value} days**\n\n${this.t('anythingElse')}`;
+        text = `📅 **${reply.daysUntilTitle} ${dateResult.event}**\n\n**${dateResult.value} ${reply.days}**\n\n${this.t('anythingElse')}`;
       } else if (dateResult.type === 'days_since') {
-        text = `📅 **Days Since ${dateResult.event}:**\n\n**${dateResult.value} days ago**\n\n${this.t('anythingElse')}`;
+        text = `📅 **${reply.daysSinceTitle} ${dateResult.event}**\n\n**${dateResult.value} ${reply.daysAgo}**\n\n${this.t('anythingElse')}`;
       }
       return {
         text,
@@ -1163,6 +2814,11 @@ class JasonAssistant {
         medium: ['contact', 'email', 'reach', 'github', '聯絡', '联络', '電郵', '电邮', 'contacto', 'correo'],
         low: ['connect', 'message', '聯繫', '联系', '訊息', '消息', 'mensaje']
       },
+      cv: {
+        high: ['download cv', 'download resume', 'jason resume', 'jason cv', '下載履歷', '下载履历', 'descargar cv'],
+        medium: ['resume', 'cv', '履歷', '履历', 'currículum'],
+        low: ['pdf', 'formal details']
+      },
       experience: {
         high: ['work experience', 'professional experience', '工作經驗', '工作经验', 'experiencia profesional'],
         medium: ['experience', 'job', 'work history', '經驗', '经验', '工作', 'experiencia', 'trabajo'],
@@ -1244,17 +2900,13 @@ class JasonAssistant {
     
     // Fun facts
     if (intent === 'fun_fact') {
-      return {
-        text: `🎉 **${this.t('funFact')}**\n\n${this.getRandomFunFact()}\n\n${this.t('anotherFact')}`,
-        actions: [{ text: '🏆 Learn More About Jason', link: 'index.html' }],
-        suggestions: ['Another fun fact', 'AWS Hackathon story', 'What time is it?', 'Chat stats']
-      };
+      return this.buildFunFactResponse();
     }
     
     // Conversation time
     if (intent === 'chat_stats') {
       return {
-        text: `⏱️ **${this.t('chatStats')}**\n\n• ${this.t('timeChatting')} **${this.getConversationTime()}**\n• ${this.t('messagesSent')} **${this.messageCount}**\n• ${this.t('started')} **${this.conversationStart.toLocaleTimeString()}**\n\n${this.t('keepAsking')}`,
+        text: `⏱️ **${this.t('chatStats')}**\n\n• ${this.t('timeChatting')} **${this.getConversationTime()}**\n• ${this.t('messagesSent')} **${this.messageCount}**\n• ${this.t('started')} **${this.conversationStart.toLocaleTimeString(locale)}**\n\n${this.t('keepAsking')}`,
         actions: [],
         suggestions: ['Tell me about Jason', 'AWS Hackathon', 'Fun fact', 'What time is it?']
       };
@@ -1263,8 +2915,8 @@ class JasonAssistant {
     // Time and date queries
     if (intent === 'time_date') {
       const now = new Date();
-      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const date = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const date = now.toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       const greetings = this.t('greeting');
       const greeting = greetings[Math.floor(Math.random() * greetings.length)];
       return {
@@ -1278,22 +2930,22 @@ class JasonAssistant {
     if (intent === 'navigate') {
       if (msg.includes('hackathon')) {
         return {
-          text: `🏆 Taking you to the AWS Hackathon page...`,
-          actions: [{ text: '🚀 View AWS Hackathon Project', link: 'hackathon.html' }],
+          text: `🏆 ${reply.takeHackathon}`,
+          actions: [{ text: `🚀 ${reply.viewHackathonProject}`, link: 'hackathon.html' }],
           suggestions: ['Tell me about HAECO', 'What are his skills?', 'Fun fact']
         };
       }
       if (msg.includes('coop') || msg.includes('co-op')) {
         return {
-          text: `🚀 Taking you to the HAECO Co-op page...`,
-          actions: [{ text: '📅 View Co-op Experience', link: 'coop.html' }],
+          text: `🚀 ${reply.takeCoop}`,
+          actions: [{ text: `📅 ${reply.viewCoopExperience}`, link: 'coop.html' }],
           suggestions: ['AWS Hackathon details', 'Education background', 'Projects']
         };
       }
       if (msg.includes('home') || msg.includes('main')) {
         return {
-          text: `🏠 Taking you to the home page...`,
-          actions: [{ text: '🏠 Go to Home', link: 'index.html' }],
+          text: `🏠 ${reply.takeHome}`,
+          actions: [{ text: `🏠 ${reply.goHome}`, link: 'index.html' }],
           suggestions: ['Tell me about Jason', 'Fun fact', 'What time is it?']
         };
       }
@@ -1319,13 +2971,53 @@ class JasonAssistant {
     
     // AWS Hackathon queries
     if (intent === 'hackathon') {
+      if (/bay management system|機位管理|机位管理/.test(msg)) {
+        return {
+          text: reply.bayManagementText,
+          actions: [{ text: `🏆 ${reply.viewHackathonProject}`, link: 'hackathon.html' }],
+          suggestions: ['AWS Hackathon details', 'HAECO Co-op experience', 'Techathon details', 'Skills']
+        };
+      }
+
+      if (/how many teams|多少隊伍|多少队伍|cuántos equipos/.test(msg)) {
+        return {
+          text: reply.hackathonScaleText,
+          actions: [{ text: `🏆 ${reply.viewHackathonProject}`, link: 'hackathon.html' }],
+          suggestions: ['What is the Bay Management System?', 'When was the AWS Hackathon?', 'HAECO Co-op experience', 'Awards']
+        };
+      }
+
+      if (/when was|什麼時候|什么时候|cuándo fue/.test(msg)) {
+        return {
+          text: reply.hackathonWhenText,
+          actions: [{ text: `🏆 ${reply.viewHackathonProject}`, link: 'hackathon.html' }],
+          suggestions: ['How many teams were in the hackathon?', 'What is the Bay Management System?', 'Awards', 'HAECO Co-op experience']
+        };
+      }
+
       return {
         text: `🏆 **${this.t('hackathonTitle')}**\n\n${this.t('hackathonIntro')}\n\n✨ **${this.t('keyAchievements')}**\n• ${this.t('hackathonAch1')}\n• ${this.t('hackathonAch2')}\n• ${this.t('hackathonAch3')}\n• ${this.t('hackathonAch4')}\n\n🛠️ **${this.t('techStack')}** ${this.t('techStackValue')}\n\n💡 ${this.t('systemFeature')}`,
         actions: [
-          { text: '📄 View Full Project Details', link: 'hackathon.html' },
-          { text: '🎥 Watch Demo Video', link: 'hackathon.html#demo' }
+          { text: `📄 ${reply.viewHackathonDetails}`, link: 'hackathon.html' },
+          { text: `🎥 ${reply.watchDemo}`, link: 'hackathon.html#demo' }
         ],
         suggestions: ['HAECO Co-op experience', 'Techathon details', 'Skills', 'Fun fact']
+      };
+    }
+
+    if (intent === 'techathon') {
+      return {
+        text: reply.techathonText,
+        actions: [{ text: `🚀 ${reply.viewCoopExperience}`, link: 'coop.html' }],
+        suggestions: ['Lean Day MC', 'AWS Hackathon', 'HAECO Co-op experience', 'Awards']
+      };
+    }
+
+    if (intent === 'lean_day') {
+      return {
+        text: reply.leanDayText,
+        actions: [{ text: `📅 ${reply.viewCoopTimeline}`, link: 'coop.html' }],
+        suggestions: ['Techathon details', 'HAECO Co-op experience', 'Awards', 'Fun fact']
       };
     }
     
@@ -1334,8 +3026,8 @@ class JasonAssistant {
       return {
         text: `🚀 **${this.t('coopTitle')}**\n\n${this.t('coopIntro')}\n\n🌟 **${this.t('majorAchievements')}**\n${this.t('coopAch1')}\n${this.t('coopAch2')}\n${this.t('coopAch3')}\n${this.t('coopAch4')}\n${this.t('coopAch5')}\n${this.t('coopAch6')}\n\n📊 **${this.t('keyProjects')}**\n• ${this.t('coopProj1')}\n• ${this.t('coopProj2')}\n• ${this.t('coopProj3')}\n• ${this.t('coopProj4')}\n• ${this.t('coopProj5')}`,
         actions: [
-          { text: '📅 View 5-Month Timeline', link: 'coop.html' },
-          { text: '📸 See Photos & Videos', link: 'coop.html' }
+          { text: `📅 ${reply.viewCoopTimeline}`, link: 'coop.html' },
+          { text: `📸 ${reply.seeCoopMedia}`, link: 'coop.html' }
         ],
         suggestions: ['Techathon details', 'Lean Day MC', 'AWS Hackathon', 'Education']
       };
@@ -1345,7 +3037,7 @@ class JasonAssistant {
     if (intent === 'skills') {
       return {
         text: `🛠️ **${this.t('skillsTitle')}**\n\n**💻 ${this.t('programmingData')}**\nPython, R, Octave, SQLite, SQL\n\n**🤖 ${this.t('aiTools')}**\nAWS Q Developer, Krio, OpenAI Codex, AutoML\n\n**🎨 ${this.t('creativeTools')}**\nMS Office, Canva, Adobe Creative Suite\n\n**🧠 ${this.t('softSkills')}**\n${this.t('softSkillsList')}\n\n**🌍 ${this.t('languagesSpoken')}**\n${this.t('languagesList')}`,
-        actions: [{ text: '📋 View Full CV', link: 'index.html#skills' }],
+        actions: [{ text: `📋 ${reply.viewFullCv}`, link: 'index.html#skills' }],
         suggestions: ['Education background', 'Projects', 'Awards', 'Contact info']
       };
     }
@@ -1354,18 +3046,26 @@ class JasonAssistant {
     if (intent === 'education') {
       return {
         text: `🎓 **${this.t('educationTitle')}**\n\n**Hong Kong University of Science and Technology (HKUST)**\n• ${this.t('hkustDegree')}\n• ${this.t('hkustMinor')}\n• ${this.t('hkustPeriod')}\n• ${this.t('hkustFYP')}\n\n**HKU SPACE Community College**\n• ${this.t('hkuDegree')}\n• ${this.t('hkuPeriod')}\n• ${this.t('hkuAwards')}\n• ${this.t('hkuLeadership')}`,
-        actions: [{ text: '📚 View Education Details', link: 'index.html#education' }],
+        actions: [{ text: `📚 ${reply.viewEducationDetails}`, link: 'index.html#education' }],
         suggestions: ['Skills overview', 'Projects', 'HAECO Co-op', 'Fun fact']
       };
     }
     
     // Projects queries
     if (intent === 'projects') {
+      if (/final year project|\bfyp\b|畢業專題|毕业专题|proyecto final/.test(msg)) {
+        return {
+          text: reply.fypText,
+          actions: [{ text: `🎯 ${reply.viewProjectSection}`, link: 'index.html#projects' }],
+          suggestions: ['Education background', 'Skills', 'AWS Hackathon', 'Contact info']
+        };
+      }
+
       return {
-        text: `🚀 **Featured Projects**\n\n**1. HAECO Bay Management System** 🏆\n• Grand Prize Winner - AWS AI Hackathon\n• AI-based aircraft bay scheduling\n• Built in 14 days\n\n**2. Inventory Control Research**\n• HKUST Final Year Project\n• JIT, Monte Carlo, AutoML, Multi-Agent Systems\n\n**3. Christmas Effects Study**\n• Data Science project analyzing livestock pricing\n\n**4. YouTube Database System**\n• SQLite database design and implementation`,
+        text: reply.projectsText,
         actions: [
-          { text: '🎯 View All Projects', link: 'index.html#projects' },
-          { text: '🏆 AWS Hackathon Details', link: 'hackathon.html' }
+          { text: `🎯 ${reply.viewProjects}`, link: 'index.html#projects' },
+          { text: `🏆 ${reply.viewHackathonDetails}`, link: 'hackathon.html' }
         ],
         suggestions: ['AWS Hackathon story', 'Skills', 'Education', 'Contact']
       };
@@ -1374,31 +3074,47 @@ class JasonAssistant {
     // Awards queries
     if (intent === 'awards') {
       return {
-        text: `🏆 **Awards & Achievements**\n\n• **Grand Prize Winner** - AWS AI Hackathon Hong Kong 2025 (130+ teams)\n• **Master of Ceremony** - HAECO Lean Day 2025\n• **Lead Organizer** - HAECO Techathon 2026\n• **Academic Excellence Award** - HKU SPACE\n• **Principal's Honor List** - HKU SPACE\n• **Class Representative** - Data Science (80+ students)\n• **Certificate of Outstanding Achievement** - HAECO 2025`,
-        actions: [{ text: '🌟 View All Achievements', link: 'index.html#awards' }],
+        text: reply.awardsText,
+        actions: [{ text: `🌟 ${reply.viewAchievements}`, link: 'index.html#awards' }],
         suggestions: ['AWS Hackathon details', 'HAECO Co-op', 'Education', 'Fun fact']
       };
     }
     
     // Contact queries
     if (intent === 'contact') {
+      if (/github/.test(msg)) {
+        return {
+          text: reply.githubText,
+          actions: [{ text: `💻 ${reply.viewGithub}`, link: 'https://github.com/Jasonauyeungaa' }],
+          suggestions: ['Projects', 'Skills', 'Download Jason\'s CV', 'Contact info']
+        };
+      }
+
       return {
-        text: `📬 **Get in Touch with Jason**\n\nInterested in AI-driven solutions, operations optimization, or innovation projects?\n\n📧 **Email:** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub:** github.com/jasonauyeungaa`,
+        text: reply.contactText,
         actions: [
-          { text: '📧 Send Email', link: 'mailto:wcauyeungaa@connect.ust.hk' },
-          { text: '💻 View GitHub', link: 'https://github.com/Jasonauyeungaa' }
+          { text: `📧 ${reply.sendEmail}`, link: 'mailto:wcauyeungaa@connect.ust.hk' },
+          { text: `💻 ${reply.viewGithub}`, link: 'https://github.com/Jasonauyeungaa' }
         ],
         suggestions: ['Tell me about Jason', 'Skills', 'Projects', 'Fun fact']
+      };
+    }
+
+    if (intent === 'cv') {
+      return {
+        text: reply.cvText,
+        actions: [{ text: `📋 ${reply.openResume}`, link: 'assets/images/CV/Jason Resume.pdf' }],
+        suggestions: ['Skills', 'Experience', 'Education background', 'Contact info']
       };
     }
     
     // Experience queries
     if (intent === 'experience') {
       return {
-        text: `💼 **Professional Experience**\n\n**1. HAECO Co-op Intern** (Sep 2025 - Jan 2026)\n• Technology Innovation department\n• AI-driven solutions for operations\n• Won AWS Hackathon Grand Prize\n\n**2. HKUST ITSO Internship** (Feb 2026 - Jun 2026)\n• IT support and asset management\n\n**3. Speedy Group IT Support** (Jul 2021 - Present)\n• Part-time IT operations\n• Digital media production`,
+        text: reply.experienceText,
         actions: [
-          { text: '💼 View Full Experience', link: 'index.html#experience' },
-          { text: '🚀 HAECO Co-op Details', link: 'coop.html' }
+          { text: `💼 ${reply.viewExperience}`, link: 'index.html#experience' },
+          { text: `🚀 ${reply.viewCoopExperience}`, link: 'coop.html' }
         ],
         suggestions: ['HAECO Co-op details', 'Skills', 'Education', 'Awards']
       };
@@ -1417,19 +3133,89 @@ class JasonAssistant {
     }
     
     // Default response with suggestions
+    return this.buildClarificationResponse();
+  }
+
+  getCurrentSectionId() {
+    return this.activeSectionId || this.domContext?.getSections?.()[0]?.id || null;
+  }
+
+  getEngineResponse(message) {
+    if (!this.engine?.respond) return null;
+
+    const normalized = this.normalize(message);
+    const summaryLike = /(summar|overview|this page|this section|section|page|總結|总结|摘要|頁面|页面|部分|seccion|pagina|resume|resumen)/.test(normalized);
+    if (this.currentLang !== 'en' && !summaryLike) {
+      return null;
+    }
+
+    const response = this.engine.respond({
+      message,
+      lang: this.currentLang,
+      currentPage: window.location.pathname.split('/').pop() || 'index.html',
+      currentSectionId: this.getCurrentSectionId()
+    });
+
+    if (!response?.handled) return null;
+
     return {
-      text: `I'm Jason's AI assistant! 🤖\n\nI can help you learn about:\n\n• 🏆 **AWS Hackathon** - Grand Prize winning project\n• 🚀 **HAECO Co-op** - 5-month internship journey\n• 🛠️ **Skills** - Programming, AI tools, expertise\n• 🎓 **Education** - HKUST and HKU SPACE\n• 💼 **Experience** - Professional background\n• 🎉 **Fun Facts** - Interesting things about Jason\n• 📬 **Contact** - How to reach Jason\n• 🕐 **Time & Date** - Current time and day\n• ⏱️ **Chat Stats** - How long we've been talking`,
-      actions: [],
-      suggestions: ['Tell me about Jason', 'AWS Hackathon', 'Fun fact', 'What time is it?']
+      text: response.text,
+      actions: response.actions || [],
+      suggestions: response.suggestions || []
     };
+  }
+
+  generateResponse(message) {
+    if (this.isFunFactRequest(message)) {
+      return this.buildFunFactResponse();
+    }
+
+    const engineResponse = this.getEngineResponse(message);
+    if (engineResponse) return engineResponse;
+    return this.generateLegacyResponse(message);
+  }
+
+  formatInline(text) {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  }
+
+  formatMessageText(text) {
+    const lines = text.split('\n');
+    const blocks = [];
+    let listItems = [];
+
+    const flushList = () => {
+      if (listItems.length === 0) return;
+      blocks.push(`<ul class="message-list">${listItems.map((item) => `<li>${this.formatInline(item)}</li>`).join('')}</ul>`);
+      listItems = [];
+    };
+
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        flushList();
+        return;
+      }
+
+      if (/^[•*-]\s+/.test(trimmed)) {
+        listItems.push(trimmed.replace(/^[•*-]\s+/, ''));
+        return;
+      }
+
+      flushList();
+      blocks.push(`<p>${this.formatInline(trimmed)}</p>`);
+    });
+
+    flushList();
+    return blocks.join('');
   }
 
   addMessage(text, sender, actions = [], suggestions = []) {
     const messagesDiv = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${sender}`;
-    
-    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const senderClass = sender === 'bot' ? 'assistant' : sender;
+    messageDiv.className = `chat-message ${senderClass}`;
     
     let actionsHTML = '';
     if (actions.length > 0) {
@@ -1441,28 +3227,31 @@ class JasonAssistant {
     }
     
     let suggestHTML = '';
-    if (sender === 'bot' && suggestions.length > 0) {
+    if (senderClass === 'assistant' && suggestions.length > 0) {
       suggestHTML = '<div class="suggest-wrap">' +
-        suggestions.map(q => `<button class="suggest-btn" data-q="${q}">${q}</button>`).join('') +
+        suggestions.map((q) => {
+          const translated = this.translateSuggestion(q);
+          return `<button class="suggest-btn" data-original-suggestion="${q}" data-q="${translated}">${translated}</button>`;
+        }).join('') +
         '</div>';
     }
     
     messageDiv.innerHTML = `
-      <div class="message-content">${formattedText.replace(/\n/g, '<br>')}</div>
+      <div class="message-content">${this.formatMessageText(text)}</div>
       ${actionsHTML}
       ${suggestHTML}
     `;
     
     messagesDiv.appendChild(messageDiv);
     
-    if (sender === 'bot') {
+    if (senderClass === 'assistant') {
       messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
       messageDiv.querySelectorAll('.suggest-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.getElementById('chatInput').value = btn.dataset.q;
-          this.handleSend();
+          this.handleSend(btn.dataset.q);
         });
       });
+      this.updateDynamicSuggestionButtons();
     } else {
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -1471,11 +3260,12 @@ class JasonAssistant {
   showTyping() {
     const messagesDiv = document.getElementById('chatMessages');
     const typingDiv = document.createElement('div');
-    typingDiv.className = 'chat-message bot typing-indicator';
+    typingDiv.className = 'chat-message assistant typing-indicator';
     typingDiv.id = 'typingIndicator';
     typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
     messagesDiv.appendChild(typingDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    this.setReaction('thinking', 1100);
   }
 
   hideTyping() {
@@ -1611,7 +3401,16 @@ class JasonAssistant {
     };
     
     const langQueries = queries[this.currentLang] || queries.en;
-    return langQueries.filter(q => q.toLowerCase().includes(input)).slice(0, 5);
+    const fallbackSuggestions = langQueries.filter(q => q.toLowerCase().includes(input));
+    const engineSuggestions = this.engine?.getAutocompleteSuggestions
+      ? this.engine.getAutocompleteSuggestions({
+          input,
+          lang: this.currentLang,
+          currentSectionId: this.getCurrentSectionId()
+        })
+      : [];
+
+    return [...new Set([...engineSuggestions, ...fallbackSuggestions])].slice(0, 6);
   }
   
   showAutocomplete(suggestions) {
@@ -1620,7 +3419,7 @@ class JasonAssistant {
       dropdown = document.createElement('div');
       dropdown.id = 'autocompleteDropdown';
       dropdown.className = 'autocomplete-dropdown';
-      document.querySelector('.chat-input-area').appendChild(dropdown);
+      document.querySelector('.chat-input-shell').appendChild(dropdown);
     }
     
     dropdown.innerHTML = suggestions.map(s => 
@@ -1629,9 +3428,8 @@ class JasonAssistant {
     
     dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
       item.addEventListener('click', () => {
-        document.getElementById('chatInput').value = item.dataset.text;
         this.hideAutocomplete();
-        this.handleSend();
+        this.handleSend(item.dataset.text);
       });
     });
     
@@ -1649,9 +3447,10 @@ class JasonAssistant {
       const greeting = greetings[Math.floor(Math.random() * greetings.length)];
       const funFact = this.getRandomFunFact();
       this.addMessage(
-        `${greeting}! 👋 ${this.t('intro')}\n\n${this.t('ready')}\n\n🎉 **${this.t('funFact')}**\n${funFact}\n\n💡 ${this.t('askAnything')}`,
-        'bot'
+        `${greeting}. ${this.t('intro')}\n\n${this.t('ready')}\n\n**${this.t('funFact')}**\n${funFact}\n\n${this.t('askAnything')}`,
+        'assistant'
       );
+      this.setReaction('happy', 1000);
     }, 500);
   }
 }
