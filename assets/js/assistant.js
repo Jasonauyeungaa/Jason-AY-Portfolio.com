@@ -594,6 +594,22 @@ class JasonAssistant {
     return locales[this.currentLang] || locales.en;
   }
 
+  getTimeBasedGreeting(date = new Date()) {
+    const greetings = this.t('greeting');
+    if (!Array.isArray(greetings) || greetings.length === 0) {
+      return 'Hello';
+    }
+
+    const hour = date.getHours();
+    if (hour >= 5 && hour < 12) {
+      return greetings[0] || greetings[greetings.length - 1];
+    }
+    if (hour >= 12 && hour < 18) {
+      return greetings[1] || greetings[0] || greetings[greetings.length - 1];
+    }
+    return greetings[2] || greetings[greetings.length - 1] || greetings[0];
+  }
+
   getReplyCopy() {
     const copy = {
       en: {
@@ -2884,8 +2900,7 @@ class JasonAssistant {
     
     // Greeting responses
     if (intent === 'greeting') {
-      const greetings = this.t('greeting');
-      const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+      const greeting = this.getTimeBasedGreeting();
       const variants = [
         `${greeting}! 👋 ${this.t('intro')}`,
         `${greeting}! 😊 ${this.t('ready')}`,
@@ -2917,8 +2932,7 @@ class JasonAssistant {
       const now = new Date();
       const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const date = now.toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      const greetings = this.t('greeting');
-      const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+      const greeting = this.getTimeBasedGreeting(now);
       return {
         text: `${greeting}!\n\n🕐 **${this.t('currentTime')}** ${time}\n📅 **${this.t('todayIs')}** ${date}\n\n${this.t('anythingElse')}`,
         actions: [],
@@ -3443,8 +3457,7 @@ class JasonAssistant {
   
   showWelcomeMessage() {
     setTimeout(() => {
-      const greetings = this.t('greeting');
-      const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+      const greeting = this.getTimeBasedGreeting();
       const funFact = this.getRandomFunFact();
       this.addMessage(
         `${greeting}. ${this.t('intro')}\n\n${this.t('ready')}\n\n**${this.t('funFact')}**\n${funFact}\n\n${this.t('askAnything')}`,
