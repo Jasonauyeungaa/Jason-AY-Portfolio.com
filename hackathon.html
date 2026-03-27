@@ -6,33 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <script>
-        (() => {
-            const root = document.documentElement;
-            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
-            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
-            const supportedThemes = new Set(['dark', 'light']);
-            let storedPrefs = {};
-
-            try {
-                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
-            } catch (error) {
-                storedPrefs = {};
-            }
-
-            const language = supportedLanguages.has(storedPrefs.language)
-                ? storedPrefs.language
-                : (runtimePrefs.language || root.lang || 'en');
-            const theme = supportedThemes.has(storedPrefs.theme)
-                ? storedPrefs.theme
-                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
-
-            root.lang = language;
-            root.setAttribute('data-theme', theme);
-            runtimePrefs.language = root.lang;
-            runtimePrefs.theme = root.getAttribute('data-theme');
-        })();
-    </script>
+    <script src="assets/js/runtime-prefs.js"></script>
     <title>AWS AI Hackathon 2025 - Grand Prize Winner | Jason Au-Yeung</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/hackathon.css">
@@ -60,7 +34,7 @@
                     <li><a href="#solution" data-i18n="hack.nav.solution">Solution</a></li>
                     <li><a href="#demo" data-i18n="hack.nav.demo">Demo</a></li>
                     <li><a href="#features" data-i18n="hack.nav.features">Features</a></li>
-                    <li><a href="#links" data-i18n="hack.nav.links">Team</a></li>
+                    <li><a href="#team" data-i18n="hack.nav.links">Team</a></li>
                     <li><a href="#media" data-i18n="hack.nav.impact">Impact</a></li>
                 </ul>
             </div>
@@ -305,7 +279,7 @@
                         <h3 data-i18n="hack.tech.ai">AI Development</h3>
                         <div class="tech-tags">
                             <span class="tag">AWS Q Developer</span>
-                            <span class="tag">Krio AI</span>
+                            <span class="tag">Kiro</span>
                         </div>
                     </div>
                     <div class="tech-card glass-card">
@@ -327,7 +301,7 @@
                 <div class="sprint-grid">
                     <div class="sprint-card glass-card">
                         <h3 data-i18n="hack.sprint.s1.title">Requirements & Design</h3>
-                        <p data-i18n="hack.sprint.s1.desc">Used Krio to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.</p>
+                        <p data-i18n="hack.sprint.s1.desc">Used Kiro to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.</p>
                     </div>
                     <div class="sprint-card glass-card">
                         <h3 data-i18n="hack.sprint.s2.title">Development</h3>
@@ -346,7 +320,7 @@
         </section>
 
         <!-- Team -->
-        <section id="links" class="section">
+        <section id="team" class="section">
             <div class="container">
                 <h2 class="section-title" data-i18n="hack.team.title">Team HAECO</h2>
 
@@ -382,7 +356,7 @@
                             </article>
                         </div>
 
-                        <div class="team-focus-panel" aria-live="polite">
+                        <div id="team-focus-panel" class="team-focus-panel" aria-live="polite">
                             <article class="team-focus-copy is-active" data-team-member="jason">
                                 <div class="team-focus-topline">
                                     <span class="team-focus-index" aria-hidden="true">01</span>
@@ -493,22 +467,22 @@
 
                     <div class="team-scroll-steps">
                         <div class="team-progress-rail glass-card">
-                            <article class="team-progress-item is-active" data-team-progress="jason">
+                            <article class="team-progress-item is-active" data-team-progress="jason" role="button" tabindex="0" aria-controls="team-focus-panel" aria-pressed="true">
                                 <span class="team-step-index" aria-hidden="true">01</span>
                                 <h3 class="team-step-name">Jason Au-Yeung</h3>
                                 <p class="team-step-role" data-i18n="hack.team.jason.role">Developer & Demo Presenter</p>
                             </article>
-                            <article class="team-progress-item" data-team-progress="derek">
+                            <article class="team-progress-item" data-team-progress="derek" role="button" tabindex="0" aria-controls="team-focus-panel" aria-pressed="false">
                                 <span class="team-step-index" aria-hidden="true">02</span>
                                 <h3 class="team-step-name">Derek Szeto</h3>
                                 <p class="team-step-role" data-i18n="hack.team.derek.role">Developer – Testing & Documentation</p>
                             </article>
-                            <article class="team-progress-item" data-team-progress="peter">
+                            <article class="team-progress-item" data-team-progress="peter" role="button" tabindex="0" aria-controls="team-focus-panel" aria-pressed="false">
                                 <span class="team-step-index" aria-hidden="true">03</span>
                                 <h3 class="team-step-name">Peter Yuen</h3>
                                 <p class="team-step-role" data-i18n="hack.team.peter.role">Business Analyst</p>
                             </article>
-                            <article class="team-progress-item" data-team-progress="sahil">
+                            <article class="team-progress-item" data-team-progress="sahil" role="button" tabindex="0" aria-controls="team-focus-panel" aria-pressed="false">
                                 <span class="team-step-index" aria-hidden="true">04</span>
                                 <h3 class="team-step-name">Sahil Kunder</h3>
                                 <p class="team-step-role" data-i18n="hack.team.sahil.role">Subject Matter Expert (SME)</p>
@@ -552,12 +526,16 @@
         </section>
 
         <!-- Hackathon Details -->
-        <section class="section">
+        <section id="details" class="section">
             <div class="container">
                 <h2 class="section-title" data-i18n="hack.details.title">Hackathon Details</h2>
                 <div class="hackathon-info glass-card">
                     <h3 data-i18n="hack.details.heading">AWS AI Hackathon Hong Kong 2025</h3>
                     <p class="hackathon-tagline" data-i18n="hack.details.tagline">"Build Tomorrow's Hong Kong with AI"</p>
+                    <a href="https://aws-hong-kong-hackathon.devpost.com" class="hackathon-official-link" target="_blank" rel="noopener noreferrer">
+                        <span class="hackathon-official-link-label" data-i18n="hack.details.official">Official Website</span>
+                        <span class="hackathon-official-link-url">aws-hong-kong-hackathon.devpost.com</span>
+                    </a>
                     
                     <div class="info-grid">
                         <div class="info-item">
@@ -589,7 +567,7 @@
                         <div class="info-item">
                             <h4 data-i18n="hack.details.statistics">Statistics</h4>
                             <ul>
-                                <li data-i18n="hack.details.stat1">841 total participants</li>
+                                <li data-i18n="hack.details.stat1">840 total participants</li>
                                 <li data-i18n="hack.details.stat2">130+ shortlisted teams</li>
                                 <li data-i18n="hack.details.stat3">Hong Kong's first AWS AI Hackathon</li>
                                 <li data-i18n="hack.details.stat4">4 non-cash prizes</li>
@@ -674,7 +652,7 @@
         </section>
 
         <!-- Links -->
-        <section class="section">
+        <section id="links" class="section">
             <div class="container">
                 <h2 class="section-title" data-i18n="hack.links.title">Relevant Links</h2>
                 <div class="links-grid">

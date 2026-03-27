@@ -132,7 +132,7 @@ const translations = {
         'proj.tag.css': 'CSS',
         'proj.tag.js': 'JavaScript',
         'proj.tag.awsq': 'AWS Q Developer',
-        'proj.tag.kiro': 'Kiro AI',
+        'proj.tag.kiro': 'Kiro',
         'proj.tag.python': 'Python',
         'proj.tag.automl': 'AutoML',
         'proj.tag.simulation': 'Simulation',
@@ -212,8 +212,8 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Curriculum Vitae',
-        'resume.modal.copy': 'Open the CV panel only when you want it. The PDF is no longer loaded automatically.',
-        'resume.modal.hint': 'Tap the letter to open or close the CV panel.',
+        'resume.modal.copy': 'Click the letter below to open Jason\'s CV. Nothing opens automatically.',
+        'resume.modal.hint': 'Click the letter to open my CV.',
         'resume.modal.open': 'Open PDF',
         'resume.modal.download': 'Download CV',
         'resume.modal.note': 'The CV stays off until you choose to open it. Nothing downloads automatically from this page.',
@@ -235,6 +235,18 @@ const translations = {
         'search.noResults': 'No matching page text found.',
         'search.results': 'results',
         'search.result': 'result',
+        'menu.kicker': 'Browse',
+        'menu.pages': 'Pages',
+        'menu.onThisPage': 'On this page',
+        'menu.close': 'Close',
+        'menu.closeAria': 'Close navigation menu',
+        'menu.page.home': 'Home',
+        'menu.page.home.meta': 'Portfolio overview',
+        'menu.page.coop': 'Co-op',
+        'menu.page.coop.meta': 'HAECO experience',
+        'menu.page.hackathon': 'Hackathon',
+        'menu.page.hackathon.meta': 'AWS AI project',
+        'menu.page.policy.meta': 'Statement and notice',
 
         // Policy Page
         'policy.nav.title': 'Policy & Statement',
@@ -432,6 +444,15 @@ const translations = {
         'coop.learnings.innovation.item1': 'After this internship, I want to keep building at the intersection of operations, data, and AI.',
         'coop.learnings.innovation.item2': 'I want to deepen my technical ability in system design, analytics, and practical AI applications while continuing to strengthen communication and leadership.',
         'coop.learnings.innovation.item3': 'In the future, I hope to turn complex operational challenges into useful, real-world solutions that create measurable value.',
+        'coop.links.title': 'Relevant Links',
+        'coop.links.home': 'Home Page',
+        'coop.links.home.desc': 'Back to the main portfolio',
+        'coop.links.hackathon': 'Hackathon Page',
+        'coop.links.hackathon.desc': 'Open the AWS hackathon case study',
+        'coop.links.haeco': 'HAECO Official Website',
+        'coop.links.haeco.desc': 'Open the official HAECO website',
+        'coop.links.hkust': 'HKUST Co-op Page',
+        'coop.links.hkust.desc': 'View the HKUST Co-op program page',
         
         // Media Gallery
         'coop.gallery.title': 'Photos & Videos',
@@ -529,7 +550,7 @@ const translations = {
         'hack.tech.feature3': 'Analytics',
         'hack.sprint.title': '14-Day Sprint',
         'hack.sprint.s1.title': 'Requirements & Design',
-        'hack.sprint.s1.desc': 'Used Krio to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.',
+        'hack.sprint.s1.desc': 'Used Kiro to document system requirements through vibe coding. Validated and clarified specifications to ensure robust, logically consistent design.',
         'hack.sprint.s2.title': 'Development',
         'hack.sprint.s2.desc': 'Built web-based solution with HTML, CSS, JavaScript. Leveraged Kiro\'s support to streamline development and focus on core logic and UX.',
         'hack.sprint.s3.title': 'AI Integration',
@@ -570,6 +591,7 @@ const translations = {
         'hack.details.title': 'Hackathon Details',
         'hack.details.heading': 'AWS AI Hackathon Hong Kong 2025',
         'hack.details.tagline': '"Build Tomorrow\'s Hong Kong with AI"',
+        'hack.details.official': 'Official Website',
         'hack.impact.title': 'Impact & Recognition',
         'hack.links.title': 'Relevant Links',
         'hack.links.devpost': 'Devpost',
@@ -601,7 +623,7 @@ const translations = {
         'hack.details.judge2': 'Implementation Quality',
         'hack.details.judge3': 'Innovation & Originality',
         'hack.details.statistics': 'Statistics',
-        'hack.details.stat1': '841 total participants',
+        'hack.details.stat1': '840 total participants',
         'hack.details.stat2': '130+ shortlisted teams',
         'hack.details.stat3': 'Hong Kong\'s first AWS AI Hackathon',
         'hack.details.stat4': '4 non-cash prizes',
@@ -764,7 +786,7 @@ const translations = {
         'proj.tag.css': 'CSS',
         'proj.tag.js': 'JavaScript',
         'proj.tag.awsq': 'AWS Q Developer',
-        'proj.tag.kiro': 'Kiro AI',
+        'proj.tag.kiro': 'Kiro',
         'proj.tag.python': 'Python',
         'proj.tag.automl': 'AutoML',
         'proj.tag.simulation': '模擬',
@@ -844,8 +866,8 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '個人履歷',
-        'resume.modal.copy': '只會在你選擇時打開履歷面板，PDF 不會自動載入。',
-        'resume.modal.hint': '點一下信件即可展開或收合履歷面板。',
+        'resume.modal.copy': '點一下下方信件即可開啟 Jason 的履歷，不會自動開啟任何檔案。',
+        'resume.modal.hint': '點一下信件即可開啟我的履歷。',
         'resume.modal.open': '開啟 PDF',
         'resume.modal.download': '下載履歷',
         'resume.modal.note': '履歷會保持關閉，直到你主動選擇開啟。此頁面不會自動下載任何檔案。',
@@ -867,6 +889,18 @@ const translations = {
         'search.noResults': '找不到相符的頁面文字。',
         'search.results': '個結果',
         'search.result': '個結果',
+        'menu.kicker': '瀏覽',
+        'menu.pages': '頁面',
+        'menu.onThisPage': '本頁內容',
+        'menu.close': '關閉',
+        'menu.closeAria': '關閉導覽選單',
+        'menu.page.home': '首頁',
+        'menu.page.home.meta': '作品集總覽',
+        'menu.page.coop': 'Co-op',
+        'menu.page.coop.meta': 'HAECO 實習經驗',
+        'menu.page.hackathon': '黑客松',
+        'menu.page.hackathon.meta': 'AWS AI 項目',
+        'menu.page.policy.meta': '聲明與通知',
 
         // Policy Page
         'policy.nav.title': '政策與聲明',
@@ -1061,6 +1095,15 @@ const translations = {
         'coop.learnings.innovation.item1': '完成這段實習後，我希望繼續在營運、數據與人工智能的交叉位置上發展。',
         'coop.learnings.innovation.item2': '我想進一步加深自己在系統設計、分析方法與實際 AI 應用上的能力，同時持續提升溝通與領導能力。',
         'coop.learnings.innovation.item3': '未來我希望把複雜的營運挑戰轉化為真正有用、能落地並帶來可衡量價值的解決方案。',
+        'coop.links.title': '相關連結',
+        'coop.links.home': '主頁',
+        'coop.links.home.desc': '返回作品集主頁',
+        'coop.links.hackathon': '黑客松頁面',
+        'coop.links.hackathon.desc': '打開 AWS 黑客松案例頁面',
+        'coop.links.haeco': 'HAECO 官方網站',
+        'coop.links.haeco.desc': '打開 HAECO 官方網站',
+        'coop.links.hkust': 'HKUST Co-op 頁面',
+        'coop.links.hkust.desc': '查看 HKUST Co-op 計劃頁面',
         
         // Media Gallery
         'coop.gallery.title': '照片與影片',
@@ -1158,7 +1201,7 @@ const translations = {
         'hack.tech.feature3': '分析',
         'hack.sprint.title': '14天衝刺',
         'hack.sprint.s1.title': '需求與設計',
-        'hack.sprint.s1.desc': '使用Krio通過vibe coding記錄系統需求。驗證和澄清規格以確保強健、邏輯一致的設計。',
+        'hack.sprint.s1.desc': '使用Kiro通過vibe coding記錄系統需求。驗證和澄清規格以確保強健、邏輯一致的設計。',
         'hack.sprint.s2.title': '開發',
         'hack.sprint.s2.desc': '使用HTML、CSS、JavaScript構建基於網頁的解決方案。利用Kiro的支援簡化開發並專注於核心邏輯和用戶體驗。',
         'hack.sprint.s3.title': '人工智能整合',
@@ -1199,6 +1242,7 @@ const translations = {
         'hack.details.title': '黑客松詳情',
         'hack.details.heading': 'AWS人工智能黑客松香港2025',
         'hack.details.tagline': '「用人工智能打造明天的香港」',
+        'hack.details.official': '官方網站',
         'hack.impact.title': '影響與認可',
         'hack.links.title': '相關連結',
         'hack.links.devpost': 'Devpost',
@@ -1230,7 +1274,7 @@ const translations = {
         'hack.details.judge2': '實現品質',
         'hack.details.judge3': '創新與原創性',
         'hack.details.statistics': '統計數據',
-        'hack.details.stat1': '841名總參與者',
+        'hack.details.stat1': '840名總參與者',
         'hack.details.stat2': '130+支入圍隊伍',
         'hack.details.stat3': '香港首個AWS人工智能黑客松',
         'hack.details.stat4': '4個非現金獎項',
@@ -1393,7 +1437,7 @@ const translations = {
         'proj.tag.css': 'CSS',
         'proj.tag.js': 'JavaScript',
         'proj.tag.awsq': 'AWS Q Developer',
-        'proj.tag.kiro': 'Kiro AI',
+        'proj.tag.kiro': 'Kiro',
         'proj.tag.python': 'Python',
         'proj.tag.automl': 'AutoML',
         'proj.tag.simulation': '模拟',
@@ -1473,8 +1517,8 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '个人履历',
-        'resume.modal.copy': '只有在你选择时才会打开履历面板，PDF 不会自动加载。',
-        'resume.modal.hint': '点一下信件即可展开或收起履历面板。',
+        'resume.modal.copy': '点一下下方信件即可打开 Jason 的履历，不会自动打开任何文件。',
+        'resume.modal.hint': '点一下信件即可打开我的履历。',
         'resume.modal.open': '打开 PDF',
         'resume.modal.download': '下载履历',
         'resume.modal.note': '履历会保持关闭，直到你主动选择打开。此页面不会自动下载任何文件。',
@@ -1496,6 +1540,18 @@ const translations = {
         'search.noResults': '未找到匹配的页面文字。',
         'search.results': '个结果',
         'search.result': '个结果',
+        'menu.kicker': '浏览',
+        'menu.pages': '页面',
+        'menu.onThisPage': '本页内容',
+        'menu.close': '关闭',
+        'menu.closeAria': '关闭导航菜单',
+        'menu.page.home': '首页',
+        'menu.page.home.meta': '作品集总览',
+        'menu.page.coop': 'Co-op',
+        'menu.page.coop.meta': 'HAECO 实习经验',
+        'menu.page.hackathon': '黑客松',
+        'menu.page.hackathon.meta': 'AWS AI 项目',
+        'menu.page.policy.meta': '声明与通知',
 
         // Policy Page
         'policy.nav.title': '政策与声明',
@@ -1690,6 +1746,15 @@ const translations = {
         'coop.learnings.innovation.item1': '完成这段实习后，我希望继续在运营、数据与人工智能的交叉位置上发展。',
         'coop.learnings.innovation.item2': '我想进一步加深自己在系统设计、分析方法与实际 AI 应用上的能力，同时持续提升沟通与领导能力。',
         'coop.learnings.innovation.item3': '未来我希望把复杂的运营挑战转化为真正有用、能落地并带来可衡量价值的解决方案。',
+        'coop.links.title': '相关链接',
+        'coop.links.home': '主页',
+        'coop.links.home.desc': '返回作品集主页',
+        'coop.links.hackathon': '黑客松页面',
+        'coop.links.hackathon.desc': '打开 AWS 黑客松案例页面',
+        'coop.links.haeco': 'HAECO 官方网站',
+        'coop.links.haeco.desc': '打开 HAECO 官方网站',
+        'coop.links.hkust': 'HKUST Co-op 页面',
+        'coop.links.hkust.desc': '查看 HKUST Co-op 计划页面',
         
         // Media Gallery
         'coop.gallery.title': '照片与影片',
@@ -1787,7 +1852,7 @@ const translations = {
         'hack.tech.feature3': '分析',
         'hack.sprint.title': '14天冲刺',
         'hack.sprint.s1.title': '需求与设计',
-        'hack.sprint.s1.desc': '使用Krio通过vibe coding记录系统需求。验证和澄清规格以确保强健、逻辑一致的设计。',
+        'hack.sprint.s1.desc': '使用Kiro通过vibe coding记录系统需求。验证和澄清规格以确保强健、逻辑一致的设计。',
         'hack.sprint.s2.title': '开发',
         'hack.sprint.s2.desc': '使用HTML、CSS、JavaScript构建基于网页的解决方案。利用Kiro的支持简化开发并专注于核心逻辑和用户体验。',
         'hack.sprint.s3.title': '人工智能整合',
@@ -1828,6 +1893,7 @@ const translations = {
         'hack.details.title': '黑客松详情',
         'hack.details.heading': 'AWS人工智能黑客松香港2025',
         'hack.details.tagline': '「用人工智能打造明天的香港」',
+        'hack.details.official': '官方网站',
         'hack.impact.title': '影响与认可',
         'hack.links.title': '相关链接',
         'hack.links.devpost': 'Devpost',
@@ -1859,7 +1925,7 @@ const translations = {
         'hack.details.judge2': '实现质量',
         'hack.details.judge3': '创新与原创性',
         'hack.details.statistics': '统计数据',
-        'hack.details.stat1': '841名总参与者',
+        'hack.details.stat1': '840名总参与者',
         'hack.details.stat2': '130+支入围队伍',
         'hack.details.stat3': '香港首个AWS人工智能黑客松',
         'hack.details.stat4': '4个非现金奖项',
@@ -2022,7 +2088,7 @@ const translations = {
         'proj.tag.css': 'CSS',
         'proj.tag.js': 'JavaScript',
         'proj.tag.awsq': 'AWS Q Developer',
-        'proj.tag.kiro': 'Kiro AI',
+        'proj.tag.kiro': 'Kiro',
         'proj.tag.python': 'Python',
         'proj.tag.automl': 'AutoML',
         'proj.tag.simulation': 'Simulación',
@@ -2102,8 +2168,8 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Currículum Vitae',
-        'resume.modal.copy': 'Abre el panel del CV solo cuando lo quieras. El PDF ya no se carga automáticamente.',
-        'resume.modal.hint': 'Toca la carta para abrir o cerrar el panel del CV.',
+        'resume.modal.copy': 'Haz clic en la carta para abrir el CV de Jason. No se abre nada automáticamente.',
+        'resume.modal.hint': 'Haz clic en la carta para abrir mi CV.',
         'resume.modal.open': 'Abrir PDF',
         'resume.modal.download': 'Descargar CV',
         'resume.modal.note': 'El CV permanece cerrado hasta que decidas abrirlo. Esta página no descarga nada automáticamente.',
@@ -2125,6 +2191,18 @@ const translations = {
         'search.noResults': 'No se encontró texto coincidente en las páginas.',
         'search.results': 'resultados',
         'search.result': 'resultado',
+        'menu.kicker': 'Explorar',
+        'menu.pages': 'Páginas',
+        'menu.onThisPage': 'En esta página',
+        'menu.close': 'Cerrar',
+        'menu.closeAria': 'Cerrar menú de navegación',
+        'menu.page.home': 'Inicio',
+        'menu.page.home.meta': 'Resumen del portafolio',
+        'menu.page.coop': 'Co-op',
+        'menu.page.coop.meta': 'Experiencia en HAECO',
+        'menu.page.hackathon': 'Hackathon',
+        'menu.page.hackathon.meta': 'Proyecto de AWS AI',
+        'menu.page.policy.meta': 'Declaración y aviso',
 
         // Policy Page
         'policy.nav.title': 'Política y declaración',
@@ -2319,6 +2397,15 @@ const translations = {
         'coop.learnings.innovation.item1': 'Despues de esta pasantia, quiero seguir construyendo en la interseccion de operaciones, datos e IA.',
         'coop.learnings.innovation.item2': 'Quiero profundizar mi capacidad tecnica en diseno de sistemas, analitica y aplicaciones practicas de IA, mientras sigo fortaleciendo mi comunicacion y liderazgo.',
         'coop.learnings.innovation.item3': 'En el futuro, espero convertir desafios operacionales complejos en soluciones utiles y reales que generen valor medible.',
+        'coop.links.title': 'Enlaces Relevantes',
+        'coop.links.home': 'Pagina Principal',
+        'coop.links.home.desc': 'Volver al portafolio principal',
+        'coop.links.hackathon': 'Pagina del Hackathon',
+        'coop.links.hackathon.desc': 'Abrir el caso del AWS Hackathon',
+        'coop.links.haeco': 'Sitio Oficial de HAECO',
+        'coop.links.haeco.desc': 'Abrir el sitio oficial de HAECO',
+        'coop.links.hkust': 'Pagina Co-op de HKUST',
+        'coop.links.hkust.desc': 'Ver la pagina del programa Co-op de HKUST',
         
         // Media Gallery
         'coop.gallery.title': 'Fotos y Videos',
@@ -2416,7 +2503,7 @@ const translations = {
         'hack.tech.feature3': 'Analítica',
         'hack.sprint.title': 'Sprint de 14 Días',
         'hack.sprint.s1.title': 'Requisitos y Diseño',
-        'hack.sprint.s1.desc': 'Usé Krio para documentar requisitos del sistema mediante vibe coding. Validé y aclaré especificaciones para garantizar un diseño robusto y lógicamente consistente.',
+        'hack.sprint.s1.desc': 'Usé Kiro para documentar requisitos del sistema mediante vibe coding. Validé y aclaré especificaciones para garantizar un diseño robusto y lógicamente consistente.',
         'hack.sprint.s2.title': 'Desarrollo',
         'hack.sprint.s2.desc': 'Construí solución basada en web con HTML, CSS, JavaScript. Aproveché el soporte de Kiro para agilizar el desarrollo y enfocarme en la lógica central y UX.',
         'hack.sprint.s3.title': 'Integración de IA',
@@ -2457,6 +2544,7 @@ const translations = {
         'hack.details.title': 'Detalles del Hackathon',
         'hack.details.heading': 'AWS AI Hackathon Hong Kong 2025',
         'hack.details.tagline': '"Construye el Hong Kong del Mañana con IA"',
+        'hack.details.official': 'Sitio Oficial',
         'hack.impact.title': 'Impacto y Reconocimiento',
         'hack.links.title': 'Enlaces Relevantes',
         'hack.links.devpost': 'Devpost',
@@ -2488,7 +2576,7 @@ const translations = {
         'hack.details.judge2': 'Calidad de implementación',
         'hack.details.judge3': 'Innovación y originalidad',
         'hack.details.statistics': 'Estadísticas',
-        'hack.details.stat1': '841 participantes totales',
+        'hack.details.stat1': '840 participantes totales',
         'hack.details.stat2': '130+ equipos preseleccionados',
         'hack.details.stat3': 'Primer AWS AI Hackathon de Hong Kong',
         'hack.details.stat4': '4 premios no monetarios',
@@ -2652,37 +2740,3 @@ function applyTranslations() {
         }
     });
 }
-
-
-// Counter animation for stats
-function animateCounter(element, target) {
-    const duration = 2000;
-    const start = 0;
-    const increment = target / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target + (target === 130 ? '+' : '');
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current) + (target === 130 ? '+' : '');
-        }
-    }, 16);
-}
-
-// Initialize counter animation on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    statNumbers.forEach((stat, index) => {
-        const text = stat.textContent.trim();
-        if (text === '130+') {
-            animateCounter(stat, 130);
-        } else if (text === '14') {
-            animateCounter(stat, 14);
-        } else if (text === '4') {
-            animateCounter(stat, 4);
-        }
-    });
-});

@@ -18,6 +18,12 @@
     return value[currentLang] || value.en || Object.values(value)[0] || fallback;
   };
 
+  const fallbackCaptionFromSrc = (src) => String(src || '')
+    .split('/')
+    .pop()
+    .replace(/\.[^.]+$/, '')
+    .replace(/_/g, ' ');
+
   const normalizeNoBreakText = (value) => {
     if (value == null) return value;
 
@@ -360,6 +366,8 @@
   window.JasonSite = {
     prefersReducedMotion,
     applyNoBreakPhrases,
+    fallbackCaptionFromSrc,
+    resolveLocalizedValue,
     scrollToElement,
     bindHeaderVisibility,
     bindTitleReveal,

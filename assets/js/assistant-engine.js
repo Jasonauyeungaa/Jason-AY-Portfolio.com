@@ -34,6 +34,172 @@
       return heading?.textContent?.replace(/\s+/g, ' ').trim() || '';
     }
 
+    getNodeText(node) {
+      return node?.textContent?.replace(/\s+/g, ' ').trim() || '';
+    }
+
+    containsCjk(text = '') {
+      return /[\u3400-\u9fff]/u.test(text);
+    }
+
+    formatDetailText(label = '', value = '') {
+      const cleanLabel = label.replace(/[：:]\s*$/, '').trim();
+      const separator = label.includes('：') ? '：' : ':';
+      return cleanLabel && value ? `${cleanLabel}${separator} ${value}` : '';
+    }
+
+    getEducationDetailPriority(label = '') {
+      const norm = this.normalize(label);
+      if (!norm) return 99;
+      if (/(minor|副修)/.test(norm)) return 1;
+      if (/(final year project|fyp|畢業專題|毕业专题)/.test(norm)) return 2;
+      if (/(projects|project|項目|项目)/.test(norm)) return 3;
+      if (/(awards|award|honou|honor|獎項|奖项|獎|奖)/.test(norm)) return 4;
+      if (/(leadership|class representative|領導|领导|代表)/.test(norm)) return 5;
+      if (/(methodologies|methodology|methods|方法)/.test(norm)) return 6;
+      if (/(courses|course|課程|课程)/.test(norm)) return 7;
+      return 8;
+    }
+
+    collectEducationCards(section, mode = 'normal') {
+      if (!section) return [];
+
+      return Array.from(section.querySelectorAll('.education-card')).map((card) => {
+        const title = this.getNodeText(card.querySelector('h3'));
+        const degree = this.getNodeText(card.querySelector('.edu-degree'));
+        const period = this.getNodeText(card.querySelector('.edu-period'));
+        const detailRoot = card.querySelector('.edu-details');
+        const children = detailRoot ? Array.from(detailRoot.children) : [];
+        const details = [];
+        const seen = new Set();
+
+        children.forEach((child, index) => {
+          if (child.tagName !== 'P') return;
+
+          const labelNode = child.querySelector('strong');
+          const valueNode = child.querySelector('span');
+          const label = this.getNodeText(labelNode);
+          const value = this.getNodeText(valueNode);
+
+          if (label && value) {
+            const text = this.formatDetailText(label, value);
+            if (text && !seen.has(text)) {
+              seen.add(text);
+              details.push({
+                label,
+                text,
+                priority: this.getEducationDetailPriority(label)
+              });
+            }
+            return;
+          }
+
+          if (!label) return;
+
+          const next = children[index + 1];
+          if (next?.tagName !== 'UL') return;
+
+          const listItems = Array.from(next.querySelectorAll('li'))
+            .map((node) => this.getNodeText(node))
+            .filter(Boolean)
+            .slice(0, mode === 'short' ? 1 : 2);
+
+          if (!listItems.length) return;
+
+          const joiner = this.containsCjk(label) ? '、' : ' / ';
+          const text = this.formatDetailText(label, listItems.join(joiner));
+
+          if (text && !seen.has(text)) {
+            seen.add(text);
+            details.push({
+              label,
+              text,
+              priority: this.getEducationDetailPriority(label)
+            });
+          }
+        });
+
+        details.sort((a, b) => a.priority - b.priority);
+
+        return {
+          title,
+          degree,
+          period,
+          details
+        };
+      }).filter((card) => card.title || card.degree);
+    }
+
+    buildEducationSummary(section, mode = 'normal') {
+      const title = this.getSectionTitle(section);
+      const cards = this.collectEducationCards(section, mode);
+      const highlights = cards
+        .flatMap((card) => card.details.slice(0, mode === 'short' ? 1 : 2).map((detail) => detail.text))
+        .slice(0, mode === 'short' ? 2 : 4);
+
+      return {
+        sectionId: 'education',
+        title,
+        paragraphs: [],
+        tags: [],
+        highlights,
+        cards,
+        url: `${window.location.pathname.split('/').pop() || ''}#education`
+      };
+    }
+
+    collectTeamCards(section, mode = 'normal') {
+      if (!section) return [];
+
+      return Array.from(section.querySelectorAll('.team-focus-copy[data-team-member]'))
+        .map((card) => {
+          const title = this.getNodeText(card.querySelector('.team-name'));
+          const role = this.getNodeText(card.querySelector('.team-main-role strong'));
+          const summary = this.getNodeText(card.querySelector('.team-focus-summary'));
+          const contributions = Array.from(card.querySelectorAll('.team-details li'))
+            .map((node) => this.getNodeText(node))
+            .filter(Boolean)
+            .slice(0, mode === 'short' ? 1 : 2)
+            .map((text) => ({ text }));
+
+          const details = [];
+
+          if (summary) {
+            details.push({ text: summary });
+          }
+
+          contributions.forEach((item) => {
+            if (!details.some((detail) => detail.text === item.text)) {
+              details.push(item);
+            }
+          });
+
+          return {
+            title,
+            degree: role,
+            period: '',
+            details
+          };
+        })
+        .filter((card) => card.title);
+    }
+
+    buildTeamSummary(section, mode = 'normal') {
+      const title = this.getSectionTitle(section);
+      const cards = this.collectTeamCards(section, mode);
+      const highlights = cards.map((card) => card.title).filter(Boolean);
+
+      return {
+        sectionId: 'team',
+        title,
+        paragraphs: [],
+        tags: [],
+        highlights,
+        cards,
+        url: `${window.location.pathname.split('/').pop() || ''}#team`
+      };
+    }
+
     collectParagraphs(root, limit = 3) {
       if (!root) return [];
       return Array.from(root.querySelectorAll('p'))
@@ -61,8 +227,12 @@
         '.feature-item h3',
         '.month-section h3',
         '.task-item h5',
+        '.skill-category h3',
+        '.policy-card h2',
+        '.team-step h3',
         '.rail-card strong',
-        '.home-snapshot-item .metric-label'
+        '.home-snapshot-item .metric-label',
+        '.contact-card .contact-label'
       ].join(', ');
 
       const seen = new Set();
@@ -76,14 +246,49 @@
         .slice(0, limit);
     }
 
+    collectTagHighlights(root, limit = 6) {
+      if (!root) return [];
+
+      const selector = [
+        '.skill-category .tag',
+        '.timeline-tags .tag',
+        '.award-tags .tag',
+        '.challenge-item h4',
+        '.feature-list li',
+        '.media-chip',
+        '.media-caption',
+        '.cert-list li',
+        '.contact-card .contact-label'
+      ].join(', ');
+
+      const seen = new Set();
+      return Array.from(root.querySelectorAll(selector))
+        .map((node) => node.textContent.replace(/\s+/g, ' ').trim())
+        .filter((text) => {
+          if (!text || text.length < 2 || seen.has(text)) return false;
+          seen.add(text);
+          return true;
+        })
+        .slice(0, limit);
+    }
+
     buildSectionSummary(sectionId, mode = 'normal') {
       const section = this.getSection(sectionId);
       if (!section) return null;
+
+      if (sectionId === 'education') {
+        return this.buildEducationSummary(section, mode);
+      }
+
+      if (sectionId === 'team') {
+        return this.buildTeamSummary(section, mode);
+      }
 
       const title = this.getSectionTitle(section);
       const paragraphs = this.collectParagraphs(section, mode === 'short' ? 1 : 2);
       const listItems = this.collectListItems(section, mode === 'short' ? 2 : 3);
       const cards = this.collectCardHighlights(section, mode === 'short' ? 2 : 3);
+      const tags = this.collectTagHighlights(section, mode === 'short' ? 3 : 6);
 
       const highlights = [];
       cards.forEach((item) => {
@@ -92,11 +297,15 @@
       listItems.forEach((item) => {
         if (!highlights.includes(item)) highlights.push(item);
       });
+      tags.forEach((item) => {
+        if (!highlights.includes(item)) highlights.push(item);
+      });
 
       return {
         sectionId,
         title,
         paragraphs,
+        tags,
         highlights: highlights.slice(0, mode === 'short' ? 2 : 4),
         url: `${window.location.pathname.split('/').pop() || ''}#${sectionId}`
       };
@@ -181,8 +390,10 @@
           quickTake: 'Quick take',
           keyPoints: 'Key points',
           relatedLinks: 'Open related section',
-          basedOnCurrentSection: 'Based on the section you are viewing.',
-          basedOnCurrentPage: 'Based on the current page.',
+          sectionSummaryLead: 'Here is the quick read of the part you are on.',
+          sectionHighlightsLead: 'This section focuses on',
+          basedOnCurrentSection: 'I kept this answer tied to the section currently on screen.',
+          basedOnCurrentPage: 'I kept this answer tied to the page you are viewing.',
           askNext: 'You can also ask:',
           noMatch: "I'm not fully sure which part you mean yet. Did you want Jason's HAECO work, the hackathon project, skills, education, awards, experience, contact details, or a summary of this page or section?",
           promptQuestion: 'Want the 20-second summary of',
@@ -200,8 +411,10 @@
           quickTake: '重點摘要',
           keyPoints: '重點',
           relatedLinks: '打開相關部分',
-          basedOnCurrentSection: '根據你正在查看的部分。',
-          basedOnCurrentPage: '根據目前頁面。',
+          sectionSummaryLead: '以下是你目前看到這部分的快速整理。',
+          sectionHighlightsLead: '這個部分主要在講',
+          basedOnCurrentSection: '我把回答聚焦在你目前螢幕上的這一部分。',
+          basedOnCurrentPage: '我把回答聚焦在你目前正在看的頁面。',
           askNext: '你也可以問：',
           noMatch: '我未完全確定你想問哪一部分。你是想問 Jason 的黑客松、港機 Co-op、項目、技能、教育、獎項、經驗、聯絡資訊，還是目前頁面或這個部分的摘要？',
           promptQuestion: '想看這個部分的 20 秒摘要嗎：',
@@ -217,8 +430,10 @@
           quickTake: '重点摘要',
           keyPoints: '重点',
           relatedLinks: '打开相关部分',
-          basedOnCurrentSection: '根据你正在查看的部分。',
-          basedOnCurrentPage: '根据当前页面。',
+          sectionSummaryLead: '下面是你现在看到这一部分的快速整理。',
+          sectionHighlightsLead: '这部分主要在讲',
+          basedOnCurrentSection: '我把回答聚焦在你现在屏幕上的这一部分。',
+          basedOnCurrentPage: '我把回答聚焦在你当前正在看的页面。',
           askNext: '你也可以问：',
           noMatch: '我还不太确定你想问哪一部分。你是想问 Jason 的黑客松、港机 Co-op、项目、技能、教育、奖项、经验、联络信息，还是当前页面或这个部分的摘要？',
           promptQuestion: '想看这个部分的 20 秒摘要吗：',
@@ -234,8 +449,10 @@
           quickTake: 'Resumen rapido',
           keyPoints: 'Puntos clave',
           relatedLinks: 'Abrir seccion relacionada',
-          basedOnCurrentSection: 'Basado en la seccion que estas viendo.',
-          basedOnCurrentPage: 'Basado en la pagina actual.',
+          sectionSummaryLead: 'Aqui tienes la lectura rapida de la parte que estas viendo.',
+          sectionHighlightsLead: 'Esta seccion se centra en',
+          basedOnCurrentSection: 'Mantengo esta respuesta enfocada en la seccion que tienes en pantalla.',
+          basedOnCurrentPage: 'Mantengo esta respuesta enfocada en la pagina que estas viendo.',
           askNext: 'Tambien puedes preguntar:',
           noMatch: 'Todavia no estoy totalmente seguro de que parte quieres decir. Quieres preguntar por el hackathon, el Co-op en HAECO, proyectos, habilidades, educacion, premios, experiencia, contacto o un resumen de esta pagina o seccion?',
           promptQuestion: 'Quieres el resumen de 20 segundos de',
@@ -266,6 +483,60 @@
 
     unique(items) {
       return Array.from(new Set(items.filter(Boolean)));
+    }
+
+    getDefaultSuggestions(lang = 'en', limit = 4) {
+      return this.unique(this.suggestedQueries[lang] || this.suggestedQueries.en || []).slice(0, limit);
+    }
+
+    joinList(items = [], lang = 'en') {
+      const values = this.unique(items);
+      if (values.length <= 1) return values[0] || '';
+      if (values.length === 2) {
+        const connector = lang === 'es' ? ' y ' : (lang === 'zh-TW' || lang === 'zh-CN' ? '、' : ' and ');
+        return values.join(connector);
+      }
+
+      const last = values[values.length - 1];
+      const leading = values.slice(0, -1);
+
+      if (lang === 'zh-TW' || lang === 'zh-CN') {
+        return `${leading.join('、')}、${last}`;
+      }
+
+      const tail = lang === 'es' ? ` y ${last}` : `, and ${last}`;
+      return `${leading.join(', ')}${tail}`;
+    }
+
+    composeHighlightSentence(summary, lang = 'en') {
+      const copy = this.getCopy(lang);
+      const items = this.unique([
+        ...(summary?.highlights || []),
+        ...(summary?.tags || [])
+      ]).slice(0, 4);
+
+      if (!items.length) return '';
+      return `${copy.sectionHighlightsLead} ${this.joinList(items, lang)}.`;
+    }
+
+    buildSectionSuggestions(sectionId, lang = 'en', summary = null) {
+      const copy = this.getCopy(lang);
+      const title = summary?.title || sectionId;
+      const dynamicPrompt = {
+        en: `Tell me about the ${title} section`,
+        'zh-TW': `告訴我「${title}」這部分的重點`,
+        'zh-CN': `告诉我“${title}”这部分的重点`,
+        es: `Cuéntame sobre la sección "${title}"`
+      };
+      const promptCatalog = this.getPromptCatalog(lang);
+      const sectionPrompts = promptCatalog[sectionId] || [];
+
+      return this.unique([
+        dynamicPrompt[lang] || dynamicPrompt.en,
+        ...sectionPrompts.map((prompt) => prompt.query),
+        copy.pagePromptAction,
+        ...(this.suggestedQueries[lang] || this.suggestedQueries.en || [])
+      ]).slice(0, 4);
     }
 
     getSharedIdlePrompts(summary, lang = 'en') {
@@ -366,6 +637,10 @@
           features: [
             { label: 'Features', question: 'Want the short version of what the product can actually do?', query: 'What are the key features?' },
             { label: 'Did you know?', question: 'This is where the project turns from concept into a usable tool.', query: 'Summarize this section' }
+          ],
+          details: [
+            { label: 'Details', question: 'Want the quick version of the hackathon timeline, requirements, and judging rules?', query: 'Summarize this section' },
+            { label: 'Did you know?', question: 'This section gives the competition format, submission rules, and scale at a glance.', query: 'Tell me about this section' }
           ],
           media: [
             { label: 'Impact', question: 'Want the quick version of the interviews and public visibility?', query: 'What impact did the project have?' },
@@ -474,6 +749,11 @@
             { label: 'If you want', question: 'I can separate the practical features from the nice-to-have ones.', query: 'Summarize this section' },
             { label: 'Did you know?', question: 'This is where the project really stops being an idea and starts looking like a product.', query: 'Summarize this section' }
           ],
+          details: [
+            { label: 'Need a hand?', question: 'Want the hackathon rules, timing, and scale in one quick summary?', query: 'Summarize this section' },
+            { label: 'If you want', question: 'I can pull the timeline, requirements, and judging criteria into one short answer.', query: 'Summarize this section' },
+            { label: 'Did you know?', question: 'This section shows the official competition setup, not just Jason’s project outcome.', query: 'Tell me about this section' }
+          ],
           media: [
             { label: 'Need a hand?', question: 'Want the quick story of the interviews and visibility?', query: 'What impact did the project have?' },
             { label: 'If you want', question: 'I can explain why the project kept getting attention after the competition.', query: 'Summarize this section' },
@@ -509,15 +789,19 @@
     }
 
     detectSummaryIntent(norm) {
-      if (/(summarize|summary|overview|what is this page about|quick summary|what is this|what am i looking at|what happened here|tell me about this|總結|总结|摘要|概覽|概览|resume|resumen)/.test(norm)) {
-        if (/(section|this section|part|here|this area|部分|這個部分|这个部分|seccion)/.test(norm)) {
+      if (/(summarize|summary|overview|what is this page about|quick summary|what is this|what am i looking at|what happened here|總結|总结|摘要|概覽|概览|resume|resumen)/.test(norm)) {
+        if (/(section|this section|part|here|this area|部分|這個部分|这个部分|呢部分|本部分|seccion)/.test(norm)) {
           return 'section_summary';
         }
-        if (/(page|this page|portfolio|頁面|页面|pagina)/.test(norm)) {
+        if (/(page|this page|portfolio|頁面|页面|這一頁|这一页|本頁|本页|呢頁|呢页|pagina)/.test(norm)) {
           return 'page_summary';
         }
       }
       return null;
+    }
+
+    detectSectionFocusIntent(norm) {
+      return /(tell me about this section|tell me about the .+ section|告訴我這個部分的重點|告訴我「.+」這部分的重點|告诉我这个部分的重点|告诉我“.+”这部分的重点|cuentame sobre esta seccion|cuentame sobre la seccion ".+"|cuéntame sobre esta sección|cuéntame sobre la sección ".+")/.test(norm);
     }
 
     isFollowUp(norm) {
@@ -572,7 +856,7 @@
           handled: true,
           text: lines.join('\n'),
           actions: [],
-          suggestions: ['Tell me about Jason', 'What did Jason do at HAECO?', 'What is the Bay Management System?', 'Summarize this page'],
+          suggestions: this.getDefaultSuggestions(lang),
           entries: []
         };
       }
@@ -680,6 +964,22 @@
       return this.unique(suggestions).slice(0, 4);
     }
 
+    composeSectionFocusResponse(sectionId, lang, context = {}) {
+      if (!sectionId) return null;
+
+      const matches = this.entries
+        .filter((entry) => entry.page === context.currentPage && entry.section === sectionId)
+        .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+        .slice(0, 3)
+        .map((entry, index) => ({ entry, score: 10 - index }));
+
+      if (!matches.length) {
+        return this.composeSectionSummary(sectionId, lang, context.mode || 'normal');
+      }
+
+      return this.composeEntryResponse(matches, lang, context);
+    }
+
     composeEntryResponse(matches, lang, context = {}) {
       const copy = this.getCopy(lang);
       const entries = matches.map((item) => item.entry);
@@ -725,11 +1025,17 @@
       if (!summary) return null;
 
       const lines = [];
-      lines.push(`**${copy.sectionSummary}: ${summary.title || sectionId}**`);
+      lines.push(`**${summary.title || sectionId}**`);
       lines.push('');
+      lines.push(copy.sectionSummaryLead);
+      const fallbackSummary = this.composeHighlightSentence(summary, lang);
 
       if (summary.paragraphs.length) {
+        lines.push('');
         lines.push(summary.paragraphs[0]);
+      } else if (fallbackSummary) {
+        lines.push('');
+        lines.push(fallbackSummary);
       }
 
       if (mode !== 'short' && summary.paragraphs[1]) {
@@ -737,7 +1043,26 @@
         lines.push(summary.paragraphs[1]);
       }
 
-      if (summary.highlights.length) {
+      if (summary.cards?.length) {
+        summary.cards.forEach((card) => {
+          lines.push('');
+          lines.push(`**${card.title}**`);
+
+          if (card.degree) {
+            lines.push(card.degree);
+          }
+
+          if (card.period) {
+            lines.push(card.period);
+          }
+
+          card.details
+            .slice(0, mode === 'short' ? 1 : 2)
+            .forEach((detail) => lines.push(`- ${detail.text}`));
+        });
+      }
+
+      if (summary.highlights.length && !summary.cards?.length) {
         lines.push('');
         lines.push(`**${copy.keyPoints}**`);
         summary.highlights.forEach((item) => lines.push(`- ${item}`));
@@ -750,10 +1075,7 @@
         handled: true,
         text: lines.join('\n'),
         actions: summary.url ? [{ text: `${copy.openSection}: ${summary.title || sectionId}`, link: summary.url }] : [],
-        suggestions: this.unique([
-          this.getCopy(lang).pagePromptAction,
-          ...(this.suggestedQueries[lang] || this.suggestedQueries.en || [])
-        ]).slice(0, 4),
+        suggestions: this.buildSectionSuggestions(sectionId, lang, summary),
         entries: []
       };
     }
@@ -800,6 +1122,7 @@
 
       const mode = this.detectMode(norm);
       const summaryIntent = this.detectSummaryIntent(norm);
+      const sectionFocusIntent = this.detectSectionFocusIntent(norm);
       const directIntent = this.detectDirectIntent(norm);
 
       if (directIntent) {
@@ -823,6 +1146,34 @@
         const response = this.composeSectionSummary(currentSectionId, lang, mode);
         if (response) {
           this.memory.lastEntries = [];
+          this.memory.lastMode = mode;
+          this.memory.lastQuery = message;
+          this.memory.lastSectionId = currentSectionId;
+          return response;
+        }
+      }
+
+      if (sectionFocusIntent && currentSectionId) {
+        if (lang !== 'en') {
+          const response = this.composeSectionSummary(currentSectionId, lang, mode);
+          if (response) {
+            this.memory.lastEntries = [];
+            this.memory.lastMode = mode;
+            this.memory.lastQuery = message;
+            this.memory.lastSectionId = currentSectionId;
+            return response;
+          }
+        }
+
+        const response = this.composeSectionFocusResponse(currentSectionId, lang, {
+          mode,
+          summaryIntent,
+          currentPage,
+          currentSectionId,
+          lastEntries: this.isFollowUp(norm) ? this.memory.lastEntries : []
+        });
+        if (response) {
+          this.memory.lastEntries = response.entries || [];
           this.memory.lastMode = mode;
           this.memory.lastQuery = message;
           this.memory.lastSectionId = currentSectionId;
@@ -861,7 +1212,7 @@
           handled: true,
           text: this.getCopy(lang).noMatch,
           actions: [],
-          suggestions: this.unique(this.suggestedQueries[lang] || this.suggestedQueries.en || []).slice(0, 4),
+          suggestions: this.getDefaultSuggestions(lang),
           entries: []
         };
       }

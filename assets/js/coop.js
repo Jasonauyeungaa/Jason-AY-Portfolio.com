@@ -1,22 +1,34 @@
 (() => {
   const site = window.JasonSite || {};
-  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const mediaGallery = document.getElementById('mediaGallery');
   const categoryButtons = Array.from(document.querySelectorAll('.category-btn'));
   const monthSections = Array.from(document.querySelectorAll('.month-section'));
+  const languageLinks = Array.from(document.querySelectorAll('[data-lang-link]'));
   const heroSection = document.querySelector('.coop-hero');
   const heroStageImage = document.querySelector('.coop-browser-stage .browser-stage-image');
   const mediaFiles = window.JasonMedia?.coop || [];
   let activeCategory = 'all';
 
-  const getCurrentLang = () => runtimePrefs.language || document.documentElement.lang || 'en';
-  const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
-  const getLocalizedText = (value, fallback = '') => {
-    if (!value) return fallback;
-    if (typeof value === 'string') return value;
+  const fallbackCaption = (src) => site.fallbackCaptionFromSrc?.(src) || '';
+  const getLocalizedText = (value, fallback = '') => site.resolveLocalizedValue?.(value, fallback) || fallback;
 
-    const currentLang = getCurrentLang();
-    return value[currentLang] || value.en || Object.values(value)[0] || fallback;
+  const updateLanguageAwareLinks = () => {
+    if (!languageLinks.length) return;
+
+    const lang = window.JasonRuntimePrefs?.language || document.documentElement.lang || 'en';
+
+    languageLinks.forEach((link) => {
+      if (link.dataset.langLink !== 'haeco') return;
+
+      const hrefMap = {
+        en: link.dataset.hrefEn,
+        'zh-TW': link.dataset.hrefZhTw,
+        'zh-CN': link.dataset.hrefZhCn,
+        es: link.dataset.hrefEs || link.dataset.hrefEn
+      };
+
+      link.href = hrefMap[lang] || hrefMap.en || link.href;
+    });
   };
 
   const renderMediaGallery = (category = activeCategory) => {
@@ -121,8 +133,16 @@
 
   const updateMonthHeaderState = (section) => {
     const trigger = section.querySelector('.month-trigger');
+    const details = section.querySelector('.month-details');
+    const isExpanded = section.classList.contains('expanded');
+
     if (trigger) {
-      trigger.setAttribute('aria-expanded', String(section.classList.contains('expanded')));
+      trigger.setAttribute('aria-expanded', String(isExpanded));
+    }
+
+    if (details) {
+      details.setAttribute('aria-hidden', String(!isExpanded));
+      details.inert = !isExpanded;
     }
   };
 
@@ -154,6 +174,9 @@
         const detailsId = details.id || `coop-month-details-${monthSections.indexOf(section) + 1}`;
         details.id = detailsId;
         trigger.setAttribute('aria-controls', detailsId);
+        trigger.id = `${detailsId}-trigger`;
+        details.setAttribute('role', 'region');
+        details.setAttribute('aria-labelledby', trigger.id);
       }
 
       updateMonthHeaderState(section);
@@ -168,6 +191,7 @@
   });
 
   bindHeroImagePan();
+  updateLanguageAwareLinks();
 
   if (mediaFiles.length) {
     renderMediaGallery(activeCategory);
@@ -175,6 +199,7 @@
 
   window.addEventListener('site:languagechange', () => {
     renderMediaGallery(activeCategory);
+    updateLanguageAwareLinks();
   });
 
   const taskItems = document.querySelectorAll('.task-item');

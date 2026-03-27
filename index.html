@@ -6,33 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <script>
-        (() => {
-            const root = document.documentElement;
-            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
-            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
-            const supportedThemes = new Set(['dark', 'light']);
-            let storedPrefs = {};
-
-            try {
-                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
-            } catch (error) {
-                storedPrefs = {};
-            }
-
-            const language = supportedLanguages.has(storedPrefs.language)
-                ? storedPrefs.language
-                : (runtimePrefs.language || root.lang || 'en');
-            const theme = supportedThemes.has(storedPrefs.theme)
-                ? storedPrefs.theme
-                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
-
-            root.lang = language;
-            root.setAttribute('data-theme', theme);
-            runtimePrefs.language = root.lang;
-            runtimePrefs.theme = root.getAttribute('data-theme');
-        })();
-    </script>
+    <script src="assets/js/runtime-prefs.js"></script>
     <title>Jason Au-Yeung | IEEM × Data × Tech</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/chat.css">
@@ -339,7 +313,7 @@
                             <span class="tag" data-i18n="proj.tag.css">CSS</span>
                             <span class="tag" data-i18n="proj.tag.js">JavaScript</span>
                             <span class="tag" data-i18n="proj.tag.awsq">AWS Q Developer</span>
-                            <span class="tag" data-i18n="proj.tag.kiro">Kiro AI</span>
+                            <span class="tag" data-i18n="proj.tag.kiro">Kiro</span>
                         </div>
                         <a href="hackathon.html" class="cta-btn" style="display: inline-block; margin-top: 1rem;" data-i18n="proj.haeco.btn">View Detailed AWS AI Hackathon →</a>
                     </div>
@@ -477,7 +451,7 @@
                         <h3 data-i18n="skills.ai.title">AI & Development Tools</h3>
                         <div class="skill-tags">
                             <span class="tag">AWS Q Developer</span>
-                            <span class="tag">Krio</span>
+                            <span class="tag">Kiro</span>
                             <span class="tag">OpenAI Codex</span>
                             <span class="tag">AutoML</span>
                         </div>
@@ -566,39 +540,27 @@
 
     <div class="resume-modal" id="resumeExperience" aria-hidden="true" hidden>
         <div class="resume-modal-shell" role="dialog" aria-modal="true" aria-labelledby="resumeModalTitle">
-            <button class="resume-modal-close" type="button" aria-label="Close CV preview" data-resume-close>×</button>
+            <button class="resume-modal-close" type="button" aria-label="Close CV dialog" data-resume-close>×</button>
             <div class="resume-modal-layout">
                 <div class="resume-letter-scene">
-                    <button class="resume-letter-trigger" id="resumeLetterToggle" type="button" aria-expanded="false" aria-controls="resumePreviewPanel">
+                    <button class="resume-letter-trigger" id="resumeLetterToggle" type="button" aria-label="Open Jason Au-Yeung CV PDF">
                         <span class="resume-envelope" aria-hidden="true">
                             <span class="cv-envelope-stage">
                                 <span class="resume-envelope-back"></span>
-                                <span class="resume-envelope-letter">
-                                    <span class="resume-letter-sheet">
-                                        <span class="resume-letter-eyebrow" data-i18n="resume.modal.kicker">Jason Au-Yeung</span>
-                                        <strong class="resume-letter-title" id="resumeModalTitle" data-i18n="resume.modal.title">Curriculum Vitae</strong>
-                                        <span class="resume-letter-copy" data-i18n="resume.modal.copy">A quick CV preview with direct access to the full PDF.</span>
+                                    <span class="resume-envelope-letter">
+                                        <span class="resume-letter-sheet">
+                                            <span class="resume-letter-eyebrow" data-i18n="resume.modal.kicker">Jason Au-Yeung</span>
+                                            <strong class="resume-letter-title" id="resumeModalTitle" data-i18n="resume.modal.title">Curriculum Vitae</strong>
+                                            <span class="resume-letter-copy" data-i18n="resume.modal.copy">Click the letter below to open Jason's CV. Nothing opens automatically.</span>
+                                        </span>
                                     </span>
-                                </span>
                                 <span class="resume-envelope-front"></span>
                                 <span class="resume-envelope-flap"></span>
                                 <span class="resume-envelope-seal">CV</span>
                             </span>
                         </span>
                     </button>
-                    <p class="resume-letter-hint" data-i18n="resume.modal.hint">Tap the letter to open or close the CV preview.</p>
-                </div>
-
-                <div class="resume-preview-panel" id="resumePreviewPanel">
-                    <div class="resume-preview-toolbar">
-                        <a href="assets/images/CV/Jason Resume.pdf" class="resume-preview-action primary" target="_blank" rel="noopener noreferrer" data-i18n="resume.modal.open">Open PDF</a>
-                    </div>
-                    <div class="resume-preview-frame resume-preview-placeholder">
-                        <div class="resume-preview-copy">
-                            <span class="resume-preview-badge">CV</span>
-                            <p class="resume-preview-note" data-i18n="resume.modal.note">The CV stays off until you choose to open it. Nothing downloads automatically from this page.</p>
-                        </div>
-                    </div>
+                    <p class="resume-letter-hint" data-i18n="resume.modal.hint">Click the letter to open my CV.</p>
                 </div>
             </div>
         </div>

@@ -110,7 +110,7 @@
       'educacion', 'educación', 'formacion academica', 'formación académica', 'universidad', 'estudios', 'titulo', 'título'
     ],
     skills: [
-      'skills', 'skill', 'programming', 'python', 'sql', 'r', 'octave', 'ai tools', 'aws q developer', 'krio', 'automl', 'languages',
+      'skills', 'skill', 'programming', 'python', 'sql', 'r', 'octave', 'ai tools', 'aws q developer', 'kiro', 'krio', 'automl', 'languages',
       '技能', '技術', '技术', '編程', '编程', '程式', '程序', '語言', '语言', '工具',
       'habilidades', 'habilidad', 'programacion', 'programación', 'lenguajes', 'herramientas', 'ia'
     ],

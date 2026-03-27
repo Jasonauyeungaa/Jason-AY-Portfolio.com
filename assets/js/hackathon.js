@@ -1,6 +1,5 @@
 (() => {
   const site = window.JasonSite || {};
-  const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
   const videoContainer = document.querySelector('.video-container');
   const gallery = document.getElementById('hackathonGallery');
   const heroSection = document.querySelector('.hackathon-hero');
@@ -13,15 +12,8 @@
   const teamSummaries = Array.from(document.querySelectorAll('.team-focus-summary'));
   const videoPath = window.JasonMedia?.hackathonVideo?.src || 'assets/videos/demo.mp4';
   const mediaFiles = window.JasonMedia?.hackathonGallery || [];
-  const getCurrentLang = () => runtimePrefs.language || document.documentElement.lang || 'en';
-  const fallbackCaption = (src) => src.split('/').pop().replace(/\.[^.]+$/, '').replace(/_/g, ' ');
-  const getLocalizedText = (value, fallback = '') => {
-    if (!value) return fallback;
-    if (typeof value === 'string') return value;
-
-    const currentLang = getCurrentLang();
-    return value[currentLang] || value.en || Object.values(value)[0] || fallback;
-  };
+  const fallbackCaption = (src) => site.fallbackCaptionFromSrc?.(src) || '';
+  const getLocalizedText = (value, fallback = '') => site.resolveLocalizedValue?.(value, fallback) || fallback;
 
   const loadDemoVideo = () => {
     if (!videoContainer) return;
@@ -156,6 +148,16 @@
 
     let activeMemberId = null;
 
+    const scrollToTeamMember = (memberId) => {
+      const targetStep = teamSteps.find((step) => step.dataset.teamStep === memberId);
+      if (!targetStep) return;
+
+      targetStep.scrollIntoView({
+        behavior: site.prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    };
+
     const setActiveMember = (memberId) => {
       if (!memberId || memberId === activeMemberId) return;
       activeMemberId = memberId;
@@ -169,6 +171,7 @@
         const isCurrent = item.dataset.teamProgress === memberId;
         item.classList.toggle('is-active', isCurrent);
         item.classList.toggle('is-reached', activeIndex >= 0 && index <= activeIndex);
+        item.setAttribute('aria-pressed', isCurrent ? 'true' : 'false');
       });
 
       teamFigures.forEach((figure) => {
@@ -179,6 +182,23 @@
         copy.classList.toggle('is-active', copy.dataset.teamMember === memberId);
       });
     };
+
+    teamProgressItems.forEach((item) => {
+      const memberId = item.dataset.teamProgress;
+      if (!memberId) return;
+
+      const activateFromRail = () => {
+        setActiveMember(memberId);
+        scrollToTeamMember(memberId);
+      };
+
+      item.addEventListener('click', activateFromRail);
+      item.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        activateFromRail();
+      });
+    });
 
     const firstMember = teamSteps[0].dataset.teamStep;
     if (firstMember) {

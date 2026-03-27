@@ -163,11 +163,11 @@
       "topic": "education",
       "title": "Education",
       "summary_short": "Jason's education section covers HKUST engineering studies and his HKU SPACE Data Science diploma.",
-      "summary_long": "The education section presents Jason's current HKUST BEng studies in IEEM with a Big Data Technology minor, as well as his earlier Higher Diploma in Data Science at HKU SPACE.",
+      "summary_long": "The education section shows two stages of Jason's academic path: he is currently studying Industrial Engineering and Engineering Management at HKUST with a minor in Big Data Technology and a final-year project on inventory control, and before that he completed a Higher Diploma in Data Science at HKU SPACE.",
       "facts": [
-        "BEng in IEEM at HKUST",
-        "Minor in Big Data Technology",
-        "Higher Diploma in Data Science at HKU SPACE"
+        "HKUST: BEng in IEEM with a Big Data Technology minor",
+        "HKUST final-year project focuses on efficient data-driven inventory control",
+        "HKU SPACE: Higher Diploma in Data Science"
       ],
       "keywords": ["education", "study", "university", "academic background"],
       "aliases": ["education", "education background", "where did jason study", "what did jason study", "academic background", "教育", "教育背景", "formacion academica"],
@@ -696,11 +696,11 @@
       "topic": "education",
       "title": "HKUST Engineering Degree",
       "summary_short": "Jason is pursuing a BEng in Industrial Engineering and Engineering Management with a Big Data Technology minor at HKUST.",
-      "summary_long": "Jason is currently pursuing a BEng in Industrial Engineering and Engineering Management at HKUST with a minor in Big Data Technology, which matches the portfolio's emphasis on data, systems, and operational thinking.",
+      "summary_long": "Jason is currently pursuing a BEng in Industrial Engineering and Engineering Management at HKUST with a minor in Big Data Technology. This part of his education connects engineering, operations thinking, and data work, and his final-year project focuses on efficient data-driven methods for inventory control.",
       "facts": [
         "BEng in IEEM at HKUST",
         "Minor in Big Data Technology",
-        "Connects engineering and data-oriented interests"
+        "Final-year project focuses on inventory control"
       ],
       "keywords": ["hkust", "ieem", "degree", "engineering", "big data"],
       "aliases": ["hkust", "what does jason study", "education hkust", "香港科技大學", "香港科技大学", "hkust education"],
@@ -717,11 +717,11 @@
       "topic": "education",
       "title": "HKU SPACE Data Science",
       "summary_short": "Jason completed a Higher Diploma in Data Science at HKU SPACE with academic honors.",
-      "summary_long": "Before HKUST, Jason completed a Higher Diploma in Data Science at HKU SPACE, earning the Academic Excellence Award and Principal's Honors List while also serving as Class Representative.",
+      "summary_long": "Before HKUST, Jason completed a Higher Diploma in Data Science at HKU SPACE. That stage of his education focused on machine learning, data mining, big data analytics, and database work such as a YouTube database system built with SQLite, and he earned academic honors while serving as Class Representative.",
       "facts": [
         "Higher Diploma in Data Science at HKU SPACE",
-        "Academic Excellence Award",
-        "Principal's Honors List",
+        "Studied machine learning, data mining, big data analytics, and information security",
+        "Academic Excellence Award and Principal's Honors List",
         "Class Representative for 80+ students"
       ],
       "keywords": ["hku space", "data science", "diploma", "academic award"],

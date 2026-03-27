@@ -6,33 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <script>
-        (() => {
-            const root = document.documentElement;
-            const runtimePrefs = window.JasonRuntimePrefs || (window.JasonRuntimePrefs = {});
-            const supportedLanguages = new Set(['en', 'zh-TW', 'zh-CN', 'es']);
-            const supportedThemes = new Set(['dark', 'light']);
-            let storedPrefs = {};
-
-            try {
-                storedPrefs = JSON.parse(window.localStorage.getItem('jason-portfolio-prefs') || '{}') || {};
-            } catch (error) {
-                storedPrefs = {};
-            }
-
-            const language = supportedLanguages.has(storedPrefs.language)
-                ? storedPrefs.language
-                : (runtimePrefs.language || root.lang || 'en');
-            const theme = supportedThemes.has(storedPrefs.theme)
-                ? storedPrefs.theme
-                : (runtimePrefs.theme || root.getAttribute('data-theme') || 'dark');
-
-            root.lang = language;
-            root.setAttribute('data-theme', theme);
-            runtimePrefs.language = root.lang;
-            runtimePrefs.theme = root.getAttribute('data-theme');
-        })();
-    </script>
+    <script src="assets/js/runtime-prefs.js"></script>
     <title>HAECO Co-op Experience | Jason Au-Yeung</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/coop.css">
@@ -677,6 +651,44 @@
                         </ul>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <section id="links" class="section">
+            <div class="container">
+                <h2 class="section-title" data-i18n="coop.links.title">Relevant Links</h2>
+                <div class="links-grid">
+                    <a href="index.html" class="link-card glass-card">
+                        <div class="link-icon">🏠</div>
+                        <h3 data-i18n="coop.links.home">Home Page</h3>
+                        <p data-i18n="coop.links.home.desc">Back to the main portfolio</p>
+                    </a>
+                    <a href="hackathon.html" class="link-card glass-card">
+                        <div class="link-icon">🏆</div>
+                        <h3 data-i18n="coop.links.hackathon">Hackathon Page</h3>
+                        <p data-i18n="coop.links.hackathon.desc">Open the AWS hackathon case study</p>
+                    </a>
+                    <a
+                        href="https://www.haeco.com/en"
+                        class="link-card glass-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-lang-link="haeco"
+                        data-href-en="https://www.haeco.com/en"
+                        data-href-zh-tw="https://www.haeco.com/tc"
+                        data-href-zh-cn="https://www.haeco.com/sc"
+                        data-href-es="https://www.haeco.com/en"
+                    >
+                        <div class="link-icon">✈️</div>
+                        <h3 data-i18n="coop.links.haeco">HAECO Official Website</h3>
+                        <p data-i18n="coop.links.haeco.desc">Open the official HAECO website</p>
+                    </a>
+                    <a href="https://career.hkust.edu.hk/web/page.php?sid=89" class="link-card glass-card" target="_blank" rel="noopener noreferrer">
+                        <div class="link-icon">🎓</div>
+                        <h3 data-i18n="coop.links.hkust">HKUST Co-op Page</h3>
+                        <p data-i18n="coop.links.hkust.desc">View the HKUST Co-op program page</p>
+                    </a>
                 </div>
             </div>
         </section>

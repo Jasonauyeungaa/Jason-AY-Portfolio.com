@@ -26,29 +26,37 @@
       id: 'home',
       href: 'index.html',
       localHref: '#home',
-      label: 'Home',
-      meta: 'Portfolio overview'
+      labelKey: 'menu.page.home',
+      labelFallback: 'Home',
+      metaKey: 'menu.page.home.meta',
+      metaFallback: 'Portfolio overview'
     },
     {
       id: 'coop',
       href: 'coop.html',
       localHref: '#overview',
-      label: 'Co-op',
-      meta: 'HAECO experience'
+      labelKey: 'menu.page.coop',
+      labelFallback: 'Co-op',
+      metaKey: 'menu.page.coop.meta',
+      metaFallback: 'HAECO experience'
     },
     {
       id: 'hackathon',
       href: 'hackathon.html',
       localHref: '#award',
-      label: 'Hackathon',
-      meta: 'AWS AI project'
+      labelKey: 'menu.page.hackathon',
+      labelFallback: 'Hackathon',
+      metaKey: 'menu.page.hackathon.meta',
+      metaFallback: 'AWS AI project'
     },
     {
       id: 'policy',
       href: 'policy.html',
       localHref: '__top__',
-      label: 'Policy',
-      meta: 'Statement and notice'
+      labelKey: 'footer.policy',
+      labelFallback: 'Policy',
+      metaKey: 'menu.page.policy.meta',
+      metaFallback: 'Statement and notice'
     }
   ];
 
@@ -64,11 +72,10 @@
   };
 
   const getMenuPageLinks = () => {
-    const policyLabel = window.JasonI18n?.translate?.('footer.policy') || 'Policy';
-
     return basePageLinks.map((item) => ({
       ...item,
-      label: item.id === 'policy' ? policyLabel : item.label
+      label: window.JasonI18n?.translate?.(item.labelKey) || item.labelFallback,
+      meta: window.JasonI18n?.translate?.(item.metaKey) || item.metaFallback
     }));
   };
 
@@ -223,7 +230,7 @@
   const resumeModal = document.getElementById('resumeExperience');
   const resumeTrigger = document.getElementById('resumeCardTrigger');
   const resumeLetterToggle = document.getElementById('resumeLetterToggle');
-  const resumePreviewPanel = document.getElementById('resumePreviewPanel');
+  const resumePdfUrl = 'assets/images/CV/Jason Resume.pdf';
 
   const getSideMenuFocusable = () => {
     if (!sideMenuState.shell) return [];
@@ -398,17 +405,17 @@
     panelInner.innerHTML = `
       <div class="side-menu-layout">
         <div class="side-menu-rail side-menu-rail-dark">
-          <p class="side-menu-kicker">Browse</p>
+          <p class="side-menu-kicker">${window.JasonI18n?.translate?.('menu.kicker') || 'Browse'}</p>
           <h2 class="side-menu-current-title" id="sideMenuTitle">${getCurrentPageTitle()}</h2>
         </div>
         <div class="side-menu-rail side-menu-rail-accent" aria-hidden="true"></div>
         <div class="side-menu-content">
           <div class="side-menu-panel-head">
-            <button class="side-menu-close" type="button" aria-label="Close navigation menu">Close</button>
+            <button class="side-menu-close" type="button" aria-label="${window.JasonI18n?.translate?.('menu.closeAria') || 'Close navigation menu'}">${window.JasonI18n?.translate?.('menu.close') || 'Close'}</button>
           </div>
           <div class="side-menu-scroll">
             <div class="side-menu-group">
-              <p class="side-menu-group-label">Pages</p>
+              <p class="side-menu-group-label">${window.JasonI18n?.translate?.('menu.pages') || 'Pages'}</p>
               <ul class="side-menu-primary-list">
                 ${pageLinks.map((item, index) => {
                   const isCurrent = isCurrentPageLink(item.id);
@@ -438,7 +445,7 @@
             </div>
             ${sectionLinks.length ? `
               <div class="side-menu-group">
-                <p class="side-menu-group-label">On this page</p>
+                <p class="side-menu-group-label">${window.JasonI18n?.translate?.('menu.onThisPage') || 'On this page'}</p>
                 <div class="side-menu-sections">
                   ${sectionLinks.map((item, index) => `
                     <a class="side-menu-section-link" href="${item.href}" data-side-menu-section="true" style="--menu-index:${index}">
@@ -630,67 +637,27 @@
     if (!resumeModal || !resumeTrigger) return;
 
     const closeButton = resumeModal.querySelector('[data-resume-close]');
-    let letterTimer = null;
-    let previewTimer = null;
+    let presentTimer = null;
     let hideTimer = null;
+    let launchTimer = null;
     let lastActiveElement = null;
 
-    const setLetterState = (isOpen) => {
-      resumeModal.classList.toggle('is-letter-open', isOpen);
-      resumeLetterToggle?.setAttribute('aria-expanded', String(isOpen));
-    };
-
-    const setPreviewState = (isVisible) => {
-      resumeModal.classList.toggle('is-preview-ready', isVisible);
-      resumePreviewPanel?.setAttribute('aria-hidden', String(!isVisible));
+    const setLetterState = (isPresented) => {
+      resumeModal.classList.toggle('is-letter-presented', isPresented);
     };
 
     const clearResumeTimers = () => {
-      window.clearTimeout(letterTimer);
-      window.clearTimeout(previewTimer);
+      window.clearTimeout(presentTimer);
       window.clearTimeout(hideTimer);
-    };
-
-    const playResumeOpenSequence = () => {
-      clearResumeTimers();
-      setLetterState(false);
-      setPreviewState(false);
-
-      if (prefersReducedMotion) {
-        setLetterState(true);
-        setPreviewState(true);
-        return;
-      }
-
-      letterTimer = window.setTimeout(() => {
-        setLetterState(true);
-      }, 180);
-
-      previewTimer = window.setTimeout(() => {
-        setPreviewState(true);
-      }, 620);
-    };
-
-    const playResumeCloseSequence = () => {
-      clearResumeTimers();
-      setPreviewState(false);
-
-      if (prefersReducedMotion) {
-        setLetterState(false);
-        return;
-      }
-
-      letterTimer = window.setTimeout(() => {
-        setLetterState(false);
-      }, 120);
+      window.clearTimeout(launchTimer);
     };
 
     setLetterState(false);
-    setPreviewState(false);
 
     const openResumeModal = () => {
       clearResumeTimers();
       lastActiveElement = document.activeElement;
+      setLetterState(false);
       resumeModal.hidden = false;
       resumeModal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lightbox-open');
@@ -699,23 +666,43 @@
         resumeModal.classList.add('is-open');
       });
 
-      playResumeOpenSequence();
-      closeButton?.focus();
+      presentTimer = window.setTimeout(() => {
+        setLetterState(true);
+      }, prefersReducedMotion ? 0 : 120);
+
+      resumeLetterToggle?.focus();
     };
 
-    const closeResumeModal = () => {
-      playResumeCloseSequence();
+    const closeResumeModal = ({ restoreFocus = true, resetLetter = true } = {}) => {
+      clearResumeTimers();
       resumeModal.classList.remove('is-open');
       resumeModal.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('lightbox-open');
 
       hideTimer = window.setTimeout(() => {
+        if (resetLetter) {
+          setLetterState(false);
+        }
         resumeModal.hidden = true;
       }, prefersReducedMotion ? 0 : 420);
 
-      if (lastActiveElement instanceof HTMLElement) {
+      if (restoreFocus && lastActiveElement instanceof HTMLElement) {
         lastActiveElement.focus();
       }
+    };
+
+    const openResumePdf = () => {
+      clearResumeTimers();
+      setLetterState(true);
+
+      const pdfWindow = window.open(resumePdfUrl, '_blank', 'noopener,noreferrer');
+      if (pdfWindow) {
+        pdfWindow.opener = null;
+      }
+
+      launchTimer = window.setTimeout(() => {
+        closeResumeModal({ restoreFocus: false, resetLetter: false });
+      }, prefersReducedMotion ? 0 : 240);
     };
 
     resumeTrigger.addEventListener('click', openResumeModal);
@@ -734,12 +721,26 @@
     });
 
     resumeLetterToggle?.addEventListener('click', () => {
-      if (resumeModal.classList.contains('is-preview-ready') || resumeModal.classList.contains('is-letter-open')) {
-        playResumeCloseSequence();
-        return;
-      }
+      openResumePdf();
+    });
+  };
 
-      playResumeOpenSequence();
+  const bindAssetProtection = () => {
+    document.querySelectorAll('img').forEach((image) => {
+      image.setAttribute('draggable', 'false');
+      image.setAttribute('data-protected-media', 'true');
+    });
+
+    document.addEventListener('dragstart', (event) => {
+      const media = event.target instanceof Element ? event.target.closest('img') : null;
+      if (!media) return;
+      event.preventDefault();
+    });
+
+    document.addEventListener('contextmenu', (event) => {
+      const media = event.target instanceof Element ? event.target.closest('img') : null;
+      if (!media) return;
+      event.preventDefault();
     });
   };
 
@@ -772,6 +773,7 @@
   updateScrollProgress();
   bindHomeHeroImagePan();
   bindResumeModal();
+  bindAssetProtection();
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
 
   if ((header || nav) && typeof site.bindHeaderVisibility === 'function') {
