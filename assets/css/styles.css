@@ -3099,7 +3099,7 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
 
 .resume-modal-shell {
   position: relative;
-  width: min(760px, calc(100vw - 2rem));
+  width: min(920px, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   padding: clamp(1rem, 2vw, 1.35rem);
   border-radius: 30px;
@@ -3126,244 +3126,25 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
 
 .resume-modal-layout {
   display: grid;
-  grid-template-columns: minmax(0, 420px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
   min-height: auto;
   align-items: center;
   justify-content: center;
 }
 
-.resume-letter-scene {
-  position: relative;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 1rem;
-  padding: clamp(1.5rem, 3vw, 2rem);
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 30% 18%, rgba(140, 170, 225, 0.22), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(233, 241, 250, 0.78));
-  border: 1px solid rgba(163, 184, 212, 0.34);
-  overflow: hidden;
-  width: min(100%, 420px);
-}
-
-[data-theme="dark"] .resume-letter-scene {
-  background:
-    radial-gradient(circle at 30% 18%, rgba(117, 149, 206, 0.14), transparent 24%),
-    linear-gradient(180deg, rgba(17, 28, 43, 0.86), rgba(12, 21, 34, 0.96));
-  border-color: rgba(173, 193, 223, 0.14);
-}
-
-.resume-letter-scene::before {
-  content: "";
-  position: absolute;
-  inset: 1rem;
-  border-radius: 22px;
-  border: 1px solid rgba(163, 184, 212, 0.18);
-  pointer-events: none;
-}
-
-.resume-letter-trigger {
-  width: min(310px, 100%);
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  perspective: 1400px;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.resume-letter-trigger:hover {
-  transform: translateY(-4px);
-}
-
-.resume-envelope {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 0.82;
-  filter: drop-shadow(0 30px 50px rgba(28, 52, 87, 0.18));
-  transform-style: preserve-3d;
-}
-
-.cv-envelope-stage {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  transform: translate(-50%, -50%);
-  perspective: 1600px;
-  transform-style: preserve-3d;
-}
-
-.resume-envelope-back,
-.resume-envelope-front,
-.resume-envelope-flap {
-  position: absolute;
-  inset-inline: 0;
-  width: 100%;
-  border-radius: 22px;
-}
-
-.resume-envelope-back {
-  inset: auto 0 0;
-  height: 64%;
-  background: linear-gradient(180deg, #e7eef9 0%, #cfdbed 100%);
-  border: 1px solid rgba(170, 187, 212, 0.56);
-  z-index: 1;
-}
-
-.cv-envelope-stage::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  bottom: 4%;
-  width: 68%;
-  height: 12%;
-  margin-inline: auto;
-  background: radial-gradient(circle, rgba(25, 48, 80, 0.2), transparent 72%);
-  filter: blur(14px);
-  pointer-events: none;
-}
-
-.resume-envelope-front {
-  inset: auto 0 0;
-  height: 56%;
-  background:
-    linear-gradient(180deg, rgba(198, 212, 235, 0.94) 0%, rgba(226, 236, 248, 0.98) 100%);
-  border: 1px solid rgba(170, 187, 212, 0.62);
-  clip-path: inset(0 round 18px);
-  z-index: 2;
-}
-
-.resume-envelope-flap {
-  display: none;
-}
-
-.resume-envelope-letter {
-  position: absolute;
-  inset: 0;
-  width: 72%;
-  height: 68%;
-  margin: auto;
-  transform-origin: center bottom;
-  transform: translate3d(0, var(--resume-letter-shift, 16%), 0) scale(var(--resume-letter-scale, 0.96));
-  transition:
-    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.42s ease,
-    filter 0.45s ease;
-  z-index: 3;
-  filter: drop-shadow(0 8px 18px rgba(36, 60, 96, 0.1));
-}
-
-.resume-letter-sheet {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  height: 100%;
-  padding: 1.3rem 1.25rem 1.45rem;
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 255, 0.98)),
-    repeating-linear-gradient(180deg, transparent 0 24px, rgba(113, 142, 188, 0.08) 24px 25px);
-  color: #18304d;
-  text-align: left;
-  box-shadow: 0 18px 36px rgba(40, 66, 103, 0.16);
-}
-
-[data-theme="dark"] .resume-envelope-back {
-  background: linear-gradient(180deg, #22334d 0%, #182638 100%);
-  border-color: rgba(133, 157, 193, 0.4);
-}
-
-[data-theme="dark"] .resume-envelope-front {
-  background:
-    linear-gradient(180deg, rgba(44, 61, 87, 0.98) 0%, rgba(28, 40, 58, 0.98) 100%);
-  border-color: rgba(133, 157, 193, 0.4);
-}
-
-[data-theme="dark"] .resume-envelope-flap {
-  background: linear-gradient(180deg, #31455f 0%, #213248 100%);
-  border-color: rgba(133, 157, 193, 0.4);
-}
-
-[data-theme="dark"] .resume-letter-sheet {
-  background:
-    linear-gradient(180deg, rgba(245, 248, 252, 0.98), rgba(237, 243, 250, 0.98)),
-    repeating-linear-gradient(180deg, transparent 0 24px, rgba(113, 142, 188, 0.08) 24px 25px);
-}
-
-.resume-envelope-seal {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 17%;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #2a4e7d 0%, #4e79b0 100%);
-  color: #eef5ff;
-  font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  margin-inline: auto;
-  box-shadow: 0 16px 30px rgba(37, 66, 108, 0.24);
-}
-
-.resume-letter-eyebrow {
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #5b7394;
-}
-
-.resume-letter-title {
-  font-size: clamp(1.35rem, 2vw, 1.7rem);
-  line-height: 1.05;
-}
-
-.resume-letter-copy {
-  color: #46607f;
-  line-height: 1.65;
-  font-size: 0.98rem;
-}
-
-.resume-letter-hint {
-  margin: 0;
-  text-align: center;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
 .resume-preview-panel {
   position: relative;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 1rem;
-  padding: clamp(1rem, 2vw, 1.35rem);
+  padding: clamp(1.15rem, 2vw, 1.5rem);
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(233, 241, 250, 0.86));
   border: 1px solid rgba(163, 184, 212, 0.34);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
   overflow: hidden;
-  transform-origin: left center;
-  transform: translate3d(-56%, 4%, 0) rotate(-7deg) scale(0.3);
-  clip-path: inset(18% 8% 16% 0 round 24px);
-  transition:
-    opacity 0.32s ease,
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    clip-path 0.62s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.32s;
-  will-change: transform, opacity, clip-path;
+  width: min(100%, 860px);
+  min-height: min(76vh, 820px);
 }
 
 [data-theme="dark"] .resume-preview-panel {
@@ -3379,6 +3160,24 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
     linear-gradient(135deg, rgba(255, 255, 255, 0.24), transparent 32%),
     radial-gradient(circle at top left, rgba(118, 149, 205, 0.14), transparent 38%);
   pointer-events: none;
+}
+
+.resume-preview-header {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.resume-preview-kicker {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5b7394;
+}
+
+.resume-preview-title {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.08;
 }
 
 .resume-preview-toolbar {
@@ -3504,25 +3303,10 @@ body[data-page="hackathon"] .site-header.header-title-visible .site-header-short
   background: rgba(26, 40, 60, 0.96);
 }
 
-.resume-modal.is-letter-presented .resume-envelope-letter {
-  --resume-letter-shift: -6%;
-  --resume-letter-scale: 1;
-  filter: drop-shadow(0 24px 34px rgba(40, 66, 103, 0.2));
-}
-
 img[data-protected-media="true"] {
   -webkit-user-drag: none;
   user-select: none;
   -webkit-touch-callout: none;
-}
-
-.resume-modal.is-preview-ready .resume-preview-panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  clip-path: inset(0 round 24px);
-  transition-delay: 0s, 0.04s, 0.04s, 0s;
 }
 
 .video-fallback {
@@ -3535,11 +3319,6 @@ img[data-protected-media="true"] {
   .resume-modal-layout {
     grid-template-columns: 1fr;
     justify-content: stretch;
-  }
-
-  .resume-letter-scene {
-    min-height: 360px;
-    width: 100%;
   }
 
   .experience-rail {
@@ -3658,20 +3437,10 @@ img[data-protected-media="true"] {
     border-radius: 24px;
   }
 
-  .resume-letter-scene,
   .resume-preview-panel {
     padding: 1rem;
     border-radius: 20px;
-  }
-
-  .resume-letter-trigger {
-    width: min(260px, 100%);
-  }
-
-  .resume-envelope-seal {
-    width: 48px;
-    height: 48px;
-    font-size: 0.82rem;
+    min-height: min(82vh, 760px);
   }
 
   .resume-preview-toolbar {

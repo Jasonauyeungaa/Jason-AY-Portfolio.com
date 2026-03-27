@@ -212,11 +212,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Curriculum Vitae',
-        'resume.modal.copy': 'Click the letter below to open Jason\'s CV. Nothing opens automatically.',
-        'resume.modal.hint': 'Click the letter to open my CV.',
+        'resume.modal.copy': 'Preview Jason\'s CV below, then open or download it when you\'re ready.',
+        'resume.modal.hint': 'Use the buttons below to open or download my CV.',
         'resume.modal.open': 'Open PDF',
         'resume.modal.download': 'Download CV',
-        'resume.modal.note': 'The CV stays off until you choose to open it. Nothing downloads automatically from this page.',
+        'resume.modal.note': 'Preview the CV below, then open or download it when you\'re ready. Nothing happens automatically from this page.',
         
         // Footer
         'footer.disclaimer.line1': 'Personal portfolio website. In case of discrepancies, my official CV is the most accurate and up-to-date version of my experience.',
@@ -866,11 +866,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '個人履歷',
-        'resume.modal.copy': '點一下下方信件即可開啟 Jason 的履歷，不會自動開啟任何檔案。',
-        'resume.modal.hint': '點一下信件即可開啟我的履歷。',
+        'resume.modal.copy': '你可以先在下方預覽 Jason 的履歷，再自行選擇開啟或下載。',
+        'resume.modal.hint': '使用下方按鈕即可開啟或下載我的履歷。',
         'resume.modal.open': '開啟 PDF',
         'resume.modal.download': '下載履歷',
-        'resume.modal.note': '履歷會保持關閉，直到你主動選擇開啟。此頁面不會自動下載任何檔案。',
+        'resume.modal.note': '可先在下方預覽履歷，再自行選擇開啟或下載。此頁面不會自動執行任何動作。',
         
         // Footer
         'footer.disclaimer.line1': '本網站僅作個人作品展示用途。如有任何不一致之處，請以本人正式履歷為最準確及最新版本。',
@@ -1517,11 +1517,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': '个人履历',
-        'resume.modal.copy': '点一下下方信件即可打开 Jason 的履历，不会自动打开任何文件。',
-        'resume.modal.hint': '点一下信件即可打开我的履历。',
+        'resume.modal.copy': '你可以先在下方预览 Jason 的履历，再自行选择打开或下载。',
+        'resume.modal.hint': '使用下方按钮即可打开或下载我的履历。',
         'resume.modal.open': '打开 PDF',
         'resume.modal.download': '下载履历',
-        'resume.modal.note': '履历会保持关闭，直到你主动选择打开。此页面不会自动下载任何文件。',
+        'resume.modal.note': '可先在下方预览履历，再自行选择打开或下载。此页面不会自动执行任何操作。',
         
         // Footer
         'footer.disclaimer.line1': '本网站仅作个人作品展示用途。如有任何不一致之处，请以本人正式履历为最准确及最新版本。',
@@ -2168,11 +2168,11 @@ const translations = {
         'contact.github': 'GitHub',
         'resume.modal.kicker': 'Jason Au-Yeung',
         'resume.modal.title': 'Currículum Vitae',
-        'resume.modal.copy': 'Haz clic en la carta para abrir el CV de Jason. No se abre nada automáticamente.',
-        'resume.modal.hint': 'Haz clic en la carta para abrir mi CV.',
+        'resume.modal.copy': 'Puedes previsualizar el CV de Jason abajo y luego abrirlo o descargarlo cuando quieras.',
+        'resume.modal.hint': 'Usa los botones de abajo para abrir o descargar mi CV.',
         'resume.modal.open': 'Abrir PDF',
         'resume.modal.download': 'Descargar CV',
-        'resume.modal.note': 'El CV permanece cerrado hasta que decidas abrirlo. Esta página no descarga nada automáticamente.',
+        'resume.modal.note': 'Previsualiza el CV abajo y luego ábrelo o descárgalo cuando quieras. Esta página no hace nada automáticamente.',
         
         // Footer
         'footer.disclaimer.line1': 'Este sitio web es un portafolio personal. En caso de discrepancias, mi CV oficial es la versión más precisa y actualizada de mi experiencia.',

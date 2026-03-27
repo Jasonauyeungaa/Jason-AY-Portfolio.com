@@ -229,8 +229,6 @@
   const homeHeroStageImage = document.querySelector('.home-browser-stage .browser-stage-image');
   const resumeModal = document.getElementById('resumeExperience');
   const resumeTrigger = document.getElementById('resumeCardTrigger');
-  const resumeLetterToggle = document.getElementById('resumeLetterToggle');
-  const resumePdfUrl = 'assets/images/CV/Jason Resume.pdf';
 
   const getSideMenuFocusable = () => {
     if (!sideMenuState.shell) return [];
@@ -637,27 +635,17 @@
     if (!resumeModal || !resumeTrigger) return;
 
     const closeButton = resumeModal.querySelector('[data-resume-close]');
-    let presentTimer = null;
     let hideTimer = null;
-    let launchTimer = null;
     let lastActiveElement = null;
-
-    const setLetterState = (isPresented) => {
-      resumeModal.classList.toggle('is-letter-presented', isPresented);
-    };
+    const primaryAction = resumeModal.querySelector('[data-resume-primary]');
 
     const clearResumeTimers = () => {
-      window.clearTimeout(presentTimer);
       window.clearTimeout(hideTimer);
-      window.clearTimeout(launchTimer);
     };
-
-    setLetterState(false);
 
     const openResumeModal = () => {
       clearResumeTimers();
       lastActiveElement = document.activeElement;
-      setLetterState(false);
       resumeModal.hidden = false;
       resumeModal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lightbox-open');
@@ -666,43 +654,22 @@
         resumeModal.classList.add('is-open');
       });
 
-      presentTimer = window.setTimeout(() => {
-        setLetterState(true);
-      }, prefersReducedMotion ? 0 : 120);
-
-      resumeLetterToggle?.focus();
+      primaryAction?.focus();
     };
 
-    const closeResumeModal = ({ restoreFocus = true, resetLetter = true } = {}) => {
+    const closeResumeModal = ({ restoreFocus = true } = {}) => {
       clearResumeTimers();
       resumeModal.classList.remove('is-open');
       resumeModal.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('lightbox-open');
 
       hideTimer = window.setTimeout(() => {
-        if (resetLetter) {
-          setLetterState(false);
-        }
         resumeModal.hidden = true;
       }, prefersReducedMotion ? 0 : 420);
 
       if (restoreFocus && lastActiveElement instanceof HTMLElement) {
         lastActiveElement.focus();
       }
-    };
-
-    const openResumePdf = () => {
-      clearResumeTimers();
-      setLetterState(true);
-
-      const pdfWindow = window.open(resumePdfUrl, '_blank', 'noopener,noreferrer');
-      if (pdfWindow) {
-        pdfWindow.opener = null;
-      }
-
-      launchTimer = window.setTimeout(() => {
-        closeResumeModal({ restoreFocus: false, resetLetter: false });
-      }, prefersReducedMotion ? 0 : 240);
     };
 
     resumeTrigger.addEventListener('click', openResumeModal);
@@ -718,10 +685,6 @@
       if (event.key === 'Escape' && resumeModal.classList.contains('is-open')) {
         closeResumeModal();
       }
-    });
-
-    resumeLetterToggle?.addEventListener('click', () => {
-      openResumePdf();
     });
   };
 
