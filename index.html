@@ -542,34 +542,37 @@
         <div class="resume-modal-shell" role="dialog" aria-modal="true" aria-labelledby="resumeModalTitle">
             <button class="resume-modal-close" type="button" aria-label="Close CV dialog" data-resume-close>×</button>
             <div class="resume-modal-layout">
-                <div class="resume-preview-panel">
-                    <div class="resume-preview-header">
-                        <span class="resume-preview-kicker" data-i18n="resume.modal.kicker">Jason Au-Yeung</span>
-                        <strong class="resume-preview-title" id="resumeModalTitle" data-i18n="resume.modal.title">Curriculum Vitae</strong>
-                        <p class="resume-preview-note" data-i18n="resume.modal.note">Preview the CV below, then open or download it when you're ready. Nothing happens automatically from this page.</p>
+                <div class="resume-selector-panel">
+                    <div class="resume-selector-header">
+                        <span class="resume-selector-kicker" data-i18n="resume.modal.kicker">Jason Au-Yeung</span>
+                        <strong class="resume-selector-title" id="resumeModalTitle" data-i18n="resume.modal.title">Choose a CV Version</strong>
+                        <p class="resume-selector-note" data-i18n="resume.modal.note">Pick which version of my CV you'd like to open. The English version is ready now, and the Chinese version is coming soon.</p>
                     </div>
-                    <div class="resume-preview-toolbar">
+                    <div class="resume-version-grid">
                         <a
-                            class="resume-preview-action primary"
+                            class="resume-version-card is-available"
                             href="assets/images/CV/Jason Resume.pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             data-resume-primary
-                            data-i18n="resume.modal.open"
-                        >Open PDF</a>
-                        <a
-                            class="resume-preview-action"
-                            href="assets/images/CV/Jason Resume.pdf"
-                            download="Jason-Au-Yeung-CV.pdf"
-                            data-i18n="resume.modal.download"
-                        >Download CV</a>
-                    </div>
-                    <div class="resume-preview-frame">
-                        <iframe
-                            src="assets/images/CV/Jason Resume.pdf#view=FitH"
-                            title="Jason Au-Yeung CV preview"
-                            loading="lazy"
-                        ></iframe>
+                            data-resume-choice
+                        >
+                            <span class="resume-version-status" data-i18n="resume.option.english.status">Available now</span>
+                            <strong class="resume-version-title" data-i18n="resume.option.english.title">English CV</strong>
+                            <p class="resume-version-copy" data-i18n="resume.option.english.note">Open the latest English resume in a new tab.</p>
+                            <span class="resume-version-cta" data-i18n="resume.option.english.cta">Open English CV</span>
+                        </a>
+                        <button
+                            type="button"
+                            class="resume-version-card is-soon"
+                            disabled
+                            aria-disabled="true"
+                        >
+                            <span class="resume-version-status" data-i18n="resume.option.chinese.status">Soon</span>
+                            <strong class="resume-version-title" data-i18n="resume.option.chinese.title">Chinese CV (Soon)</strong>
+                            <p class="resume-version-copy" data-i18n="resume.option.chinese.note">A Chinese version is on the way.</p>
+                            <span class="resume-version-cta" data-i18n="resume.option.chinese.cta">Coming Soon</span>
+                        </button>
                     </div>
                 </div>
             </div>

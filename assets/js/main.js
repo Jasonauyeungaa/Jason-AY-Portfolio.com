@@ -638,6 +638,7 @@
     let hideTimer = null;
     let lastActiveElement = null;
     const primaryAction = resumeModal.querySelector('[data-resume-primary]');
+    const versionChoices = resumeModal.querySelectorAll('[data-resume-choice]');
 
     const clearResumeTimers = () => {
       window.clearTimeout(hideTimer);
@@ -674,6 +675,11 @@
 
     resumeTrigger.addEventListener('click', openResumeModal);
     closeButton?.addEventListener('click', closeResumeModal);
+    versionChoices.forEach((choice) => {
+      choice.addEventListener('click', () => {
+        closeResumeModal({ restoreFocus: false });
+      });
+    });
 
     resumeModal.addEventListener('click', (event) => {
       if (event.target === resumeModal) {
