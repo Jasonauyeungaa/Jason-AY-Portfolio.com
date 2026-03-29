@@ -2,10 +2,13 @@
   const searchButton = document.getElementById('siteSearchToggle');
   if (!searchButton) return;
 
+  const site = window.JasonSite || {};
   const i18n = window.JasonI18n || {};
   const pageTitles = i18n.pageTitles || {};
   const indexCache = {};
   const suggestionCache = {};
+  const pendingHighlightStorageKey = 'jason-portfolio-search-highlight';
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let isOpen = false;
   let modal;
@@ -15,6 +18,9 @@
   let results;
   let closeButton;
   let autocomplete;
+  let activeHighlightTimeout = null;
+  let isInputActive = false;
+  let keepSuggestionsOnBlur = false;
 
   const updateSearchUiState = () => {
     if (!modal || !input || !searchButton) return;
@@ -73,6 +79,13 @@
 
   const getCurrentPageFile = () => window.location.pathname.split('/').pop() || 'index.html';
 
+  const getFileFromHref = (href) => {
+    const raw = String(href || '').split('#')[0];
+    if (!raw) return getCurrentPageFile();
+    const file = raw.split('/').pop();
+    return file || 'index.html';
+  };
+
   const buildHref = (url) => {
     const parts = String(url || '').split('#');
     const file = parts[0] || 'index.html';
@@ -81,59 +94,6 @@
       return hash || file;
     }
     return `${file}${hash}`;
-  };
-
-  const aliasGroups = {
-    about: [
-      'about', 'jason', 'introduction', 'intro', 'who is jason', 'profile',
-      '關於', '关于', '介紹', '介绍', '自我介紹', '自我介绍',
-      'sobre', 'perfil', 'quien es jason', 'quién es jason', 'introduccion', 'introducción'
-    ],
-    awards: [
-      'awards', 'achievements', 'prize', 'winner', 'grand prize', 'award', 'champion',
-      '獎項', '奖项', '成就', '得獎', '得奖', '冠軍', '冠军', '總冠軍', '总冠军',
-      'premios', 'premio', 'logros', 'ganador', 'gran premio', 'campeon', 'campeón'
-    ],
-    experience: [
-      'experience', 'work experience', 'professional experience', 'job', 'career', 'haeco', 'co-op', 'coop', 'internship',
-      '工作經驗', '工作经验', '經驗', '经验', '實習', '实习', '職業', '职业', '工作',
-      'experiencia', 'experiencia profesional', 'practica', 'práctica', 'pasantia', 'pasantía', 'trabajo', 'carrera'
-    ],
-    projects: [
-      'projects', 'project', 'portfolio', 'fyp', 'final year project', 'bay management system', 'inventory control', 'youtube database', 'christmas effects',
-      '項目', '项目', '專題', '专题', '作品', '畢業專題', '毕业专题', '機位管理系統', '机位管理系统', '庫存控制', '库存控制',
-      'proyectos', 'proyecto', 'portafolio', 'proyecto final', 'control de inventario', 'sistema de gestion de bahias', 'sistema de gestión de bahías'
-    ],
-    education: [
-      'education', 'edu', 'education background', 'hkust', 'hku', 'hku space', 'university', 'school', 'degree', 'study',
-      '教育', '教育背景', '學歷', '学历', '大學', '大学', '學校', '学校', '學位', '学位', '讀書', '读书',
-      'educacion', 'educación', 'formacion academica', 'formación académica', 'universidad', 'estudios', 'titulo', 'título'
-    ],
-    skills: [
-      'skills', 'skill', 'programming', 'python', 'sql', 'r', 'octave', 'ai tools', 'aws q developer', 'kiro', 'krio', 'automl', 'languages',
-      '技能', '技術', '技术', '編程', '编程', '程式', '程序', '語言', '语言', '工具',
-      'habilidades', 'habilidad', 'programacion', 'programación', 'lenguajes', 'herramientas', 'ia'
-    ],
-    contact: [
-      'contact', 'contact info', 'email', 'github', 'resume', 'cv',
-      '聯絡', '联络', '聯繫', '联系', '電郵', '电邮', '履歷', '履历', '簡歷', '简历',
-      'contacto', 'informacion de contacto', 'información de contacto', 'correo', 'curriculum', 'currículum', 'github'
-    ],
-    hackathon: [
-      'aws hackathon', 'hackathon', 'bay management', 'aircraft bay', 'award', 'challenge', 'solution', 'demo', 'media', 're:invent',
-      '黑客松', '黑客松aws', '機位管理', '机位管理', '挑戰', '挑战', '方案', '示範', '演示', '影響', '影响',
-      'hackathon aws', 'desafio', 'desafío', 'solucion', 'solución', 'demo', 'impacto', 'medios', 'reinvent', 're invent'
-    ],
-    coop: [
-      'haeco co-op', 'haeco coop', 'co-op', 'internship', 'techathon', 'lean day', 'timeline', 'learnings',
-      '港機', '港机', '實習', '实习', '收穫', '收获', '時間線', '时间线', '亮點', '亮点', '精益日',
-      'experiencia co-op', 'co-op haeco', 'pasantia', 'pasantía', 'aprendizajes', 'cronologia', 'cronología', 'logros', 'lean day'
-    ],
-    policy: [
-      'policy', 'statement', 'chatbot notice', 'accuracy', 'disclaimer', 'purpose',
-      '政策', '聲明', '声明', '準確性', '准确性', '免責聲明', '免责声明', '用途',
-      'politica', 'política', 'declaracion', 'declaración', 'aviso del chatbot', 'precision', 'precisión', 'descargo', 'proposito', 'propósito'
-    ]
   };
 
   const getCannedSuggestions = (lang) => {
@@ -196,15 +156,15 @@
     const pageTitle = getPageTitle(config.pageId, config.lang);
     const heading = config.heading;
     const text = unique(config.textParts || []).join(' ');
-    const keywords = unique(config.keywords || []);
+    const suggestionKeywords = unique(config.suggestionKeywords || []);
     entries.push({
       pageId: config.pageId,
       pageTitle,
       heading,
       href: buildHref(config.href),
       text,
-      keywords,
-      searchText: normalizeText([pageTitle, heading, text, keywords.join(' ')].join(' '))
+      suggestionKeywords,
+      searchText: normalizeText([pageTitle, heading, text].join(' '))
     });
   };
 
@@ -225,7 +185,7 @@
         t('hero.rail.focus.value', ''),
         t('hero.rail.focus.desc', '')
       ],
-      keywords: aliasGroups.about.concat(['ieem', 'data', 'ai', 'industrial engineering'])
+      suggestionKeywords: ['Jason Au-Yeung', 'Industrial Engineering', 'Data', 'AI Systems']
     });
 
     addEntry(entries, {
@@ -239,7 +199,7 @@
         t('awards.leanday.desc', ''),
         t('awards.academic.desc', '')
       ],
-      keywords: aliasGroups.awards.concat(['champion', 'academic excellence', 'lean day', 'techathon'])
+      suggestionKeywords: ['AWS AI Hackathon', 'Grand Prize', 'Academic Excellence', 'Lean Day', 'Techathon']
     });
 
     addEntry(entries, {
@@ -256,7 +216,7 @@
         t('exp.speedy.title', ''),
         t('exp.speedy.company', '')
       ],
-      keywords: aliasGroups.experience.concat(['itso', 'speedy group', 'asset management'])
+      suggestionKeywords: ['HAECO', 'Co-op', 'ITSO', 'Speedy Group', 'Asset Management']
     });
 
     addEntry(entries, {
@@ -267,14 +227,33 @@
       textParts: [
         t('proj.haeco.title', ''),
         t('proj.haeco.desc', ''),
+        t('proj.haeco.ach1', ''),
+        t('proj.haeco.ach2', ''),
+        t('proj.haeco.ach3', ''),
+        t('proj.haeco.ach4', ''),
         t('proj.fyp.title', ''),
         t('proj.fyp.desc', ''),
+        t('proj.fyp.method1', ''),
+        t('proj.fyp.method2', ''),
+        t('proj.fyp.method3', ''),
+        t('proj.fyp.method4', ''),
         t('proj.christmas.title', ''),
         t('proj.christmas.desc', ''),
         t('proj.youtube.title', ''),
-        t('proj.youtube.desc', '')
+        t('proj.youtube.desc', ''),
+        t('proj.tag.awsq', ''),
+        t('proj.tag.kiro', ''),
+        t('proj.tag.python', ''),
+        t('proj.tag.automl', ''),
+        t('proj.tag.simulation', ''),
+        t('proj.tag.optimization', ''),
+        t('proj.tag.datamining', ''),
+        t('proj.tag.stats', ''),
+        t('proj.tag.sqlite', ''),
+        t('proj.tag.dbdesign', ''),
+        t('proj.tag.sql', '')
       ],
-      keywords: aliasGroups.projects.concat(['jit', 'monte carlo', 'sqlite', 'data mining'])
+      suggestionKeywords: ['Bay Management System', 'Kiro', 'AWS Q Developer', 'SQLite', 'AutoML', 'Simulation', 'Optimization', 'Data Mining', 'SQL']
     });
 
     addEntry(entries, {
@@ -293,7 +272,7 @@
         t('edu.hku.award2', ''),
         t('edu.hku.leadership.value', '')
       ],
-      keywords: aliasGroups.education.concat(['big data technology', 'data science', 'class representative'])
+      suggestionKeywords: ['HKUST', 'HKU SPACE', 'Big Data Technology', 'Data Science', 'Class Representative']
     });
 
     addEntry(entries, {
@@ -306,12 +285,35 @@
         t('skills.ai.title', ''),
         t('skills.creative.title', ''),
         t('skills.soft.title', ''),
+        'Python',
+        'R',
+        'Octave',
+        'SQLite',
+        'SQL',
+        'AWS Q Developer',
+        'Kiro',
+        'OpenAI Codex',
+        'AutoML',
+        t('skills.creative.msoffice', ''),
+        t('skills.creative.canva', ''),
+        t('skills.creative.adobe', ''),
+        t('skills.creative.photo', ''),
+        t('skills.creative.video', ''),
+        t('skills.soft.critical', ''),
+        t('skills.soft.decision', ''),
+        t('skills.soft.teamwork', ''),
+        t('skills.soft.negotiation', ''),
+        t('skills.soft.leadership', ''),
+        t('skills.soft.problem', ''),
         t('skills.languages.title', ''),
         t('skills.languages.english', ''),
         t('skills.languages.cantonese', ''),
-        t('skills.languages.mandarin', '')
+        t('skills.languages.mandarin', ''),
+        t('skills.certs.title', ''),
+        t('skills.certs.cert1', ''),
+        t('skills.certs.cert2', '')
       ],
-      keywords: aliasGroups.skills.concat(['python', 'sql', 'openai codex', 'aws q developer', 'canva', 'adobe'])
+      suggestionKeywords: ['Python', 'SQLite', 'SQL', 'AWS Q Developer', 'Kiro', 'OpenAI Codex', 'Canva', 'Adobe Creative']
     });
 
     addEntry(entries, {
@@ -327,7 +329,7 @@
         'wcauyeungaa@connect.ust.hk',
         'github.com/jasonauyeungaa'
       ],
-      keywords: aliasGroups.contact.concat(['wcauyeungaa', 'connect.ust.hk', 'github'])
+      suggestionKeywords: ['Email', 'GitHub', 'Resume / CV', 'wcauyeungaa@connect.ust.hk']
     });
 
     addEntry(entries, {
@@ -341,7 +343,7 @@
         t('coop.hero.period', ''),
         t('coop.hero.intro', '')
       ],
-      keywords: aliasGroups.coop.concat(['technology innovation', 'transformation and technology', '5 months'])
+      suggestionKeywords: ['HAECO Co-op', 'Transformation & Technology', 'Technology Innovation Team', '5 months']
     });
 
     addEntry(entries, {
@@ -360,7 +362,7 @@
         t('coop.highlights.reinvent.title', ''),
         t('coop.highlights.reinvent.desc', '')
       ],
-      keywords: aliasGroups.coop.concat(['techathon', 'lean day', 're:invent', 'media interviews'])
+      suggestionKeywords: ['Techathon', 'Lean Day', 'AWS re:Invent', 'Media Interviews']
     });
 
     addEntry(entries, {
@@ -375,7 +377,7 @@
         t('coop.learnings.strategy.item1', ''),
         t('coop.learnings.innovation.item1', '')
       ],
-      keywords: aliasGroups.coop.concat(['reflection', 'personal reflection', 'leadership', 'operations', 'ai'])
+      suggestionKeywords: ['Leadership', 'Operations', 'AI', 'Reflection']
     });
 
     addEntry(entries, {
@@ -388,7 +390,7 @@
         t('hack.hero.subtitle', ''),
         t('hack.hero.tagline', '')
       ],
-      keywords: aliasGroups.hackathon.concat(['grand prize', '130 teams', '14 days'])
+      suggestionKeywords: ['AWS AI Hackathon', 'Grand Prize', '130+ teams', '14 days']
     });
 
     addEntry(entries, {
@@ -401,7 +403,7 @@
         t('hack.challenge.heading', ''),
         t('hack.challenge.desc', '')
       ],
-      keywords: aliasGroups.hackathon.concat(['aircraft bay assignment', 'manual planning', 'constraints'])
+      suggestionKeywords: ['Aircraft Bay Assignment', 'Manual Planning', 'Constraints']
     });
 
     addEntry(entries, {
@@ -418,7 +420,7 @@
         t('hack.solution.item4.title', ''),
         t('hack.solution.item4.desc', '')
       ],
-      keywords: aliasGroups.hackathon.concat(['optimization', 'real-time visualization', 'dashboard', 'chatbot'])
+      suggestionKeywords: ['Optimization', 'Real-time Visualization', 'Dashboard', 'Chatbot']
     });
 
     addEntry(entries, {
@@ -434,7 +436,7 @@
         t('hack.impact.global.desc1', ''),
         t('hack.impact.global.desc2', '')
       ],
-      keywords: aliasGroups.hackathon.concat(['scmp', 'unwire', 'aws hong kong', 'las vegas', 're:invent'])
+      suggestionKeywords: ['SCMP', 'unwire.hk', 'AWS Hong Kong', 'Las Vegas', 're:Invent']
     });
 
     addEntry(entries, {
@@ -447,7 +449,7 @@
         t('hack.reflection.meaning.body', ''),
         t('hack.reflection.future.body', '')
       ],
-      keywords: aliasGroups.hackathon.concat(['reflection', 'future', 'practical ai'])
+      suggestionKeywords: ['Reflection', 'Future', 'Practical AI']
     });
 
     addEntry(entries, {
@@ -458,7 +460,7 @@
       textParts: [
         stripHtml(t('policy.purpose.body', ''))
       ],
-      keywords: aliasGroups.policy.concat(['portfolio policy', 'website purpose'])
+      suggestionKeywords: ['Policy', 'Website Purpose']
     });
 
     addEntry(entries, {
@@ -469,7 +471,7 @@
       textParts: [
         stripHtml(t('policy.accuracy.body', ''))
       ],
-      keywords: aliasGroups.policy.concat(['accuracy', 'cv precedence', 'official cv'])
+      suggestionKeywords: ['Accuracy', 'CV Precedence', 'Official CV']
     });
 
     addEntry(entries, {
@@ -480,7 +482,7 @@
       textParts: [
         stripHtml(t('policy.chatbot.body', ''))
       ],
-      keywords: aliasGroups.policy.concat(['chatbot', 'ai-generated', 'probabilistic', 'search vs chatbot'])
+      suggestionKeywords: ['Chatbot Notice', 'AI-generated', 'Search vs Chatbot']
     });
 
     indexCache[lang] = entries;
@@ -496,16 +498,10 @@
     index.forEach((entry) => {
       pool.push(entry.heading);
       pool.push(`${entry.pageTitle} ${entry.heading}`);
-      entry.keywords.forEach((keyword) => pool.push(keyword));
+      entry.suggestionKeywords.forEach((keyword) => pool.push(keyword));
     });
 
     getCannedSuggestions(lang).forEach((item) => pool.push(item));
-    aliasGroups.education.forEach((item) => pool.push(item));
-    aliasGroups.projects.forEach((item) => pool.push(item));
-    aliasGroups.hackathon.forEach((item) => pool.push(item));
-    aliasGroups.coop.forEach((item) => pool.push(item));
-    aliasGroups.skills.forEach((item) => pool.push(item));
-    aliasGroups.contact.forEach((item) => pool.push(item));
 
     suggestionCache[lang] = unique(pool);
     return suggestionCache[lang];
@@ -521,6 +517,104 @@
     return 60 - Math.min(normalizedSuggestion.indexOf(normalizedQuery), 40);
   };
 
+  const getHighlightTarget = (target) => {
+    if (!target) return null;
+
+    if (target.matches('.section-title, h1, h2, h3, h4, h5, h6')) {
+      return target;
+    }
+
+    return target.querySelector('.section-title, h1, h2, h3, h4, h5, h6') || target;
+  };
+
+  const storePendingHighlight = (href, query) => {
+    try {
+      window.sessionStorage.setItem(pendingHighlightStorageKey, JSON.stringify({
+        file: getFileFromHref(href),
+        hash: String(href || '').includes('#') ? `#${String(href).split('#')[1]}` : '',
+        query: String(query || '').trim(),
+        ts: Date.now()
+      }));
+    } catch (error) {
+      // Ignore storage failures so navigation still works.
+    }
+  };
+
+  const applyTargetHighlight = (target) => {
+    const highlightTarget = getHighlightTarget(target);
+    if (!highlightTarget) return;
+
+    if (activeHighlightTimeout) {
+      window.clearTimeout(activeHighlightTimeout);
+      activeHighlightTimeout = null;
+    }
+
+    highlightTarget.classList.remove('site-search-target-highlight');
+    void highlightTarget.offsetWidth;
+    highlightTarget.classList.add('site-search-target-highlight');
+
+    activeHighlightTimeout = window.setTimeout(() => {
+      highlightTarget.classList.remove('site-search-target-highlight');
+      activeHighlightTimeout = null;
+    }, 2000);
+  };
+
+  const navigateToHashTarget = (hash, { updateHistory = true } = {}) => {
+    if (!hash) return false;
+
+    const target = document.querySelector(hash);
+    if (!target) return false;
+
+    if (updateHistory) {
+      const nextUrl = `${window.location.pathname}${window.location.search}${hash}`;
+      window.history.pushState(null, '', nextUrl);
+    }
+
+    const scrollTarget = getHighlightTarget(target);
+    if (typeof site.scrollToElement === 'function') {
+      site.scrollToElement(scrollTarget || target, {
+        extraOffset: 16
+      });
+    } else {
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    }
+
+    const highlightDelay = prefersReducedMotion ? 0 : 260;
+    window.setTimeout(() => applyTargetHighlight(target), highlightDelay);
+    return true;
+  };
+
+  const consumePendingHighlight = () => {
+    let payload = null;
+
+    try {
+      payload = JSON.parse(window.sessionStorage.getItem(pendingHighlightStorageKey) || 'null');
+    } catch (error) {
+      payload = null;
+    }
+
+    if (!payload) return;
+
+    const isStale = Math.abs(Date.now() - Number(payload.ts || 0)) > 15000;
+    const sameFile = payload.file === getCurrentPageFile();
+    const sameHash = !payload.hash || payload.hash === window.location.hash;
+
+    try {
+      window.sessionStorage.removeItem(pendingHighlightStorageKey);
+    } catch (error) {
+      // Ignore storage failures after reading the payload.
+    }
+
+    if (isStale || !sameFile || !sameHash || !payload.hash) return;
+
+    window.requestAnimationFrame(() => {
+      navigateToHashTarget(payload.hash, { updateHistory: false });
+    });
+  };
+
   const getSuggestions = (query, lang) => {
     const pool = buildSuggestionPool(lang);
     return pool
@@ -529,6 +623,12 @@
       .sort((left, right) => right.score - left.score || left.item.length - right.item.length)
       .slice(0, 6)
       .map((item) => item.item);
+  };
+
+  const hideSuggestions = () => {
+    if (!autocomplete) return;
+    autocomplete.hidden = true;
+    autocomplete.innerHTML = '';
   };
 
   const createSnippet = (entry, query) => {
@@ -562,7 +662,6 @@
     let score = 0;
     const heading = normalizeText(entry.heading);
     const pageTitle = normalizeText(entry.pageTitle);
-    const keywordText = normalizeText(entry.keywords.join(' '));
 
     for (let i = 0; i < terms.length; i += 1) {
       const term = terms[i];
@@ -571,7 +670,6 @@
       else if (heading.indexOf(term) === 0) score += 28;
       else if (heading.indexOf(` ${term}`) !== -1) score += 18;
       if (pageTitle.indexOf(term) !== -1) score += 10;
-      if (keywordText.indexOf(term) !== -1) score += 18;
       score += Math.max(1, entry.searchText.split(term).length - 1);
     }
 
@@ -582,16 +680,14 @@
     if (!autocomplete) return;
 
     const trimmed = String(query || '').trim();
-    if (!trimmed) {
-      autocomplete.hidden = true;
-      autocomplete.innerHTML = '';
+    if (!trimmed || !isInputActive) {
+      hideSuggestions();
       return;
     }
 
     const suggestions = getSuggestions(trimmed, getLang());
     if (!suggestions.length) {
-      autocomplete.hidden = true;
-      autocomplete.innerHTML = '';
+      hideSuggestions();
       return;
     }
 
@@ -603,7 +699,8 @@
     autocomplete.querySelectorAll('.site-search-suggestion').forEach((button) => {
       button.addEventListener('click', () => {
         input.value = button.dataset.suggestion || button.textContent || '';
-        renderSuggestions(input.value);
+        isInputActive = false;
+        hideSuggestions();
         performSearch(input.value);
         input.focus();
       });
@@ -748,7 +845,34 @@
     closeButton.addEventListener('click', closeSearch);
 
     input.addEventListener('input', () => {
+      isInputActive = true;
       performSearch(input.value);
+    });
+
+    input.addEventListener('focus', () => {
+      isInputActive = true;
+      renderSuggestions(input.value);
+    });
+
+    input.addEventListener('pointerdown', () => {
+      isInputActive = true;
+      window.setTimeout(() => renderSuggestions(input.value), 0);
+    });
+
+    input.addEventListener('keydown', () => {
+      isInputActive = true;
+    });
+
+    input.addEventListener('blur', () => {
+      window.setTimeout(() => {
+        if (keepSuggestionsOnBlur) {
+          keepSuggestionsOnBlur = false;
+          return;
+        }
+
+        isInputActive = false;
+        hideSuggestions();
+      }, 0);
     });
 
     input.addEventListener('search', () => {
@@ -769,10 +893,51 @@
       }
     });
 
+    autocomplete.addEventListener('pointerdown', () => {
+      keepSuggestionsOnBlur = true;
+    });
+
+    autocomplete.addEventListener('focusin', () => {
+      isInputActive = true;
+    });
+
+    autocomplete.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        if (autocomplete.contains(document.activeElement) || document.activeElement === input) return;
+        isInputActive = false;
+        hideSuggestions();
+      }, 0);
+    });
+
+    results.addEventListener('scroll', () => {
+      isInputActive = false;
+      hideSuggestions();
+    }, { passive: true });
+
+    results.addEventListener('pointerdown', () => {
+      isInputActive = false;
+      hideSuggestions();
+    });
+
     results.addEventListener('click', (event) => {
-      if (event.target.closest('a')) {
-        closeSearch();
+      const link = event.target.closest('a.site-search-result');
+      if (!link) return;
+
+      event.preventDefault();
+
+      const href = link.getAttribute('href') || '';
+      const destinationFile = getFileFromHref(href);
+      const hash = href.includes('#') ? `#${href.split('#')[1]}` : '';
+
+      storePendingHighlight(href, input?.value || '');
+      closeSearch();
+
+      if (destinationFile === getCurrentPageFile() && hash) {
+        navigateToHashTarget(hash);
+        return;
       }
+
+      window.location.href = href;
     });
 
     syncUiText();
@@ -800,6 +965,7 @@
     window.addEventListener('site:languagechange', () => {
       syncUiText();
     });
+    consumePendingHighlight();
   };
 
   if (document.readyState === 'loading') {

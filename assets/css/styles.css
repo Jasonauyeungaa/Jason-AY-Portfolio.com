@@ -1901,6 +1901,27 @@ body.side-menu-open {
   line-height: 1.55;
 }
 
+.site-search-target-highlight {
+  position: relative;
+  border-radius: 18px;
+  animation: site-search-target-flash 2s ease;
+}
+
+@keyframes site-search-target-flash {
+  0% {
+    background: rgba(255, 223, 138, 0.72);
+    box-shadow: 0 0 0 0 rgba(227, 157, 56, 0.32);
+  }
+  20% {
+    background: rgba(255, 223, 138, 0.58);
+    box-shadow: 0 0 0 14px rgba(227, 157, 56, 0.18);
+  }
+  100% {
+    background: transparent;
+    box-shadow: 0 0 0 0 rgba(227, 157, 56, 0);
+  }
+}
+
 body.search-open {
   overflow: hidden;
 }

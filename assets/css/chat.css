@@ -34,6 +34,8 @@
 }
 
 :root {
+  --chat-window-gap: 24px;
+  --chat-window-gap-mobile: 12px;
   --bot-feature: #2f4f73;
   --bot-feature-soft: rgba(47, 79, 115, 0.62);
   --bot-feature-glow: rgba(118, 197, 255, 0.32);
@@ -344,10 +346,12 @@
 
 .chat-window {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  top: max(var(--chat-window-gap), calc(env(safe-area-inset-top, 0px) + var(--chat-window-gap)));
+  right: max(var(--chat-window-gap), calc(env(safe-area-inset-right, 0px) + var(--chat-window-gap)));
+  bottom: max(var(--chat-window-gap), calc(env(safe-area-inset-bottom, 0px) + var(--chat-window-gap)));
   width: min(430px, calc(100vw - 32px));
-  height: min(720px, calc(100vh - 48px));
+  max-height: min(720px, calc(100vh - (var(--chat-window-gap) * 2)));
+  max-height: min(720px, calc(100dvh - (var(--chat-window-gap) * 2) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)));
   display: none;
   flex-direction: column;
   border-radius: 28px;
@@ -1119,11 +1123,13 @@ body.chat-open {
   }
 
   .chat-window {
-    right: 12px;
-    left: 12px;
-    bottom: 12px;
+    top: max(var(--chat-window-gap-mobile), calc(env(safe-area-inset-top, 0px) + var(--chat-window-gap-mobile)));
+    right: max(var(--chat-window-gap-mobile), calc(env(safe-area-inset-right, 0px) + var(--chat-window-gap-mobile)));
+    left: max(var(--chat-window-gap-mobile), calc(env(safe-area-inset-left, 0px) + var(--chat-window-gap-mobile)));
+    bottom: max(var(--chat-window-gap-mobile), calc(env(safe-area-inset-bottom, 0px) + var(--chat-window-gap-mobile)));
     width: auto;
-    height: calc(100vh - 24px);
+    max-height: calc(100vh - (var(--chat-window-gap-mobile) * 2));
+    max-height: calc(100dvh - (var(--chat-window-gap-mobile) * 2) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     border-radius: 24px;
   }
 
