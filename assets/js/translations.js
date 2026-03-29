@@ -11,7 +11,7 @@ const translations = {
         'nav.contact': 'Contact',
         
         // Hero Section
-        'hero.tagline': 'Industrial Engineering × Data × AI Systems',
+        'hero.tagline': 'Industrial Engineering × Data × Innovation',
         'hero.intro': 'Worked in HAECO\'s Transformation & Technology Department, building AI-assisted and data-driven tools for operational optimization. Grand Prize winner of AWS AI Hackathon Hong Kong 2025.',
         'hero.btn.contact': 'Get in Touch',
         'hero.btn.hackathon': 'AWS Hackathon',
@@ -230,7 +230,7 @@ const translations = {
         'footer.disclaimer.line1': 'Personal portfolio website. In case of discrepancies, my official CV is the most accurate and up-to-date version of my experience.',
         'footer.disclaimer.line2': 'The English version prevails in case of language inconsistencies.',
         'footer.copyright': '© 2026 Jason Au-Yeung. All rights reserved.',
-        'footer.tagline': 'Built with ❤️ | IEEM × Data × Tech',
+        'footer.tagline': 'Built with ❤️ | IEEM × Data × Innovation',
         'footer.policy': 'Policy & Statement',
         'footer.chatbot': 'Chatbot Notice',
         'search.title': 'Search page text',
@@ -673,7 +673,7 @@ const translations = {
         'nav.contact': '聯絡',
         
         // Hero Section
-        'hero.tagline': '工業工程 × 數據 × 人工智能系統',
+        'hero.tagline': '工業工程 × 數據 × 創新',
         'hero.intro': '曾於HAECO業務轉型及科技部工作，建立以人工智能輔助及數據驅動的營運優化工具。曾奪得2025年AWS人工智能黑客松香港區總冠軍。',
         'hero.btn.contact': '聯絡我',
         'hero.btn.hackathon': 'AWS黑客松',
@@ -892,7 +892,7 @@ const translations = {
         'footer.disclaimer.line1': '本網站僅作個人作品展示用途。如有任何不一致之處，請以本人正式履歷為最準確及最新版本。',
         'footer.disclaimer.line2': '如不同語言版本出現差異，請以英文版本為準。',
         'footer.copyright': '© 2026 Jason Au-Yeung. 版權所有。',
-        'footer.tagline': '用❤️打造 | 工業工程 × 數據 × 科技',
+        'footer.tagline': '用❤️打造 | 工業工程 × 數據 × 創新',
         'footer.policy': '政策與聲明',
         'footer.chatbot': '聊天機械人聲明',
         'search.title': '搜尋頁面文字',
@@ -1332,7 +1332,7 @@ const translations = {
         'nav.contact': '联络',
         
         // Hero Section
-        'hero.tagline': '工业工程 × 数据 × 人工智能系统',
+        'hero.tagline': '工业工程 × 数据 × 创新',
         'hero.intro': '曾在HAECO业务转型及科技部工作，建立以人工智能辅助和数据驱动的运营优化工具。曾获得2025年AWS人工智能黑客松香港区总冠军。',
         'hero.btn.contact': '联络我',
         'hero.btn.hackathon': 'AWS黑客松',
@@ -1551,7 +1551,7 @@ const translations = {
         'footer.disclaimer.line1': '本网站仅作个人作品展示用途。如有任何不一致之处，请以本人正式履历为最准确及最新版本。',
         'footer.disclaimer.line2': '如不同语言版本出现差异，请以英文版本为准。',
         'footer.copyright': '© 2026 Jason Au-Yeung. 版权所有。',
-        'footer.tagline': '用❤️打造 | 工业工程 × 数据 × 科技',
+        'footer.tagline': '用❤️打造 | 工业工程 × 数据 × 创新',
         'footer.policy': '政策与声明',
         'footer.chatbot': '聊天机器人声明',
         'search.title': '搜索页面文字',
@@ -1991,7 +1991,7 @@ const translations = {
         'nav.contact': 'Contacto',
         
         // Hero Section
-        'hero.tagline': 'Ingenieria Industrial × Datos × Sistemas de IA',
+        'hero.tagline': 'Ingenieria Industrial × Datos × Innovacion',
         'hero.intro': 'Trabaje en el Departamento de Transformacion y Tecnologia de HAECO, creando herramientas asistidas por IA y datos para la optimizacion operativa. Ganador del Gran Premio del AWS AI Hackathon Hong Kong 2025.',
         'hero.btn.contact': 'Contacto',
         'hero.btn.hackathon': 'AWS Hackathon',
@@ -2210,7 +2210,7 @@ const translations = {
         'footer.disclaimer.line1': 'Este sitio web es un portafolio personal. En caso de discrepancias, mi CV oficial es la versión más precisa y actualizada de mi experiencia.',
         'footer.disclaimer.line2': 'En caso de diferencias entre idiomas, prevalece la versión en inglés.',
         'footer.copyright': '© 2026 Jason Au-Yeung. Todos los derechos reservados.',
-        'footer.tagline': 'Hecho con ❤️ | IEEM × Data × Tech',
+        'footer.tagline': 'Hecho con ❤️ | IEEM × Data × Innovacion',
         'footer.policy': 'Política y declaración',
         'footer.chatbot': 'Aviso del chatbot',
         'search.title': 'Buscar texto de páginas',
@@ -2675,10 +2675,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const pageTitles = {
     home: {
-        en: 'Jason Au-Yeung | IEEM × Data × Tech',
-        'zh-TW': 'Jason Au-Yeung | 工業工程 × 數據 × 科技',
-        'zh-CN': 'Jason Au-Yeung | 工业工程 × 数据 × 科技',
-        es: 'Jason Au-Yeung | IEEM × Data × Tech'
+        en: 'Jason Au-Yeung | IEEM × Data × Innovation',
+        'zh-TW': 'Jason Au-Yeung | 工業工程 × 數據 × 創新',
+        'zh-CN': 'Jason Au-Yeung | 工业工程 × 数据 × 创新',
+        es: 'Jason Au-Yeung | IEEM × Data × Innovacion'
     },
     coop: {
         en: 'HAECO Co-op Experience | Jason Au-Yeung',
