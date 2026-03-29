@@ -398,6 +398,10 @@
 
     const pageLinks = getMenuPageLinks();
     const sectionLinks = getMenuSectionLinks();
+    const homeLink = pageLinks.find((item) => item.id === 'home') || basePageLinks[0];
+    const homeBrandHref = isCurrentPageLink('home')
+      ? (homeLink.localHref === '__top__' ? '#' : homeLink.localHref)
+      : homeLink.href;
     const panelInner = sideMenuState.shell.querySelector('.side-menu-panel-inner');
 
     panelInner.innerHTML = `
@@ -409,6 +413,19 @@
         <div class="side-menu-rail side-menu-rail-accent" aria-hidden="true"></div>
         <div class="side-menu-content">
           <div class="side-menu-panel-head">
+            <a
+              class="side-menu-brand"
+              href="${homeBrandHref}"
+              ${isCurrentPageLink('home') ? 'data-side-menu-local="true"' : ''}
+              ${homeLink.localHref === '__top__' ? 'data-side-menu-top="true"' : ''}
+              aria-label="Jason AY home"
+            >
+              <img class="side-menu-brand-mark" src="assets/images/logos/web-logo/icon-transparent.png" alt="Jason AY logo">
+              <span class="side-menu-brand-copy">
+                <span class="side-menu-brand-title">Jason AY</span>
+                <span class="side-menu-brand-subtitle">Portfolio</span>
+              </span>
+            </a>
             <button class="side-menu-close" type="button" aria-label="${window.JasonI18n?.translate?.('menu.closeAria') || 'Close navigation menu'}">${window.JasonI18n?.translate?.('menu.close') || 'Close'}</button>
           </div>
           <div class="side-menu-scroll">
@@ -460,6 +477,39 @@
 
     sideMenuState.closeButton = sideMenuState.shell.querySelector('.side-menu-close');
     sideMenuState.closeButton?.addEventListener('click', () => closeSideMenu());
+
+    sideMenuState.shell.querySelector('.side-menu-brand')?.addEventListener('click', (event) => {
+      const link = event.currentTarget;
+      if (!(link instanceof HTMLAnchorElement)) return;
+
+      if (link.dataset.sideMenuLocal !== 'true') {
+        closeSideMenu({ restoreFocus: false });
+        return;
+      }
+
+      event.preventDefault();
+      closeSideMenu({ restoreFocus: false });
+
+      if (link.dataset.sideMenuTop === 'true') {
+        window.requestAnimationFrame(scrollToTop);
+        return;
+      }
+
+      const target = document.querySelector(link.getAttribute('href'));
+      if (!target) {
+        window.requestAnimationFrame(scrollToTop);
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        navigateToTarget(target, {
+          anchor: link,
+          lockHeader: true,
+          usesExpandableHeader: hasExpandableHeader,
+          extraOffset: hasExpandableHeader ? 14 : 16
+        });
+      });
+    });
 
     sideMenuState.shell.querySelectorAll('.side-menu-primary-link').forEach((link) => {
       link.addEventListener('click', (event) => {
