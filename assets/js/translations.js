@@ -207,8 +207,8 @@ const translations = {
         // Contact Section
         'contact.title': 'Get in Touch',
         'contact.kicker': 'Direct contact',
-        'contact.intro': 'Interested in AI-driven solutions, operations optimization, or innovation projects? Let\'s connect!',
-        'contact.panel.title': 'Start with a short message',
+        'contact.intro': 'Interested in AI-driven solutions, operations optimization, or innovative projects? Let’s connect.',
+        'contact.panel.title': 'Start with a quick introduction',
         'contact.panel.item1': 'Project collaborations and innovation work',
         'contact.panel.item2': 'Internship, placement, and student opportunities',
         'contact.panel.item3': 'Questions about HAECO, the hackathon, or the portfolio',
@@ -892,8 +892,8 @@ const translations = {
         // Contact Section
         'contact.title': '聯絡我',
         'contact.kicker': '直接聯絡',
-        'contact.intro': '對人工智能驅動方案、營運優化或創新項目感興趣？讓我們聯繫！',
-        'contact.panel.title': '先發一段簡短訊息給我',
+        'contact.intro': '如果你對人工智慧、營運優化或創新項目有興趣，歡迎與我聯繫。',
+        'contact.panel.title': '歡迎先簡單介紹一下你的想法',
         'contact.panel.item1': '項目合作與創新相關交流',
         'contact.panel.item2': '實習、工作體驗與學生機會',
         'contact.panel.item3': '關於 HAECO、黑客松或作品集的提問',
@@ -1574,8 +1574,8 @@ const translations = {
         // Contact Section
         'contact.title': '联络我',
         'contact.kicker': '直接联系',
-        'contact.intro': '对人工智能驱动方案、运营优化或创新项目感兴趣？让我们联系！',
-        'contact.panel.title': '先发一段简短消息给我',
+        'contact.intro': '如果你对人工智能、运营优化或创新项目有兴趣，欢迎与我联系。',
+        'contact.panel.title': '欢迎先简单介绍一下你的想法',
         'contact.panel.item1': '项目合作与创新相关交流',
         'contact.panel.item2': '实习、工作体验与学生机会',
         'contact.panel.item3': '关于 HAECO、黑客松或作品集的问题',
@@ -2256,8 +2256,8 @@ const translations = {
         // Contact Section
         'contact.title': 'Contáctame',
         'contact.kicker': 'Contacto directo',
-        'contact.intro': '¿Interesado en soluciones impulsadas por IA, optimización de operaciones o proyectos de innovación? ¡Conectemos!',
-        'contact.panel.title': 'Empieza con un mensaje corto',
+        'contact.intro': 'Si te interesan las soluciones impulsadas por IA, la optimización de operaciones o los proyectos innovadores, conectemos.',
+        'contact.panel.title': 'Empieza con una breve introducción',
         'contact.panel.item1': 'Colaboraciones de proyectos y trabajo de innovación',
         'contact.panel.item2': 'Prácticas, colocaciones y oportunidades para estudiantes',
         'contact.panel.item3': 'Preguntas sobre HAECO, el hackathon o el portafolio',
