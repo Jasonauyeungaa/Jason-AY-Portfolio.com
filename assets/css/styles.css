@@ -1223,6 +1223,15 @@ body.side-menu-open {
   cursor: pointer;
 }
 
+.contact-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .contact-card {
   display: flex;
   flex-direction: column;
@@ -1379,6 +1388,10 @@ body.side-menu-open {
 
 .contact-form-status[data-state="info"] {
   color: #4d85d1;
+}
+
+.contact-form-status[data-state="success"] {
+  color: #4eaf73;
 }
 
 /* Footer */

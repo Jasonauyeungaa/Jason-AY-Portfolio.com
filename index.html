@@ -542,7 +542,13 @@
                             </div>
                         </div>
 
-                        <form id="contactForm" class="contact-form-shell" novalidate>
+                        <form
+                            id="contactForm"
+                            class="contact-form-shell"
+                            action="https://script.google.com/macros/s/AKfycbxZZGQsK3x4Nqns1iueh5nq-aIZIVVnxZ-ZeyZk4ES2fVMdcw37xtUoElHQYIdH9A/exec"
+                            method="POST"
+                            novalidate
+                        >
                             <div class="contact-form-heading">
                                 <span class="contact-form-kicker" data-i18n="contact.form.kicker">Contact form</span>
                                 <h3 data-i18n="contact.form.title">Send a message directly from this site</h3>
@@ -565,6 +571,12 @@
                                 <span data-i18n="contact.form.message">Message</span>
                                 <textarea id="contactMessage" name="message" rows="6" data-i18n="contact.form.message.placeholder" placeholder="Write your message here" required></textarea>
                             </label>
+
+                            <input id="contactFormPage" name="page" type="hidden" value="index.html#contact">
+                            <input id="contactFormLanguage" name="language" type="hidden" value="en">
+                            <input id="contactFormUserAgent" name="user_agent" type="hidden" value="">
+                            <input id="contactFormReturnUrl" name="return_url" type="hidden" value="https://jasonauyeungaa.github.io/Jason-AY-Portfolio.com/#contact">
+                            <input id="contactFormWebsite" name="website" type="text" tabindex="-1" autocomplete="off" class="contact-honeypot" aria-hidden="true">
 
                             <div class="contact-form-actions">
                                 <button type="submit" class="cta-btn cta-primary"><span data-i18n="contact.form.submit">Send Message</span></button>

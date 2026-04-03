@@ -807,12 +807,82 @@
   const contactFormStatus = document.getElementById('contactFormStatus');
 
   if (contactForm && contactFormStatus) {
-    const contactFormReadyText = 'Form UI ready. Delivery goes live after the Google Sheets step.';
+    const contactFormPage = document.getElementById('contactFormPage');
+    const contactFormLanguage = document.getElementById('contactFormLanguage');
+    const contactFormUserAgent = document.getElementById('contactFormUserAgent');
+    const contactFormReturnUrl = document.getElementById('contactFormReturnUrl');
+    const contactSubmitButton = contactForm.querySelector('button[type="submit"]');
+    const getContactText = (key, fallback) => window.JasonI18n?.translate?.(key) || fallback;
+
+    const setContactStatus = (key, fallback, state) => {
+      contactFormStatus.textContent = getContactText(key, fallback);
+      if (state) {
+        contactFormStatus.dataset.state = state;
+      } else {
+        delete contactFormStatus.dataset.state;
+      }
+    };
 
     const resetContactFormStatus = () => {
-      contactFormStatus.textContent = contactFormReadyText;
-      delete contactFormStatus.dataset.state;
+      setContactStatus('contact.form.status.ready', 'Send a message here and it will be delivered to Jason.');
     };
+
+    const syncContactFormMetadata = () => {
+      const pathname = window.location.pathname || '/';
+      const pageFragment = pathname.split('/').pop() || 'index.html';
+      const canonicalReturnUrl = `${window.location.origin}${pathname}#contact`;
+
+      if (contactFormPage) {
+        contactFormPage.value = `${pageFragment}#contact`;
+      }
+
+      if (contactFormLanguage) {
+        contactFormLanguage.value = document.documentElement.lang || runtimePrefs.lang || 'en';
+      }
+
+      if (contactFormUserAgent) {
+        contactFormUserAgent.value = window.navigator.userAgent || '';
+      }
+
+      if (contactFormReturnUrl) {
+        contactFormReturnUrl.value = canonicalReturnUrl;
+      }
+    };
+
+    const applyContactResultFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const result = params.get('contact');
+      const rawMessage = params.get('message');
+      const clearContactQueryParams = () => {
+        if (!result && !rawMessage) return;
+        const nextUrl = `${window.location.pathname}#contact`;
+        window.history.replaceState({}, '', nextUrl);
+      };
+
+      if (result === 'success') {
+        setContactStatus(
+          'contact.form.status.success',
+          'Message sent successfully. Jason will receive it in Google Sheets and by email.',
+          'success'
+        );
+        contactForm.reset();
+        syncContactFormMetadata();
+        clearContactQueryParams();
+        return;
+      }
+
+      if (result === 'error' || rawMessage) {
+        contactFormStatus.textContent = rawMessage || getContactText('contact.form.status.error', 'Submission failed. Please try again.');
+        contactFormStatus.dataset.state = 'error';
+        clearContactQueryParams();
+        return;
+      }
+
+      resetContactFormStatus();
+    };
+
+    syncContactFormMetadata();
+    applyContactResultFromUrl();
 
     contactForm.addEventListener('input', () => {
       if (contactFormStatus.dataset.state) {
@@ -820,17 +890,28 @@
       }
     });
 
-    contactForm.addEventListener('submit', (event) => {
-      event.preventDefault();
+    window.addEventListener('site:languagechange', () => {
+      syncContactFormMetadata();
+      applyContactResultFromUrl();
+    });
 
+    contactForm.addEventListener('submit', (event) => {
       if (!contactForm.reportValidity()) {
-        contactFormStatus.textContent = 'Please complete your name, email, and message before sending.';
-        contactFormStatus.dataset.state = 'error';
+        event.preventDefault();
+        setContactStatus(
+          'contact.form.status.invalid',
+          'Please complete your name, email, and message before sending.',
+          'error'
+        );
         return;
       }
 
-      contactFormStatus.textContent = 'Form looks ready. The next step is connecting it to Google Sheets so messages can be delivered.';
-      contactFormStatus.dataset.state = 'info';
+      syncContactFormMetadata();
+      setContactStatus('contact.form.status.sending', 'Sending your message...', 'info');
+
+      if (contactSubmitButton) {
+        contactSubmitButton.disabled = true;
+      }
     });
   }
 
