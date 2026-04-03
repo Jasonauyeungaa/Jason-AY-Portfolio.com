@@ -232,7 +232,9 @@
         '.team-step h3',
         '.rail-card strong',
         '.home-snapshot-item .metric-label',
-        '.contact-card .contact-label'
+        '.contact-panel-title',
+        '.contact-support-title',
+        '.contact-form-heading h3'
       ].join(', ');
 
       const seen = new Set();
@@ -258,7 +260,7 @@
         '.media-chip',
         '.media-caption',
         '.cert-list li',
-        '.contact-card .contact-label'
+        '.contact-support-list li'
       ].join(', ');
 
       const seen = new Set();
@@ -595,8 +597,8 @@
             { label: 'Did you know?', question: 'His skills mix programming, AI tools, and operations thinking. Want the quick version?', query: 'Summarize this section' }
           ],
           contact: [
-            { label: 'Contact', question: 'Want the fastest way to contact Jason?', query: 'How can I contact Jason?' },
-            { label: 'Did you know?', question: 'This section also points to Jason’s GitHub and CV. Want both in one answer?', query: "How can I contact Jason?" }
+            { label: 'Contact', question: 'Want the quickest way to send Jason a message?', query: 'How can I contact Jason?' },
+            { label: 'Did you know?', question: 'This section now centers on the message form and CV. Want the short version?', query: 'Summarize this section' }
           ],
           overview: [
             { label: 'HAECO Co-op', question: 'Want the quick story of Jason’s five months at HAECO?', query: 'What did Jason do at HAECO?' },
@@ -696,8 +698,8 @@
           ],
           contact: [
             { label: 'Need a hand?', question: 'Need the fastest way to contact Jason?', query: 'How can I contact Jason?' },
-            { label: 'If you want', question: 'I can pull together the email, GitHub, and CV links in one answer.', query: 'How can I contact Jason?' },
-            { label: 'Did you know?', question: 'Most people only notice the email, but the GitHub and CV are here too.', query: 'How can I contact Jason?' }
+            { label: 'If you want', question: 'I can point you to the contact form or the CV.', query: 'How can I contact Jason?' },
+            { label: 'Did you know?', question: 'The fastest route here is the on-site message form.', query: 'How can I contact Jason?' }
           ],
           overview: [
             { label: 'Need a hand?', question: 'Want the quick story of Jason’s time at HAECO?', query: 'What did Jason do at HAECO?' },

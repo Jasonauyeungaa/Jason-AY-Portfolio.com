@@ -766,7 +766,7 @@ class JasonAssistant {
         projects: ['What is the Bay Management System?', "What projects should I look at first?", "What is Jason's Final Year Project?", "What are Jason's skills?"],
         education: ["What is Jason's education background?", "What is Jason's Final Year Project?", "What are Jason's skills?", "What awards has Jason won?"],
         skills: ["What are Jason's skills?", 'What AI tools does Jason use?', 'What programming languages does Jason know?', "How can I contact Jason?"],
-        contact: ["How can I contact Jason?", "What is Jason's GitHub?", "Download Jason's CV", 'Tell me about Jason']
+        contact: ["How can I contact Jason?", "Download Jason's CV", 'Tell me about Jason', 'Show me Jason\'s projects']
       },
       'coop.html': {
         overview: ["What did Jason do at HAECO?", 'Summarize this page', 'Tell me about the Techathon', 'Tell me about Lean Day'],
@@ -961,8 +961,8 @@ class JasonAssistant {
         viewEducationDetails: 'View Education Details',
         viewProjects: 'View All Projects',
         viewAchievements: 'View All Achievements',
-        sendEmail: 'Send Email',
-        viewGithub: 'View GitHub',
+        sendEmail: 'Open contact form',
+        viewGithub: 'Open CV',
         openResume: 'Open Jason Resume',
         viewExperience: 'View Full Experience',
         viewProjectSection: 'View Projects Section',
@@ -974,8 +974,8 @@ class JasonAssistant {
         fypText: "🎯 **Jason's Final Year Project**\n\nJason's HKUST Final Year Project focuses on inventory control using efficient data-driven methods.\n\n• Research area: inventory optimization\n• Methods mentioned in the portfolio include JIT, Monte Carlo, AutoML, and multi-agent systems\n• It is positioned as a data and operations-focused academic project",
         projectsText: "🚀 **Featured Projects**\n\n**1. HAECO Bay Management System** 🏆\n• Grand Prize Winner - AWS AI Hackathon\n• AI-based aircraft bay scheduling\n• Built in 14 days\n\n**2. Inventory Control Research**\n• HKUST Final Year Project\n• JIT, Monte Carlo, AutoML, Multi-Agent Systems\n\n**3. Christmas Effects Study**\n• Data Science project analyzing livestock pricing\n\n**4. YouTube Database System**\n• SQLite database design and implementation",
         awardsText: "🏆 **Awards & Achievements**\n\n• **Grand Prize Winner** - AWS AI Hackathon Hong Kong 2025 (130+ teams)\n• **Master of Ceremony** - HAECO Lean Day 2025\n• **Lead Organizer** - HAECO Techathon 2026\n• **Academic Excellence Award** - HKU SPACE\n• **Principal's Honor List** - HKU SPACE\n• **Class Representative** - Data Science (80+ students)\n• **Certificate of Outstanding Achievement** - HAECO 2025",
-        githubText: "💻 **Jason's GitHub**\n\nGitHub: **github.com/Jasonauyeungaa**\n\nYou can use it to review Jason's coding work and project repositories.",
-        contactText: "📬 **Get in Touch with Jason**\n\nInterested in AI-driven solutions, operations optimization, or innovation projects?\n\n📧 **Email:** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub:** github.com/jasonauyeungaa",
+        githubText: "📄 **Contact and CV**\n\nThe contact area now points visitors to the on-site message form first, with Jason's CV available as the formal reference.\n\nIf you want the quickest next step, open the form or the CV directly from the portfolio.",
+        contactText: "📬 **Get in Touch with Jason**\n\nThe fastest route is the message form in the contact section.\n\nUse it for collaboration, internship, project, or innovation conversations.\n\n📄 **CV:** Available directly from the same section for formal details.",
         cvText: "📄 **Jason's CV / Resume**\n\nFor formal and up-to-date professional details, Jason's CV is the most accurate source.\n\nYou can open the latest resume directly from the portfolio.",
         experienceText: "💼 **Professional Experience**\n\n**1. HAECO Co-op Intern** (Sep 2025 - Jan 2026)\n• Technology Innovation department\n• AI-driven solutions for operations\n• Won AWS Hackathon Grand Prize\n\n**2. HKUST ITSO Internship** (Feb 2026 - Jun 2026)\n• IT support and asset management\n\n**3. Speedy Group IT Support** (Jul 2021 - Present)\n• Part-time IT operations\n• Digital media production",
         defaultText: "I'm Jason's AI assistant.\n\nI can help you learn about:\n\n• **AWS Hackathon**\n• **HAECO Co-op**\n• **Skills**\n• **Education**\n• **Experience**\n• **Fun Facts**\n• **Contact**\n• **Time & Date**\n• **Chat Stats**"
@@ -1003,8 +1003,8 @@ class JasonAssistant {
         viewEducationDetails: '查看教育背景',
         viewProjects: '查看所有項目',
         viewAchievements: '查看所有成就',
-        sendEmail: '發送電郵',
-        viewGithub: '查看GitHub',
+        sendEmail: '開啟聯絡表格',
+        viewGithub: '開啟履歷',
         openResume: '打開Jason履歷',
         viewExperience: '查看完整經驗',
         viewProjectSection: '查看項目部分',
@@ -1016,8 +1016,8 @@ class JasonAssistant {
         fypText: "🎯 **Jason的畢業專題**\n\nJason於HKUST的畢業專題聚焦於以高效數據驅動方法進行庫存控制。\n\n• 研究方向：庫存優化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系統\n• 屬於數據與營運導向的學術項目",
         projectsText: "🚀 **精選項目**\n\n**1. 港機機位管理系統** 🏆\n• AWS黑客松總冠軍項目\n• 基於AI的機位調度方案\n• 14天內完成\n\n**2. 庫存控制研究**\n• HKUST畢業專題\n• JIT、Monte Carlo、AutoML、多代理系統\n\n**3. 聖誕效應研究**\n• 數據科學項目，分析牲畜價格\n\n**4. YouTube資料庫系統**\n• SQLite資料庫設計與實作",
         awardsText: "🏆 **獎項與成就**\n\n• **總冠軍** - AWS AI黑客松香港2025（130+隊伍）\n• **司儀** - 港機精益日2025\n• **首席籌辦者** - 港機Techathon 2026\n• **學術卓越獎** - HKU SPACE\n• **校長榮譽錄** - HKU SPACE\n• **班代表** - 數據科學（80+名學生）\n• **傑出成就證書** - 港機2025",
-        githubText: "💻 **Jason的GitHub**\n\nGitHub：**github.com/Jasonauyeungaa**\n\n你可以在這裡查看Jason的程式作品與項目儲存庫。",
-        contactText: "📬 **聯絡Jason**\n\n如果你對AI驅動方案、營運優化或創新項目有興趣，可以透過以下方式聯絡。\n\n📧 **電郵：** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub：** github.com/jasonauyeungaa",
+        githubText: "📄 **聯絡與履歷**\n\n聯絡區現在會先引導訪客使用網站內的訊息表格，並保留 Jason 的履歷作為正式參考。\n\n如果你想快速開始，可以直接打開表格或履歷。",
+        contactText: "📬 **聯絡Jason**\n\n最快的方法是使用聯絡區中的站內訊息表格。\n\n它適合合作、實習、項目或創新相關交流。\n\n📄 **履歷：** 同一區域也可直接開啟，查看較正式的資料。",
         cvText: "📄 **Jason的履歷**\n\n如需正式及最新的專業資料，Jason的履歷是最準確來源。\n\n你可以直接從作品集打開最新版本。",
         experienceText: "💼 **專業經驗**\n\n**1. 港機Co-op實習生**（2025年9月 - 2026年1月）\n• 科技創新部門\n• 以AI驅動營運方案\n• 贏得AWS黑客松總冠軍\n\n**2. HKUST ITSO實習**（2026年2月 - 2026年6月）\n• IT支援與資產管理\n\n**3. 環速集團IT支援**（2021年7月 - 現在）\n• 兼職IT營運\n• 數碼媒體製作",
         defaultText: "我是Jason的AI助理。\n\n我可以幫你了解：\n\n• **AWS黑客松**\n• **港機Co-op**\n• **技能**\n• **教育背景**\n• **工作經驗**\n• **趣事**\n• **聯絡方式**\n• **時間與日期**\n• **聊天統計**"
@@ -1045,8 +1045,8 @@ class JasonAssistant {
         viewEducationDetails: '查看教育背景',
         viewProjects: '查看所有项目',
         viewAchievements: '查看所有成就',
-        sendEmail: '发送电邮',
-        viewGithub: '查看GitHub',
+        sendEmail: '打开联系表格',
+        viewGithub: '打开履历',
         openResume: '打开Jason履历',
         viewExperience: '查看完整经验',
         viewProjectSection: '查看项目部分',
@@ -1058,8 +1058,8 @@ class JasonAssistant {
         fypText: "🎯 **Jason的毕业专题**\n\nJason在HKUST的毕业专题聚焦于以高效数据驱动方法进行库存控制。\n\n• 研究方向：库存优化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系统\n• 属于数据与运营导向的学术项目",
         projectsText: "🚀 **精选项目**\n\n**1. 港机机位管理系统** 🏆\n• AWS黑客松总冠军项目\n• 基于AI的机位调度方案\n• 14天内完成\n\n**2. 库存控制研究**\n• HKUST毕业专题\n• JIT、Monte Carlo、AutoML、多代理系统\n\n**3. 圣诞效应研究**\n• 数据科学项目，分析牲畜价格\n\n**4. YouTube数据库系统**\n• SQLite数据库设计与实现",
         awardsText: "🏆 **奖项与成就**\n\n• **总冠军** - AWS AI黑客松香港2025（130+队伍）\n• **司仪** - 港机精益日2025\n• **首席筹办者** - 港机Techathon 2026\n• **学术卓越奖** - HKU SPACE\n• **校长荣誉录** - HKU SPACE\n• **班代表** - 数据科学（80+名学生）\n• **杰出成就证书** - 港机2025",
-        githubText: "💻 **Jason的GitHub**\n\nGitHub：**github.com/Jasonauyeungaa**\n\n你可以在这里查看Jason的编程作品与项目仓库。",
-        contactText: "📬 **联系Jason**\n\n如果你对AI驱动方案、运营优化或创新项目有兴趣，可以通过以下方式联系。\n\n📧 **电邮：** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub：** github.com/jasonauyeungaa",
+        githubText: "📄 **联系与履历**\n\n联系区现在会先引导访客使用网站内的留言表格，同时保留 Jason 的履历作为正式参考。\n\n如果你想快速开始，可以直接打开表格或履历。",
+        contactText: "📬 **联系Jason**\n\n最快的方式是使用联系区里的站内留言表格。\n\n它适合合作、实习、项目或创新相关交流。\n\n📄 **履历：** 同一区域也可以直接打开，用来看正式资料。",
         cvText: "📄 **Jason的履历**\n\n如需正式及最新的专业资料，Jason的履历是最准确来源。\n\n你可以直接从作品集打开最新版本。",
         experienceText: "💼 **专业经验**\n\n**1. 港机Co-op实习生**（2025年9月 - 2026年1月）\n• 科技创新部门\n• 以AI驱动运营方案\n• 赢得AWS黑客松总冠军\n\n**2. HKUST ITSO实习**（2026年2月 - 2026年6月）\n• IT支持与资产管理\n\n**3. 环速集团IT支持**（2021年7月 - 现在）\n• 兼职IT运营\n• 数码媒体制作",
         defaultText: "我是Jason的AI助理。\n\n我可以帮你了解：\n\n• **AWS黑客松**\n• **港机Co-op**\n• **技能**\n• **教育背景**\n• **工作经验**\n• **趣事**\n• **联系方式**\n• **时间与日期**\n• **聊天统计**"
@@ -1087,8 +1087,8 @@ class JasonAssistant {
         viewEducationDetails: 'Ver educacion',
         viewProjects: 'Ver todos los proyectos',
         viewAchievements: 'Ver todos los logros',
-        sendEmail: 'Enviar correo',
-        viewGithub: 'Ver GitHub',
+        sendEmail: 'Abrir formulario',
+        viewGithub: 'Abrir CV',
         openResume: 'Abrir CV de Jason',
         viewExperience: 'Ver experiencia completa',
         viewProjectSection: 'Ver seccion de proyectos',
@@ -1100,8 +1100,8 @@ class JasonAssistant {
         fypText: "🎯 **Proyecto Final de Jason**\n\nEl Proyecto Final de Jason en HKUST se centra en control de inventario con metodos eficientes basados en datos.\n\n• Area de investigacion: optimizacion de inventario\n• El portafolio menciona JIT, Monte Carlo, AutoML y sistemas multiagente\n• Es un proyecto academico orientado a datos y operaciones",
         projectsText: "🚀 **Proyectos destacados**\n\n**1. Sistema de Gestion de Bahias de HAECO** 🏆\n• Proyecto ganador del AWS Hackathon\n• Solucion de asignacion de bahias basada en IA\n• Desarrollado en 14 dias\n\n**2. Investigacion de control de inventario**\n• Proyecto final de HKUST\n• JIT, Monte Carlo, AutoML y sistemas multiagente\n\n**3. Estudio de efectos navidenos**\n• Proyecto de ciencia de datos sobre precios de ganado\n\n**4. Sistema de base de datos de YouTube**\n• Diseno e implementacion con SQLite",
         awardsText: "🏆 **Premios y logros**\n\n• **Gran Premio** - AWS AI Hackathon Hong Kong 2025 (130+ equipos)\n• **Maestro de ceremonias** - HAECO Lean Day 2025\n• **Organizador principal** - HAECO Techathon 2026\n• **Premio a la excelencia academica** - HKU SPACE\n• **Lista de honor del director** - HKU SPACE\n• **Representante de clase** - Ciencia de Datos (80+ estudiantes)\n• **Certificado de logro destacado** - HAECO 2025",
-        githubText: "💻 **GitHub de Jason**\n\nGitHub: **github.com/Jasonauyeungaa**\n\nPuedes usarlo para revisar el trabajo tecnico y los repositorios de Jason.",
-        contactText: "📬 **Contactar a Jason**\n\nSi te interesan soluciones impulsadas por IA, optimizacion operativa o proyectos de innovacion, puedes contactarlo aqui.\n\n📧 **Correo:** wcauyeungaa@connect.ust.hk\n💼 **Jason AU-YEUNG**\n💻 **GitHub:** github.com/jasonauyeungaa",
+        githubText: "📄 **Contacto y CV**\n\nLa sección de contacto ahora dirige primero al formulario del sitio y deja el CV de Jason como referencia formal.\n\nSi quieres la vía más rápida, abre el formulario o el CV desde el portafolio.",
+        contactText: "📬 **Contactar a Jason**\n\nLa forma más rápida es usar el formulario de mensajes en la sección de contacto.\n\nSirve para colaboraciones, oportunidades, proyectos o conversaciones sobre innovación.\n\n📄 **CV:** También puedes abrirlo desde la misma sección para ver los detalles formales.",
         cvText: "📄 **CV de Jason**\n\nPara detalles formales y actualizados, el CV de Jason es la fuente mas precisa.\n\nPuedes abrir la version mas reciente directamente desde el portafolio.",
         experienceText: "💼 **Experiencia profesional**\n\n**1. Co-op en HAECO** (Sep 2025 - Ene 2026)\n• Departamento de Innovacion Tecnologica\n• Soluciones operativas impulsadas por IA\n• Ganador del Gran Premio del AWS Hackathon\n\n**2. Practica en HKUST ITSO** (Feb 2026 - Jun 2026)\n• Soporte TI y gestion de activos\n\n**3. Soporte TI en Speedy Group** (Jul 2021 - Actualidad)\n• Operaciones TI a tiempo parcial\n• Produccion de medios digitales",
         defaultText: "Soy el asistente de IA de Jason.\n\nPuedo ayudarte a conocer:\n\n• **AWS Hackathon**\n• **Co-op en HAECO**\n• **Habilidades**\n• **Educacion**\n• **Experiencia**\n• **Datos curiosos**\n• **Contacto**\n• **Hora y fecha**\n• **Estadisticas del chat**"
@@ -1200,10 +1200,10 @@ class JasonAssistant {
         award6: '**Class Representative** - Data Science (80+ students)',
         award7: '**Certificate of Outstanding Achievement** - HAECO 2025',
         // Contact
-        contactTitle: 'Get in Touch with Jason',
-        contactIntro: 'Interested in AI-driven solutions, operations optimization, or innovation projects?',
-        contactEmail: 'Email:',
-        contactGitHub: 'GitHub:',
+        contactTitle: 'Send a Message to Jason',
+        contactIntro: 'Use the on-site contact form for collaboration, project, or opportunity inquiries.',
+        contactEmail: 'Contact form:',
+        contactGitHub: 'Resume:',
         // Experience
         experienceTitle: 'Professional Experience',
         exp1Title: 'HAECO Co-op Intern (Sep 2025 - Jan 2026)',
@@ -1326,10 +1326,10 @@ class JasonAssistant {
         award6: '**班代表** - 數據科學 (80+名學生)',
         award7: '**傑出成就證書** - 港機2025',
         // Contact
-        contactTitle: '聯絡Jason',
-        contactIntro: '對人工智能驅動方案、營運優化或創新項目感興趣？',
-        contactEmail: '電郵：',
-        contactGitHub: 'GitHub：',
+        contactTitle: '向Jason發送訊息',
+        contactIntro: '如想合作、討論項目或機會，可使用網站內的聯絡表格。',
+        contactEmail: '聯絡表格：',
+        contactGitHub: '履歷：',
         // Experience
         experienceTitle: '專業經驗',
         exp1Title: '港機Co-op實習生 (2025年9月 - 2026年1月)',
@@ -1452,10 +1452,10 @@ class JasonAssistant {
         award6: '**班代表** - 数据科学 (80+名学生)',
         award7: '**杰出成就证书** - 港机2025',
         // Contact
-        contactTitle: '联系Jason',
-        contactIntro: '对人工智能驱动方案、运营优化或创新项目感兴趣？',
-        contactEmail: '电邮：',
-        contactGitHub: 'GitHub：',
+        contactTitle: '向Jason发送消息',
+        contactIntro: '如果想讨论合作、项目或机会，可以使用站内联系表格。',
+        contactEmail: '联系表格：',
+        contactGitHub: '履历：',
         // Experience
         experienceTitle: '专业经验',
         exp1Title: '港机Co-op实习生 (2025年9月 - 2026年1月)',
@@ -1578,10 +1578,10 @@ class JasonAssistant {
         award6: '**Representante de Clase** - Ciencia de Datos (80+ estudiantes)',
         award7: '**Certificado de Logro Sobresaliente** - HAECO 2025',
         // Contact
-        contactTitle: 'Contáctate con Jason',
-        contactIntro: '¿Interesado en soluciones impulsadas por IA, optimización de operaciones o proyectos de innovación?',
-        contactEmail: 'Correo:',
-        contactGitHub: 'GitHub:',
+        contactTitle: 'Envíale un mensaje a Jason',
+        contactIntro: 'Usa el formulario del sitio para colaboraciones, proyectos u oportunidades.',
+        contactEmail: 'Formulario:',
+        contactGitHub: 'CV:',
         // Experience
         experienceTitle: 'Experiencia Profesional',
         exp1Title: 'Pasante Co-op de HAECO (Sep 2025 - Ene 2026)',
@@ -3408,7 +3408,10 @@ class JasonAssistant {
       if (/github/.test(msg)) {
         return {
           text: reply.githubText,
-          actions: [{ text: `💻 ${reply.viewGithub}`, link: 'https://github.com/Jasonauyeungaa' }],
+          actions: [
+            { text: `📄 ${reply.viewGithub}`, link: 'assets/images/CV/Jason Resume.pdf' },
+            { text: `🚀 ${reply.viewProjects}`, link: 'index.html#projects' }
+          ],
           suggestions: ['Projects', 'Skills', 'Download Jason\'s CV', 'Contact info']
         };
       }
@@ -3416,8 +3419,8 @@ class JasonAssistant {
       return {
         text: reply.contactText,
         actions: [
-          { text: `📧 ${reply.sendEmail}`, link: 'mailto:wcauyeungaa@connect.ust.hk' },
-          { text: `💻 ${reply.viewGithub}`, link: 'https://github.com/Jasonauyeungaa' }
+          { text: `📬 ${reply.sendEmail}`, link: 'index.html#contact' },
+          { text: `📄 ${reply.viewGithub}`, link: 'assets/images/CV/Jason Resume.pdf' }
         ],
         suggestions: ['Tell me about Jason', 'Skills', 'Projects', 'Fun fact']
       };
@@ -3696,7 +3699,7 @@ class JasonAssistant {
         'What is the Bay Management System?',
         'How many teams were in the hackathon?',
         'When was the AWS Hackathon?',
-        'What is Jason\'s GitHub?',
+        'Open Jason\'s CV',
         'Download Jason\'s CV'
       ],
       'zh-TW': [
@@ -3723,7 +3726,7 @@ class JasonAssistant {
         '什麼是機位管理系統？',
         '黑客松有多少隊伍？',
         'AWS黑客松是什麼時候？',
-        'Jason的GitHub是什麼？',
+        '打開Jason的履歷',
         '下載Jason的履歷'
       ],
       'zh-CN': [
@@ -3750,7 +3753,7 @@ class JasonAssistant {
         '什么是机位管理系统？',
         '黑客松有多少队伍？',
         'AWS黑客松是什么时候？',
-        'Jason的GitHub是什么？',
+        '打开Jason的履历',
         '下载Jason的履历'
       ],
       es: [
@@ -3777,7 +3780,7 @@ class JasonAssistant {
         '¿Qué es el Sistema de Gestión de Bahías?',
         '¿Cuántos equipos había en el hackathon?',
         '¿Cuándo fue el AWS Hackathon?',
-        '¿Cuál es el GitHub de Jason?',
+        'Abrir CV de Jason',
         'Descargar CV de Jason'
       ]
     };

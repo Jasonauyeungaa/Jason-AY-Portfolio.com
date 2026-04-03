@@ -803,6 +803,37 @@
     });
   }
 
+  const contactForm = document.getElementById('contactForm');
+  const contactFormStatus = document.getElementById('contactFormStatus');
+
+  if (contactForm && contactFormStatus) {
+    const contactFormReadyText = 'Form UI ready. Delivery goes live after the Google Sheets step.';
+
+    const resetContactFormStatus = () => {
+      contactFormStatus.textContent = contactFormReadyText;
+      delete contactFormStatus.dataset.state;
+    };
+
+    contactForm.addEventListener('input', () => {
+      if (contactFormStatus.dataset.state) {
+        resetContactFormStatus();
+      }
+    });
+
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (!contactForm.reportValidity()) {
+        contactFormStatus.textContent = 'Please complete your name, email, and message before sending.';
+        contactFormStatus.dataset.state = 'error';
+        return;
+      }
+
+      contactFormStatus.textContent = 'Form looks ready. The next step is connecting it to Google Sheets so messages can be delivered.';
+      contactFormStatus.dataset.state = 'info';
+    });
+  }
+
   if (langSwitcher) {
     const dropdown = langSwitcher.querySelector('.lang-dropdown');
     const toggle = langSwitcher.querySelector('.lang-toggle');

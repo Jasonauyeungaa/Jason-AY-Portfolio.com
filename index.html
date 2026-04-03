@@ -13,6 +13,15 @@
     <link rel="shortcut icon" href="assets/images/logos/web-logo/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/logos/web-logo/apple-touch-icon.png">
     <script src="assets/js/runtime-prefs.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFKT97KC2G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-VFKT97KC2G');
+    </script>
     <title>Jason Au-Yeung | IEEM × Data × Innovation</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/chat.css">
@@ -511,20 +520,59 @@
             <div class="container">
                 <h2 class="section-title" data-i18n="contact.title">Get in Touch</h2>
                 <div class="contact-content glass-card">
-                    <p class="contact-intro" data-i18n="contact.intro">Interested in AI-driven solutions, operations optimization, or innovation projects? Let's connect!</p>
-                    <div class="contact-links">
-                        <a href="mailto:wcauyeungaa@connect.ust.hk" class="contact-card glass-card">
-                            <span class="contact-icon"><img src="assets/images/logos/email.png" alt="Email" class="contact-icon-image"></span>
-                            <span class="contact-label" data-i18n="contact.email">Email</span>
-                        </a>
-                        <button type="button" class="contact-card glass-card resume-card-trigger" id="resumeCardTrigger" aria-haspopup="dialog" aria-controls="resumeExperience">
-                            <span class="contact-icon"><img src="assets/images/logos/resume.png" alt="Resume" class="contact-icon-image"></span>
-                            <span class="contact-label" data-i18n="contact.resume">View My Resume</span>
-                        </button>
-                        <a href="https://github.com/Jasonauyeungaa" class="contact-card glass-card" target="_blank" rel="noopener noreferrer">
-                            <span class="contact-icon"><img src="assets/images/logos/github.png" alt="GitHub" class="contact-icon-image"></span>
-                            <span class="contact-label" data-i18n="contact.github">GitHub</span>
-                        </a>
+                    <div class="contact-layout">
+                        <div class="contact-panel">
+                            <span class="contact-kicker" data-i18n="contact.kicker">Direct contact</span>
+                            <h3 class="contact-panel-title" data-i18n="contact.panel.title">Start with a short message</h3>
+                            <p class="contact-intro" data-i18n="contact.intro">Interested in AI-driven solutions, operations optimization, or innovation projects? Let's connect!</p>
+                            <ul class="contact-support-list" aria-label="Contact topics">
+                                <li data-i18n="contact.panel.item1">Project collaborations and innovation work</li>
+                                <li data-i18n="contact.panel.item2">Internship, placement, and student opportunities</li>
+                                <li data-i18n="contact.panel.item3">Questions about HAECO, the hackathon, or the portfolio</li>
+                            </ul>
+                            <div class="contact-support">
+                                <div class="contact-support-copy">
+                                    <span class="contact-support-eyebrow" data-i18n="contact.resume.eyebrow">Resume</span>
+                                    <strong class="contact-support-title" data-i18n="contact.resume.title">Prefer the formal version first?</strong>
+                                    <p class="contact-support-text" data-i18n="contact.resume.copy">Open the latest CV for experience, education, and project details.</p>
+                                </div>
+                                <button type="button" class="cta-btn contact-support-action resume-card-trigger" id="resumeCardTrigger" aria-haspopup="dialog" aria-controls="resumeExperience">
+                                    <span data-i18n="contact.resume">View My Resume</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="contactForm" class="contact-form-shell" novalidate>
+                            <div class="contact-form-heading">
+                                <span class="contact-form-kicker" data-i18n="contact.form.kicker">Contact form</span>
+                                <h3 data-i18n="contact.form.title">Send a message directly from this site</h3>
+                                <p data-i18n="contact.form.copy">Best for project collaborations, internship opportunities, and technical conversations.</p>
+                            </div>
+
+                            <div class="contact-form-grid">
+                                <label class="contact-field">
+                                    <span data-i18n="contact.form.name">Name</span>
+                                    <input id="contactName" name="name" type="text" autocomplete="name" data-i18n="contact.form.name.placeholder" placeholder="Your name" required>
+                                </label>
+
+                                <label class="contact-field">
+                                    <span data-i18n="contact.form.email">Email</span>
+                                    <input id="contactEmail" name="email" type="email" autocomplete="email" data-i18n="contact.form.email.placeholder" placeholder="you@example.com" required>
+                                </label>
+                            </div>
+
+                            <label class="contact-field">
+                                <span data-i18n="contact.form.message">Message</span>
+                                <textarea id="contactMessage" name="message" rows="6" data-i18n="contact.form.message.placeholder" placeholder="Write your message here" required></textarea>
+                            </label>
+
+                            <div class="contact-form-actions">
+                                <button type="submit" class="cta-btn cta-primary"><span data-i18n="contact.form.submit">Send Message</span></button>
+                                <p id="contactFormStatus" class="contact-form-status" role="status" aria-live="polite">
+                                    Form UI ready. Delivery goes live after the Google Sheets step.
+                                </p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

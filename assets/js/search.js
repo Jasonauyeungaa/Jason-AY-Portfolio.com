@@ -323,13 +323,14 @@
       heading: t('contact.title', 'Get in Touch'),
       textParts: [
         t('contact.intro', ''),
-        t('contact.email', 'Email'),
-        t('contact.github', 'GitHub'),
+        'Direct contact',
+        'Contact form',
+        'Send a message directly from this site',
+        'Project collaborations',
+        'Internship opportunities',
         t('contact.resume', 'Resume'),
-        'wcauyeungaa@connect.ust.hk',
-        'github.com/jasonauyeungaa'
       ],
-      suggestionKeywords: ['Email', 'GitHub', 'Resume / CV', 'wcauyeungaa@connect.ust.hk']
+      suggestionKeywords: ['Contact form', 'Send a message', 'Resume / CV', 'Project collaboration']
     });
 
     addEntry(entries, {

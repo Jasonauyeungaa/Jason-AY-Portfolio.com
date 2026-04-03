@@ -205,20 +205,20 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "type": "section_summary",
       "topic": "contact",
       "title": "Contact",
-      "summary_short": "The contact section provides Jason's email and GitHub for professional inquiries.",
-      "summary_long": "The contact section is the direct call-to-action area of the portfolio. It points visitors to Jason's email and GitHub for opportunities related to AI-driven solutions, operations optimization, and project collaboration.",
+      "summary_short": "The contact section centers on a direct message form, with the CV available as a secondary option.",
+      "summary_long": "The contact section is the portfolio's direct call-to-action area. It now guides visitors to send a message from the site itself for collaboration, opportunities, and project conversations, while still keeping the CV available for formal details.",
       "facts": [
-        "Primary contact is Jason's HKUST email",
-        "GitHub is available for technical work and projects",
-        "Designed as the fastest route for follow-up contact"
+        "Visitors can send a message directly from the portfolio",
+        "Best for collaboration, internship, and project inquiries",
+        "CV remains available for formal details"
       ],
-      "keywords": ["contact", "email", "github", "reach jason"],
+      "keywords": ["contact", "message form", "reach jason", "resume"],
       "aliases": ["contact", "contact info", "how can i contact jason", "how do i contact jason", "reach jason", "聯絡", "联络", "contacto"],
       "page": "index.html",
       "section": "contact",
       "priority": 8,
       "related": ["contact_email", "github_profile", "resume_cv"],
-      "followups": ["What is Jason's GitHub?", "Download Jason's CV", "Summarize the contact section"],
+      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
       "url": "index.html#contact"
     },
     {
@@ -824,39 +824,41 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "id": "contact_email",
       "type": "fact",
       "topic": "contact",
-      "title": "Contact Information",
-      "summary_short": "Jason can be reached at wcauyeungaa@connect.ust.hk.",
-      "summary_long": "The portfolio's main contact route is Jason's email: wcauyeungaa@connect.ust.hk. It is positioned for inquiries related to AI-driven solutions, optimization, and collaboration.",
+      "title": "Contact Form",
+      "summary_short": "The fastest way to reach Jason on the site is the contact form.",
+      "summary_long": "The portfolio now uses an on-site contact form as the primary route for messages about collaboration, opportunities, and project conversations.",
       "facts": [
-        "Email: wcauyeungaa@connect.ust.hk"
+        "Use the message form in the contact section",
+        "Name, email, and message fields are provided"
       ],
-      "keywords": ["contact", "email", "reach", "inquiries"],
+      "keywords": ["contact", "form", "message", "reach", "inquiries"],
       "aliases": ["email jason", "contact jason", "how can i contact jason", "電郵", "电邮", "correo"],
       "page": "index.html",
       "section": "contact",
       "priority": 9,
       "related": ["contact_summary", "github_profile", "resume_cv"],
-      "followups": ["What is Jason's GitHub?", "Download Jason's CV", "Summarize the contact section"],
-      "url": "mailto:wcauyeungaa@connect.ust.hk"
+      "followups": ["Download Jason's CV", "Summarize the contact section", "Tell me about Jason"],
+      "url": "index.html#contact"
     },
     {
       "id": "github_profile",
       "type": "fact",
       "topic": "contact",
-      "title": "GitHub Profile",
-      "summary_short": "Jason's GitHub is github.com/Jasonauyeungaa.",
-      "summary_long": "Jason's GitHub profile gives a direct path to his technical work and repositories: github.com/Jasonauyeungaa.",
+      "title": "Resume Access",
+      "summary_short": "Jason's CV can be opened directly from the contact section.",
+      "summary_long": "The contact area keeps Jason's CV close by as the formal, up-to-date source for experience, education, and project details.",
       "facts": [
-        "GitHub: github.com/Jasonauyeungaa"
+        "CV is accessible directly from the portfolio",
+        "Useful for formal and up-to-date details"
       ],
-      "keywords": ["github", "repositories", "code", "profile"],
-      "aliases": ["what is jason's github", "github", "github profile", "github是什麼", "github是什么", "github de jason"],
+      "keywords": ["cv", "resume", "formal details", "portfolio"],
+      "aliases": ["download jason's cv", "download resume", "cv", "履歷", "履历", "descargar cv"],
       "page": "index.html",
       "section": "contact",
       "priority": 8,
       "related": ["contact_summary", "contact_email", "resume_cv"],
-      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
-      "url": "https://github.com/Jasonauyeungaa"
+      "followups": ["How can I contact Jason?", "Summarize the contact section", "Tell me about Jason"],
+      "url": "assets/images/CV/Jason Resume.pdf"
     },
     {
       "id": "resume_cv",
@@ -875,7 +877,7 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "section": "contact",
       "priority": 7,
       "related": ["contact_summary", "contact_email", "github_profile"],
-      "followups": ["How can I contact Jason?", "What is Jason's GitHub?", "Summarize the contact section"],
+      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
       "url": "assets/images/CV/Jason Resume.pdf"
     }
   ]
