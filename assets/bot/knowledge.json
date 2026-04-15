@@ -205,20 +205,20 @@
       "type": "section_summary",
       "topic": "contact",
       "title": "Contact",
-      "summary_short": "The contact section provides Jason's email and GitHub for professional inquiries.",
-      "summary_long": "The contact section is the direct call-to-action area of the portfolio. It points visitors to Jason's email and GitHub for opportunities related to AI-driven solutions, operations optimization, and project collaboration.",
+      "summary_short": "The contact section centers on a direct message form, with the resume easy to view as a secondary option.",
+      "summary_long": "The contact section is the portfolio's direct call-to-action area. It guides visitors to send a message from the site itself for collaboration, opportunities, and project conversations, while keeping the resume close by for formal details.",
       "facts": [
-        "Primary contact is Jason's HKUST email",
-        "GitHub is available for technical work and projects",
-        "Designed as the fastest route for follow-up contact"
+        "Visitors can send a message directly from the portfolio",
+        "Best for collaboration, internship, and project inquiries",
+        "Resume remains there to view for formal details"
       ],
-      "keywords": ["contact", "email", "github", "reach jason"],
+      "keywords": ["contact", "message form", "reach jason", "resume"],
       "aliases": ["contact", "contact info", "how can i contact jason", "how do i contact jason", "reach jason", "聯絡", "联络", "contacto"],
       "page": "index.html",
       "section": "contact",
       "priority": 8,
       "related": ["contact_email", "github_profile", "resume_cv"],
-      "followups": ["What is Jason's GitHub?", "Download Jason's CV", "Summarize the contact section"],
+      "followups": ["View Jason's resume", "Summarize the contact section", "Tell me about Jason"],
       "url": "index.html#contact"
     },
     {
@@ -824,38 +824,41 @@
       "id": "contact_email",
       "type": "fact",
       "topic": "contact",
-      "title": "Contact Information",
-      "summary_short": "Jason can be reached at wcauyeungaa@connect.ust.hk.",
-      "summary_long": "The portfolio's main contact route is Jason's email: wcauyeungaa@connect.ust.hk. It is positioned for inquiries related to AI-driven solutions, optimization, and collaboration.",
+      "title": "Contact Form",
+      "summary_short": "The fastest way to reach Jason on the site is the contact form.",
+      "summary_long": "The portfolio now uses an on-site contact form as the primary route for messages about collaboration, opportunities, and project conversations.",
       "facts": [
-        "Email: wcauyeungaa@connect.ust.hk"
+        "Use the message form in the contact section",
+        "Name, email, and message fields are provided"
       ],
-      "keywords": ["contact", "email", "reach", "inquiries"],
+      "keywords": ["contact", "form", "message", "reach", "inquiries"],
       "aliases": ["email jason", "contact jason", "how can i contact jason", "電郵", "电邮", "correo"],
       "page": "index.html",
       "section": "contact",
       "priority": 9,
       "related": ["contact_summary", "github_profile", "resume_cv"],
-      "followups": ["What is Jason's GitHub?", "Download Jason's CV", "Summarize the contact section"],
-      "url": "mailto:wcauyeungaa@connect.ust.hk"
+      "followups": ["View Jason's resume", "Summarize the contact section", "Tell me about Jason"],
+      "url": "index.html#contact"
     },
     {
       "id": "github_profile",
       "type": "fact",
       "topic": "contact",
       "title": "GitHub Profile",
-      "summary_short": "Jason's GitHub is github.com/Jasonauyeungaa.",
-      "summary_long": "Jason's GitHub profile gives a direct path to his technical work and repositories: github.com/Jasonauyeungaa.",
+      "summary_short": "Jason's GitHub is the place to browse his code work and technical repositories.",
+      "summary_long": "Jason's GitHub profile is where visitors can look through code work and technical repositories alongside the portfolio. For formal background details, the portfolio also keeps both English and Chinese resume versions in the contact section.",
       "facts": [
-        "GitHub: github.com/Jasonauyeungaa"
+        "GitHub profile is available directly from the portfolio assistant",
+        "Best for code work and technical repositories",
+        "Resume remains the better choice for formal summary details"
       ],
-      "keywords": ["github", "repositories", "code", "profile"],
-      "aliases": ["what is jason's github", "github", "github profile", "github是什麼", "github是什么", "github de jason"],
+      "keywords": ["github", "repositories", "code", "technical projects", "portfolio links"],
+      "aliases": ["what is jason's github", "jason github", "github profile", "view github", "open github", "github", "程式碼", "代码", "repositorios"],
       "page": "index.html",
       "section": "contact",
       "priority": 8,
       "related": ["contact_summary", "contact_email", "resume_cv"],
-      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
+      "followups": ["View Jason's resume", "How can I contact Jason?", "What projects should I look at first?"],
       "url": "https://github.com/Jasonauyeungaa"
     },
     {
@@ -863,20 +866,20 @@
       "type": "fact",
       "topic": "contact",
       "title": "CV and Resume",
-      "summary_short": "Jason's CV is available directly from the portfolio and remains the best source for formal details.",
-      "summary_long": "The portfolio explicitly treats Jason's CV as the most accurate source for formal and up-to-date professional details, and it can be opened directly from the site.",
+      "summary_short": "Jason's resume can be viewed directly from the portfolio in both English and Chinese.",
+      "summary_long": "The portfolio provides both English and Chinese resume versions. The English resume is the base version for the most accurate and up-to-date professional details, while the Chinese version is provided for easier reading in Chinese.",
       "facts": [
-        "CV is the best source for formal details",
-        "Available directly from the portfolio"
+        "English and Chinese resume versions can be viewed directly from the portfolio",
+        "English resume is the base version if wording differs"
       ],
-      "keywords": ["cv", "resume", "download cv", "formal details"],
-      "aliases": ["download jason's cv", "download resume", "cv", "履歷", "履历", "descargar cv"],
+      "keywords": ["cv", "resume", "english resume", "chinese resume", "formal details"],
+      "aliases": ["download jason's cv", "download resume", "view jason's resume", "open english resume", "open chinese resume", "english resume", "chinese resume", "english cv", "chinese cv", "base version", "difference between resume versions", "cv", "履歷", "履历", "英文履歷", "中文履歷", "英文履历", "中文履历", "descargar cv"],
       "page": "index.html",
       "section": "contact",
       "priority": 7,
       "related": ["contact_summary", "contact_email", "github_profile"],
-      "followups": ["How can I contact Jason?", "What is Jason's GitHub?", "Summarize the contact section"],
-      "url": "assets/images/CV/Jason Resume.pdf"
+      "followups": ["View Jason's English resume", "View Jason's Chinese resume", "How can I contact Jason?"],
+      "url": "assets/images/CV/Jason Resume (EN).pdf"
     }
   ]
 }

@@ -59,6 +59,7 @@
     .toLowerCase()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -109,7 +110,10 @@
         'Bay Management System',
         'Final Year Project',
         'Contact information',
-        'Resume / CV'
+        'Resume / CV',
+        'English CV',
+        'Chinese CV',
+        'GitHub'
       ],
       'zh-TW': [
         '教育背景',
@@ -121,7 +125,10 @@
         'Bay Management System',
         '畢業專題',
         '聯絡資料',
-        '履歷'
+        '履歷',
+        '英文履歷',
+        '中文履歷',
+        'GitHub'
       ],
       'zh-CN': [
         '教育背景',
@@ -133,7 +140,10 @@
         'Bay Management System',
         '毕业专题',
         '联络资料',
-        '履历'
+        '履历',
+        '英文履历',
+        '中文履历',
+        'GitHub'
       ],
       es: [
         'Educacion',
@@ -145,7 +155,10 @@
         'Bay Management System',
         'Proyecto final',
         'Informacion de contacto',
-        'CV'
+        'CV',
+        'CV en inglés',
+        'CV en chino',
+        'GitHub'
       ]
     };
 
@@ -157,6 +170,7 @@
     const heading = config.heading;
     const text = unique(config.textParts || []).join(' ');
     const suggestionKeywords = unique(config.suggestionKeywords || []);
+    const aliases = unique(config.aliases || []);
     entries.push({
       pageId: config.pageId,
       pageTitle,
@@ -164,7 +178,8 @@
       href: buildHref(config.href),
       text,
       suggestionKeywords,
-      searchText: normalizeText([pageTitle, heading, text].join(' '))
+      aliases,
+      searchText: normalizeText([pageTitle, heading, text, suggestionKeywords.join(' '), aliases.join(' ')].join(' '))
     });
   };
 
@@ -329,8 +344,119 @@
         'Project collaborations',
         'Internship opportunities',
         t('contact.resume', 'Resume'),
+        t('contact.github', 'GitHub')
       ],
-      suggestionKeywords: ['Contact form', 'Send a message', 'Resume / CV', 'Project collaboration']
+      suggestionKeywords: ['Contact form', 'Send a message', 'Resume / CV', 'Project collaboration', 'GitHub'],
+      aliases: [
+        'How can I contact Jason?',
+        'Contact Jason',
+        'Contact info',
+        'Email Jason',
+        'GitHub',
+        "What is Jason's GitHub?",
+        "View Jason's resume",
+        '履歷',
+        '履历',
+        '聯絡',
+        '联络'
+      ]
+    });
+
+    addEntry(entries, {
+      lang,
+      pageId: 'home',
+      href: 'index.html#contact',
+      heading: t('resume.modal.title', 'Choose a CV Version'),
+      textParts: [
+        t('contact.resume.copy', 'Open the latest CV for experience, education, and project details.'),
+        t('resume.modal.note', "Pick which version of my CV you'd like to view. If any wording differs, the English version is the base version.")
+      ],
+      suggestionKeywords: ['Resume / CV', 'English resume', 'Chinese resume', 'Base version', 'Formal details'],
+      aliases: [
+        "View Jason's resume",
+        'Resume',
+        'CV',
+        'English resume',
+        'Chinese resume',
+        'English CV',
+        'Chinese CV',
+        'EN resume',
+        'CN resume',
+        '履歷',
+        '履历',
+        '英文履歷',
+        '中文履歷',
+        '英文履历',
+        '中文履历'
+      ]
+    });
+
+    addEntry(entries, {
+      lang,
+      pageId: 'home',
+      href: 'assets/images/CV/Jason Resume (EN).pdf',
+      heading: t('resume.option.english.title', 'English CV'),
+      textParts: [
+        t('resume.option.english.note', 'View the English base resume in a new tab.'),
+        t('resume.modal.note', "Pick which version of my CV you'd like to view. If any wording differs, the English version is the base version.")
+      ],
+      suggestionKeywords: ['English resume', 'English CV', 'Base version', 'Formal details'],
+      aliases: [
+        "View Jason's English resume",
+        'English resume',
+        'English CV',
+        'Base version',
+        'EN version',
+        '英文履歷',
+        '英文履历'
+      ]
+    });
+
+    addEntry(entries, {
+      lang,
+      pageId: 'home',
+      href: 'assets/images/CV/Jason Resume (CN).pdf',
+      heading: t('resume.option.chinese.title', 'Chinese CV'),
+      textParts: [
+        t('resume.option.chinese.note', 'View the Chinese resume in a new tab.'),
+        t('resume.modal.note', "Pick which version of my CV you'd like to view. If any wording differs, the English version is the base version.")
+      ],
+      suggestionKeywords: ['Chinese resume', 'Chinese CV', 'Chinese version', 'Resume in Chinese'],
+      aliases: [
+        "View Jason's Chinese resume",
+        'Chinese resume',
+        'Chinese CV',
+        'CN version',
+        '中文版',
+        '中文履歷',
+        '中文履历'
+      ]
+    });
+
+    addEntry(entries, {
+      lang,
+      pageId: 'home',
+      href: 'https://github.com/Jasonauyeungaa',
+      heading: t('contact.github', 'GitHub'),
+      textParts: [
+        t('contact.github', 'GitHub'),
+        ({
+          en: "Jason's GitHub profile is the place to look at code work and technical repositories.",
+          'zh-TW': 'Jason 的 GitHub 適合查看程式碼作品與技術儲存庫。',
+          'zh-CN': 'Jason 的 GitHub 适合查看代码作品与技术仓库。',
+          es: 'El GitHub de Jason es el mejor lugar para ver trabajo de código y repositorios técnicos.'
+        }[lang] || "Jason's GitHub profile is the place to look at code work and technical repositories.")
+      ],
+      suggestionKeywords: ['GitHub', 'Code repositories', 'Technical projects'],
+      aliases: [
+        "What is Jason's GitHub?",
+        'Jason GitHub',
+        'GitHub profile',
+        'Code repositories',
+        '程式碼',
+        '代码',
+        'GitHub'
+      ]
     });
 
     addEntry(entries, {
@@ -541,6 +667,14 @@
     }
   };
 
+  const clearPendingHighlight = () => {
+    try {
+      window.sessionStorage.removeItem(pendingHighlightStorageKey);
+    } catch (error) {
+      // Ignore storage failures so the current interaction can continue.
+    }
+  };
+
   const applyTargetHighlight = (target) => {
     const highlightTarget = getHighlightTarget(target);
     if (!highlightTarget) return;
@@ -603,11 +737,7 @@
     const sameFile = payload.file === getCurrentPageFile();
     const sameHash = !payload.hash || payload.hash === window.location.hash;
 
-    try {
-      window.sessionStorage.removeItem(pendingHighlightStorageKey);
-    } catch (error) {
-      // Ignore storage failures after reading the payload.
-    }
+    clearPendingHighlight();
 
     if (isStale || !sameFile || !sameHash || !payload.hash) return;
 
@@ -663,6 +793,13 @@
     let score = 0;
     const heading = normalizeText(entry.heading);
     const pageTitle = normalizeText(entry.pageTitle);
+    const aliases = (entry.aliases || []).map((alias) => normalizeText(alias)).filter(Boolean);
+
+    aliases.forEach((alias) => {
+      if (alias === normalizedQuery) score += 50;
+      else if (alias.indexOf(normalizedQuery) === 0) score += 28;
+      else if (alias.includes(normalizedQuery)) score += 16;
+    });
 
     for (let i = 0; i < terms.length; i += 1) {
       const term = terms[i];
@@ -929,8 +1066,14 @@
       const href = link.getAttribute('href') || '';
       const destinationFile = getFileFromHref(href);
       const hash = href.includes('#') ? `#${href.split('#')[1]}` : '';
+      const isCrossPageTarget = destinationFile !== getCurrentPageFile();
 
-      storePendingHighlight(href, input?.value || '');
+      if (isCrossPageTarget && hash) {
+        storePendingHighlight(href, input?.value || '');
+      } else {
+        clearPendingHighlight();
+      }
+
       closeSearch();
 
       if (destinationFile === getCurrentPageFile() && hash) {

@@ -10,6 +10,7 @@ class JasonAssistant {
     this.knowledgeIndex = null;
     this.intentHistory = [];
     this.lastIntentPicks = {};
+    this.pendingFollowUp = null;
     this.currentLang = 'en';
     this.eyeReactionTimer = null;
     this.pointerX = window.innerWidth * 0.5;
@@ -327,10 +328,28 @@ class JasonAssistant {
         es: 'Cuantos equipos habia en el hackathon'
       },
       downloadCv: {
-        en: "Download Jason's CV",
-        'zh-TW': '下載Jason的履歷',
-        'zh-CN': '下载Jason的履历',
-        es: 'Descargar CV de Jason'
+        en: "View Jason's resume",
+        'zh-TW': '查看Jason的履歷',
+        'zh-CN': '查看Jason的履历',
+        es: 'Ver el CV de Jason'
+      },
+      englishResume: {
+        en: "View Jason's English resume",
+        'zh-TW': '查看Jason的英文履歷',
+        'zh-CN': '查看Jason的英文履历',
+        es: 'Ver el CV de Jason en inglés'
+      },
+      chineseResume: {
+        en: "View Jason's Chinese resume",
+        'zh-TW': '查看Jason的中文履歷',
+        'zh-CN': '查看Jason的中文履历',
+        es: 'Ver el CV de Jason en chino'
+      },
+      githubProfile: {
+        en: "What is Jason's GitHub?",
+        'zh-TW': 'Jason 的 GitHub 是什麼？',
+        'zh-CN': 'Jason 的 GitHub 是什么？',
+        es: '¿Cuál es el GitHub de Jason?'
       }
     };
   }
@@ -655,10 +674,28 @@ class JasonAssistant {
         es: 'Cuéntame sobre re:Invent'
       },
       download_jasons_cv: {
-        en: "Download Jason's CV",
-        'zh-TW': '下載Jason的履歷',
-        'zh-CN': '下载Jason的履历',
-        es: 'Descargar CV de Jason'
+        en: "View Jason's resume",
+        'zh-TW': '查看Jason的履歷',
+        'zh-CN': '查看Jason的履历',
+        es: 'Ver el CV de Jason'
+      },
+      view_jasons_english_resume: {
+        en: "View Jason's English resume",
+        'zh-TW': '查看Jason的英文履歷',
+        'zh-CN': '查看Jason的英文履历',
+        es: 'Ver el CV de Jason en inglés'
+      },
+      view_jasons_chinese_resume: {
+        en: "View Jason's Chinese resume",
+        'zh-TW': '查看Jason的中文履歷',
+        'zh-CN': '查看Jason的中文履历',
+        es: 'Ver el CV de Jason en chino'
+      },
+      resume_versions_difference: {
+        en: 'What is the difference between the resume versions?',
+        'zh-TW': '履歷版本之間有什麼不同？',
+        'zh-CN': '履历版本之间有什么不同？',
+        es: '¿Qué diferencia hay entre las versiones del CV?'
       },
       what_is_jasons_final_year_project: {
         en: "What is Jason's Final Year Project?",
@@ -766,7 +803,7 @@ class JasonAssistant {
         projects: ['What is the Bay Management System?', "What projects should I look at first?", "What is Jason's Final Year Project?", "What are Jason's skills?"],
         education: ["What is Jason's education background?", "What is Jason's Final Year Project?", "What are Jason's skills?", "What awards has Jason won?"],
         skills: ["What are Jason's skills?", 'What AI tools does Jason use?', 'What programming languages does Jason know?', "How can I contact Jason?"],
-        contact: ["How can I contact Jason?", "Download Jason's CV", 'Tell me about Jason', 'Show me Jason\'s projects']
+        contact: ["How can I contact Jason?", "View Jason's resume", "What is Jason's GitHub?", 'Show me Jason\'s projects']
       },
       'coop.html': {
         overview: ["What did Jason do at HAECO?", 'Summarize this page', 'Tell me about the Techathon', 'Tell me about Lean Day'],
@@ -962,8 +999,13 @@ class JasonAssistant {
         viewProjects: 'View All Projects',
         viewAchievements: 'View All Achievements',
         sendEmail: 'Open contact form',
-        viewGithub: 'Open CV',
-        openResume: 'Open Jason Resume',
+        openGithub: 'Open GitHub',
+        openResume: 'Open English Resume',
+        openEnglishResume: 'Open English Resume',
+        openChineseResume: 'Open Chinese Resume',
+        askEnglishResume: 'English version',
+        askChineseResume: 'Chinese version',
+        resumeDifferenceQuestion: 'What is the difference between them?',
         viewExperience: 'View Full Experience',
         viewProjectSection: 'View Projects Section',
         techathonText: "💡 **HAECO Techathon**\n\nJason helped organize HAECO's first Techathon during his Co-op in the Technology Innovation team.\n\n• Designed the event framework and planning flow\n• Prepared materials for multiple GM-level meetings\n• Supported innovation pitching and cross-team coordination\n\nIt was one of the key initiatives highlighted during his HAECO experience.",
@@ -974,9 +1016,13 @@ class JasonAssistant {
         fypText: "🎯 **Jason's Final Year Project**\n\nJason's HKUST Final Year Project focuses on inventory control using efficient data-driven methods.\n\n• Research area: inventory optimization\n• Methods mentioned in the portfolio include JIT, Monte Carlo, AutoML, and multi-agent systems\n• It is positioned as a data and operations-focused academic project",
         projectsText: "🚀 **Featured Projects**\n\n**1. HAECO Bay Management System** 🏆\n• Grand Prize Winner - AWS AI Hackathon\n• AI-based aircraft bay scheduling\n• Built in 14 days\n\n**2. Inventory Control Research**\n• HKUST Final Year Project\n• JIT, Monte Carlo, AutoML, Multi-Agent Systems\n\n**3. Christmas Effects Study**\n• Data Science project analyzing livestock pricing\n\n**4. YouTube Database System**\n• SQLite database design and implementation",
         awardsText: "🏆 **Awards & Achievements**\n\n• **Grand Prize Winner** - AWS AI Hackathon Hong Kong 2025 (130+ teams)\n• **Master of Ceremony** - HAECO Lean Day 2025\n• **Lead Organizer** - HAECO Techathon 2026\n• **Academic Excellence Award** - HKU SPACE\n• **Principal's Honor List** - HKU SPACE\n• **Class Representative** - Data Science (80+ students)\n• **Certificate of Outstanding Achievement** - HAECO 2025",
-        githubText: "📄 **Contact and CV**\n\nThe contact area now points visitors to the on-site message form first, with Jason's CV available as the formal reference.\n\nIf you want the quickest next step, open the form or the CV directly from the portfolio.",
-        contactText: "📬 **Get in Touch with Jason**\n\nThe fastest route is the message form in the contact section.\n\nUse it for collaboration, internship, project, or innovation conversations.\n\n📄 **CV:** Available directly from the same section for formal details.",
-        cvText: "📄 **Jason's CV / Resume**\n\nFor formal and up-to-date professional details, Jason's CV is the most accurate source.\n\nYou can open the latest resume directly from the portfolio.",
+        githubText: "💻 **Jason's GitHub**\n\nJason's GitHub is a good place to look at code work and technical repositories.\n\nIf you want the portfolio's formal summary instead, open the resume from the contact section.",
+        contactText: "📬 **Get in Touch with Jason**\n\nThe fastest route is the message form in the contact section.\n\nUse it for collaboration, internship, project, or innovation conversations.\n\n📄 **CV:** View it from the same section for formal details.",
+        cvText: "📄 **Jason's Resume**\n\nJason has both English and Chinese resume versions on the portfolio.\n\nWhich one do you want to view?",
+        cvChoiceText: "📄 **Jason's Resume**\n\nJason has both English and Chinese versions ready.\n\nWhich one do you want to view?",
+        cvEnglishText: "📄 **English Resume**\n\nThis is the base version for Jason's formal and up-to-date professional details.\n\nIf any wording differs between versions, use this one as the reference.",
+        cvChineseText: "📄 **Chinese Resume**\n\nThis version is there for Chinese reading convenience.\n\nIf any wording differs between versions, the English resume is the base version.",
+        cvDifferenceText: "📄 **Resume Versions**\n\nJason has both English and Chinese resume versions.\n\nThe English resume is the base version. The Chinese version is for easier reading in Chinese, but if any wording differs, use the English one as the reference.",
         experienceText: "💼 **Professional Experience**\n\n**1. HAECO Co-op Intern** (Sep 2025 - Jan 2026)\n• Technology Innovation department\n• AI-driven solutions for operations\n• Won AWS Hackathon Grand Prize\n\n**2. HKUST ITSO Internship** (Feb 2026 - Jun 2026)\n• IT support and asset management\n\n**3. Speedy Group IT Support** (Jul 2021 - Present)\n• Part-time IT operations\n• Digital media production",
         defaultText: "I'm Jason's AI assistant.\n\nI can help you learn about:\n\n• **AWS Hackathon**\n• **HAECO Co-op**\n• **Skills**\n• **Education**\n• **Experience**\n• **Fun Facts**\n• **Contact**\n• **Time & Date**\n• **Chat Stats**"
       },
@@ -1004,8 +1050,13 @@ class JasonAssistant {
         viewProjects: '查看所有項目',
         viewAchievements: '查看所有成就',
         sendEmail: '開啟聯絡表格',
-        viewGithub: '開啟履歷',
-        openResume: '打開Jason履歷',
+        openGithub: '開啟 GitHub',
+        openResume: '打開Jason英文履歷',
+        openEnglishResume: '打開英文履歷',
+        openChineseResume: '打開中文履歷',
+        askEnglishResume: '英文版本',
+        askChineseResume: '中文版本',
+        resumeDifferenceQuestion: '兩個版本有什麼不同？',
         viewExperience: '查看完整經驗',
         viewProjectSection: '查看項目部分',
         techathonText: "💡 **港機創科馬拉松**\n\nJason在港機科技創新團隊Co-op期間，協助籌辦港機首個Techathon。\n\n• 設計活動框架與規劃流程\n• 為多次GM級別會議準備材料\n• 支援創新提案與跨團隊協調\n\n這是他港機實習期間其中一個重點項目。",
@@ -1016,9 +1067,13 @@ class JasonAssistant {
         fypText: "🎯 **Jason的畢業專題**\n\nJason於HKUST的畢業專題聚焦於以高效數據驅動方法進行庫存控制。\n\n• 研究方向：庫存優化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系統\n• 屬於數據與營運導向的學術項目",
         projectsText: "🚀 **精選項目**\n\n**1. 港機機位管理系統** 🏆\n• AWS黑客松總冠軍項目\n• 基於AI的機位調度方案\n• 14天內完成\n\n**2. 庫存控制研究**\n• HKUST畢業專題\n• JIT、Monte Carlo、AutoML、多代理系統\n\n**3. 聖誕效應研究**\n• 數據科學項目，分析牲畜價格\n\n**4. YouTube資料庫系統**\n• SQLite資料庫設計與實作",
         awardsText: "🏆 **獎項與成就**\n\n• **總冠軍** - AWS AI黑客松香港2025（130+隊伍）\n• **司儀** - 港機精益日2025\n• **首席籌辦者** - 港機Techathon 2026\n• **學術卓越獎** - HKU SPACE\n• **校長榮譽錄** - HKU SPACE\n• **班代表** - 數據科學（80+名學生）\n• **傑出成就證書** - 港機2025",
-        githubText: "📄 **聯絡與履歷**\n\n聯絡區現在會先引導訪客使用網站內的訊息表格，並保留 Jason 的履歷作為正式參考。\n\n如果你想快速開始，可以直接打開表格或履歷。",
+        githubText: "💻 **Jason 的 GitHub**\n\n如果你想看 Jason 的程式碼作品與技術儲存庫，可以直接前往他的 GitHub。\n\n如果你想看正式背景摘要，則可從作品集打開履歷。",
         contactText: "📬 **聯絡Jason**\n\n最快的方法是使用聯絡區中的站內訊息表格。\n\n它適合合作、實習、項目或創新相關交流。\n\n📄 **履歷：** 同一區域也可直接開啟，查看較正式的資料。",
-        cvText: "📄 **Jason的履歷**\n\n如需正式及最新的專業資料，Jason的履歷是最準確來源。\n\n你可以直接從作品集打開最新版本。",
+        cvText: "📄 **Jason 的履歷**\n\nJason 目前提供英文版與中文版履歷。\n\n你想看哪一個版本？",
+        cvChoiceText: "📄 **Jason 的履歷**\n\nJason 目前提供英文版與中文版履歷。\n\n你想看哪一個版本？",
+        cvEnglishText: "📄 **英文履歷**\n\n這是 Jason 正式與最新專業資料的基準版本。\n\n如果不同版本內容有差異，請以英文版為準。",
+        cvChineseText: "📄 **中文履歷**\n\n這個版本方便以中文閱讀。\n\n如果不同版本內容有差異，請以英文履歷為準。",
+        cvDifferenceText: "📄 **履歷版本說明**\n\nJason 目前提供英文版與中文版履歷。\n\n英文履歷是基準版本；中文版方便中文閱讀，但如果內容有差異，請以英文版為準。",
         experienceText: "💼 **專業經驗**\n\n**1. 港機Co-op實習生**（2025年9月 - 2026年1月）\n• 科技創新部門\n• 以AI驅動營運方案\n• 贏得AWS黑客松總冠軍\n\n**2. HKUST ITSO實習**（2026年2月 - 2026年6月）\n• IT支援與資產管理\n\n**3. 環速集團IT支援**（2021年7月 - 現在）\n• 兼職IT營運\n• 數碼媒體製作",
         defaultText: "我是Jason的AI助理。\n\n我可以幫你了解：\n\n• **AWS黑客松**\n• **港機Co-op**\n• **技能**\n• **教育背景**\n• **工作經驗**\n• **趣事**\n• **聯絡方式**\n• **時間與日期**\n• **聊天統計**"
       },
@@ -1046,8 +1101,13 @@ class JasonAssistant {
         viewProjects: '查看所有项目',
         viewAchievements: '查看所有成就',
         sendEmail: '打开联系表格',
-        viewGithub: '打开履历',
-        openResume: '打开Jason履历',
+        openGithub: '打开 GitHub',
+        openResume: '打开Jason英文履历',
+        openEnglishResume: '打开英文履历',
+        openChineseResume: '打开中文履历',
+        askEnglishResume: '英文版本',
+        askChineseResume: '中文版本',
+        resumeDifferenceQuestion: '两个版本有什么不同？',
         viewExperience: '查看完整经验',
         viewProjectSection: '查看项目部分',
         techathonText: "💡 **港机创科马拉松**\n\nJason在港机科技创新团队Co-op期间，协助筹办港机首个Techathon。\n\n• 设计活动框架与规划流程\n• 为多次GM级别会议准备材料\n• 支持创新提案与跨团队协调\n\n这是他港机实习期间其中一个重点项目。",
@@ -1058,9 +1118,13 @@ class JasonAssistant {
         fypText: "🎯 **Jason的毕业专题**\n\nJason在HKUST的毕业专题聚焦于以高效数据驱动方法进行库存控制。\n\n• 研究方向：库存优化\n• 作品集中提到的方法包括JIT、Monte Carlo、AutoML及多代理系统\n• 属于数据与运营导向的学术项目",
         projectsText: "🚀 **精选项目**\n\n**1. 港机机位管理系统** 🏆\n• AWS黑客松总冠军项目\n• 基于AI的机位调度方案\n• 14天内完成\n\n**2. 库存控制研究**\n• HKUST毕业专题\n• JIT、Monte Carlo、AutoML、多代理系统\n\n**3. 圣诞效应研究**\n• 数据科学项目，分析牲畜价格\n\n**4. YouTube数据库系统**\n• SQLite数据库设计与实现",
         awardsText: "🏆 **奖项与成就**\n\n• **总冠军** - AWS AI黑客松香港2025（130+队伍）\n• **司仪** - 港机精益日2025\n• **首席筹办者** - 港机Techathon 2026\n• **学术卓越奖** - HKU SPACE\n• **校长荣誉录** - HKU SPACE\n• **班代表** - 数据科学（80+名学生）\n• **杰出成就证书** - 港机2025",
-        githubText: "📄 **联系与履历**\n\n联系区现在会先引导访客使用网站内的留言表格，同时保留 Jason 的履历作为正式参考。\n\n如果你想快速开始，可以直接打开表格或履历。",
+        githubText: "💻 **Jason 的 GitHub**\n\n如果你想看 Jason 的代码作品和技术仓库，可以直接前往他的 GitHub。\n\n如果你想看正式背景摘要，则可以从作品集打开履历。",
         contactText: "📬 **联系Jason**\n\n最快的方式是使用联系区里的站内留言表格。\n\n它适合合作、实习、项目或创新相关交流。\n\n📄 **履历：** 同一区域也可以直接打开，用来看正式资料。",
-        cvText: "📄 **Jason的履历**\n\n如需正式及最新的专业资料，Jason的履历是最准确来源。\n\n你可以直接从作品集打开最新版本。",
+        cvText: "📄 **Jason 的履历**\n\nJason 目前提供英文版与中文版履历。\n\n你想看哪个版本？",
+        cvChoiceText: "📄 **Jason 的履历**\n\nJason 目前提供英文版与中文版履历。\n\n你想看哪个版本？",
+        cvEnglishText: "📄 **英文履历**\n\n这是 Jason 正式与最新专业资料的基准版本。\n\n如果不同版本内容有差异，请以英文版为准。",
+        cvChineseText: "📄 **中文履历**\n\n这个版本方便用中文阅读。\n\n如果不同版本内容有差异，请以英文履历为准。",
+        cvDifferenceText: "📄 **履历版本说明**\n\nJason 目前提供英文版与中文版履历。\n\n英文履历是基准版本；中文版方便中文阅读，但如果内容有差异，请以英文版为准。",
         experienceText: "💼 **专业经验**\n\n**1. 港机Co-op实习生**（2025年9月 - 2026年1月）\n• 科技创新部门\n• 以AI驱动运营方案\n• 赢得AWS黑客松总冠军\n\n**2. HKUST ITSO实习**（2026年2月 - 2026年6月）\n• IT支持与资产管理\n\n**3. 环速集团IT支持**（2021年7月 - 现在）\n• 兼职IT运营\n• 数码媒体制作",
         defaultText: "我是Jason的AI助理。\n\n我可以帮你了解：\n\n• **AWS黑客松**\n• **港机Co-op**\n• **技能**\n• **教育背景**\n• **工作经验**\n• **趣事**\n• **联系方式**\n• **时间与日期**\n• **聊天统计**"
       },
@@ -1088,8 +1152,13 @@ class JasonAssistant {
         viewProjects: 'Ver todos los proyectos',
         viewAchievements: 'Ver todos los logros',
         sendEmail: 'Abrir formulario',
-        viewGithub: 'Abrir CV',
+        openGithub: 'Abrir GitHub',
         openResume: 'Abrir CV de Jason',
+        openEnglishResume: 'Abrir CV en inglés',
+        openChineseResume: 'Abrir CV en chino',
+        askEnglishResume: 'Versión en inglés',
+        askChineseResume: 'Versión en chino',
+        resumeDifferenceQuestion: '¿Qué diferencia hay entre las dos?',
         viewExperience: 'Ver experiencia completa',
         viewProjectSection: 'Ver seccion de proyectos',
         techathonText: "💡 **Techathon de HAECO**\n\nJason ayudo a organizar el primer Techathon de HAECO durante su Co-op en el equipo de Innovacion Tecnologica.\n\n• Diseno el marco del evento y el flujo de planificacion\n• Preparo materiales para varias reuniones de nivel GM\n• Apoyo propuestas de innovacion y coordinacion entre equipos\n\nFue una de las iniciativas clave de su experiencia en HAECO.",
@@ -1100,9 +1169,13 @@ class JasonAssistant {
         fypText: "🎯 **Proyecto Final de Jason**\n\nEl Proyecto Final de Jason en HKUST se centra en control de inventario con metodos eficientes basados en datos.\n\n• Area de investigacion: optimizacion de inventario\n• El portafolio menciona JIT, Monte Carlo, AutoML y sistemas multiagente\n• Es un proyecto academico orientado a datos y operaciones",
         projectsText: "🚀 **Proyectos destacados**\n\n**1. Sistema de Gestion de Bahias de HAECO** 🏆\n• Proyecto ganador del AWS Hackathon\n• Solucion de asignacion de bahias basada en IA\n• Desarrollado en 14 dias\n\n**2. Investigacion de control de inventario**\n• Proyecto final de HKUST\n• JIT, Monte Carlo, AutoML y sistemas multiagente\n\n**3. Estudio de efectos navidenos**\n• Proyecto de ciencia de datos sobre precios de ganado\n\n**4. Sistema de base de datos de YouTube**\n• Diseno e implementacion con SQLite",
         awardsText: "🏆 **Premios y logros**\n\n• **Gran Premio** - AWS AI Hackathon Hong Kong 2025 (130+ equipos)\n• **Maestro de ceremonias** - HAECO Lean Day 2025\n• **Organizador principal** - HAECO Techathon 2026\n• **Premio a la excelencia academica** - HKU SPACE\n• **Lista de honor del director** - HKU SPACE\n• **Representante de clase** - Ciencia de Datos (80+ estudiantes)\n• **Certificado de logro destacado** - HAECO 2025",
-        githubText: "📄 **Contacto y CV**\n\nLa sección de contacto ahora dirige primero al formulario del sitio y deja el CV de Jason como referencia formal.\n\nSi quieres la vía más rápida, abre el formulario o el CV desde el portafolio.",
+        githubText: "💻 **GitHub de Jason**\n\nSi quieres ver trabajo técnico y repositorios de código, puedes abrir el GitHub de Jason.\n\nSi prefieres el resumen formal, abre el CV desde el portafolio.",
         contactText: "📬 **Contactar a Jason**\n\nLa forma más rápida es usar el formulario de mensajes en la sección de contacto.\n\nSirve para colaboraciones, oportunidades, proyectos o conversaciones sobre innovación.\n\n📄 **CV:** También puedes abrirlo desde la misma sección para ver los detalles formales.",
-        cvText: "📄 **CV de Jason**\n\nPara detalles formales y actualizados, el CV de Jason es la fuente mas precisa.\n\nPuedes abrir la version mas reciente directamente desde el portafolio.",
+        cvText: "📄 **CV de Jason**\n\nJason ya tiene versiones en inglés y en chino.\n\n¿Cuál quieres ver?",
+        cvChoiceText: "📄 **CV de Jason**\n\nJason ya tiene versiones en inglés y en chino.\n\n¿Cuál quieres ver?",
+        cvEnglishText: "📄 **CV en inglés**\n\nEsta es la versión base para los detalles formales y actualizados de Jason.\n\nSi hay diferencias entre versiones, usa esta como referencia.",
+        cvChineseText: "📄 **CV en chino**\n\nEsta versión está ahí para facilitar la lectura en chino.\n\nSi hay diferencias entre versiones, la versión base es la de inglés.",
+        cvDifferenceText: "📄 **Versiones del CV**\n\nJason ya tiene CV en inglés y en chino.\n\nLa versión en inglés es la base; la versión en chino facilita la lectura, pero si hay diferencias, usa la versión en inglés como referencia.",
         experienceText: "💼 **Experiencia profesional**\n\n**1. Co-op en HAECO** (Sep 2025 - Ene 2026)\n• Departamento de Innovacion Tecnologica\n• Soluciones operativas impulsadas por IA\n• Ganador del Gran Premio del AWS Hackathon\n\n**2. Practica en HKUST ITSO** (Feb 2026 - Jun 2026)\n• Soporte TI y gestion de activos\n\n**3. Soporte TI en Speedy Group** (Jul 2021 - Actualidad)\n• Operaciones TI a tiempo parcial\n• Produccion de medios digitales",
         defaultText: "Soy el asistente de IA de Jason.\n\nPuedo ayudarte a conocer:\n\n• **AWS Hackathon**\n• **Co-op en HAECO**\n• **Habilidades**\n• **Educacion**\n• **Experiencia**\n• **Datos curiosos**\n• **Contacto**\n• **Hora y fecha**\n• **Estadisticas del chat**"
       }
@@ -1242,7 +1315,7 @@ class JasonAssistant {
       'zh-TW': {
         greeting: ['早安', '午安', '晚安'],
         intro: '我是 Jason Bot，可以根據你現在看到的部分，快速解釋內容、整理重點，或帶你了解 Jason 的項目與經驗。',
-        aboutIntro: "👋 認識Jason Au-Yeung\n\n工業工程 × 數據 × 科技 | 人工智能與營運創新\n\nJason是香港科技大學學生，專攻工業工程，熱衷於人工智能驅動方案和營運優化。\n\n🌟 近期亮點：\n• 🏆 總冠軍 - 2025年AWS人工智能黑客松香港區\n• 🚀 完成港機（香港）5個月Co-op實習\n• 🎤 擔任2025年港機（香港）精益日司儀\n• 💡 組織港機（香港）首個創科馬拉松\n\n🎓 教育：\n• 香港科技大學 - 工業工程及工程管理學士 + 大數據技術副修\n• 香港大學專業進修學院 - 數據科學高級文憑\n\n💪 專長：\n人工智能/機器學習、數據分析、營運優化、Python、AWS、領導力",
+        aboutIntro: "👋 認識Jason Au-Yeung\n\n工業工程 × 數據 × 科技 | 人工智能與營運創新\n\nJason是香港科技大學學生，專攻工業工程，熱衷於人工智能驅動方案和營運優化。\n\n🌟 近期亮點：\n• 🏆 總冠軍 - AWS人工智能黑客松香港 2025\n• 🚀 完成港機（香港）5個月Co-op實習\n• 🎤 擔任2025年港機（香港）精益日司儀\n• 💡 組織港機（香港）首個創科馬拉松\n\n🎓 教育：\n• 香港科技大學 - 工業工程及工程管理學士 + 大數據技術副修\n• 香港大學專業進修學院 - 數據科學高級文憑\n\n💪 專長：\n人工智能/機器學習、數據分析、營運優化、Python、AWS、領導力",
         ready: '我可以幫你快速總結、串連重點，或直接帶你看最值得先了解的部分。',
         ask: '你可以直接問目前螢幕上的部分，或作品集裡的任何內容。',
         funFact: '關於Jason的趣事：',
@@ -1263,7 +1336,7 @@ class JasonAssistant {
         messages: '條訊息',
         comeBack: '隨時回來了解更多關於Jason的資訊！😊',
         // AWS Hackathon
-        hackathonTitle: 'AWS人工智能黑客松香港2025 - 總冠軍！',
+        hackathonTitle: 'AWS人工智能黑客松香港 2025 - 總冠軍！',
         hackathonIntro: 'Jason的團隊開發了**港機（香港）機位管理系統** - 基於人工智能的飛機機位調度優化平台。',
         keyAchievements: '主要成就：',
         hackathonAch1: '於**130+支入圍隊伍**中奪得總冠軍',
@@ -1277,7 +1350,7 @@ class JasonAssistant {
         coopTitle: '港機（香港）Co-op實習經驗 (2025年9月 - 2026年1月)',
         coopIntro: 'Jason完成了在港機（香港）科技創新部門為期**5個月**的Co-op實習。',
         majorAchievements: '主要成就：',
-        coopAch1: '🏆 奪得AWS人工智能黑客松總冠軍',
+        coopAch1: '🏆 奪得AWS人工智能黑客松香港 2025總冠軍',
         coopAch2: '💡 組織港機首個創科馬拉松',
         coopAch3: '🎤 擔任港機精益日司儀',
         coopAch4: '🎙️ 4次媒體訪問',
@@ -1318,7 +1391,7 @@ class JasonAssistant {
         project4: 'YouTube數據庫系統 - SQLite項目',
         // Awards
         awardsTitle: '獎項與成就',
-        award1: '**總冠軍** - AWS人工智能黑客松香港2025 (130+隊)',
+        award1: '**總冠軍** - AWS人工智能黑客松香港 2025 (130+隊)',
         award2: '**司儀** - 港機精益日2025',
         award3: '**首席組織者** - 港機創科馬拉松2026',
         award4: '**學術卓越獎** - 香港大學專業進修學院',
@@ -1368,7 +1441,7 @@ class JasonAssistant {
       'zh-CN': {
         greeting: ['早安', '午安', '晚安'],
         intro: '我是 Jason Bot，可以根据你现在看到的部分，快速解释内容、整理重点，或带你了解 Jason 的项目与经历。',
-        aboutIntro: "👋 认识Jason Au-Yeung\n\n工业工程 × 数据 × 科技 | 人工智能与运营创新\n\nJason是香港科技大学学生，专攻工业工程，热衷于人工智能驱动方案和运营优化。\n\n🌟 近期亮点：\n• 🏆 总冠军 - 2025年AWS人工智能黑客松香港区\n• 🚀 完成港机（香港）5个月Co-op实习\n• 🎤 担任2025年港机（香港）精益日司仪\n• 💡 组织港机（香港）首个创科马拉松\n\n🎓 教育：\n• 香港科技大学 - 工业工程及工程管理学士 + 大数据技术副修\n• 香港大学专业进修学院 - 数据科学高级文凭\n\n💪 专长：\n人工智能/机器学习、数据分析、运营优化、Python、AWS、领导力",
+        aboutIntro: "👋 认识Jason Au-Yeung\n\n工业工程 × 数据 × 科技 | 人工智能与运营创新\n\nJason是香港科技大学学生，专攻工业工程，热衷于人工智能驱动方案和运营优化。\n\n🌟 近期亮点：\n• 🏆 总冠军 - AWS人工智能黑客松香港 2025\n• 🚀 完成港机（香港）5个月Co-op实习\n• 🎤 担任2025年港机（香港）精益日司仪\n• 💡 组织港机（香港）首个创科马拉松\n\n🎓 教育：\n• 香港科技大学 - 工业工程及工程管理学士 + 大数据技术副修\n• 香港大学专业进修学院 - 数据科学高级文凭\n\n💪 专长：\n人工智能/机器学习、数据分析、运营优化、Python、AWS、领导力",
         ready: '我可以帮你快速总结、串起重点，或直接带你看最值得先了解的部分。',
         ask: '你可以直接问当前屏幕上的部分，或作品集里的任何内容。',
         funFact: '关于Jason的趣事：',
@@ -1389,7 +1462,7 @@ class JasonAssistant {
         messages: '条消息',
         comeBack: '随时回来了解更多关于Jason的信息！😊',
         // AWS Hackathon
-        hackathonTitle: 'AWS人工智能黑客松香港2025 - 总冠军！',
+        hackathonTitle: 'AWS人工智能黑客松香港 2025 - 总冠军！',
         hackathonIntro: 'Jason的团队开发了**港机（香港）机位管理系统** - 基于人工智能的飞机机位调度优化平台。',
         keyAchievements: '主要成就：',
         hackathonAch1: '于**130+支入围队伍**中夺得总冠军',
@@ -1403,7 +1476,7 @@ class JasonAssistant {
         coopTitle: '港机（香港）Co-op实习经验 (2025年9月 - 2026年1月)',
         coopIntro: 'Jason完成了在港机（香港）科技创新部门为期**5个月**的Co-op实习。',
         majorAchievements: '主要成就：',
-        coopAch1: '🏆 夺得AWS人工智能黑客松总冠军',
+        coopAch1: '🏆 夺得AWS人工智能黑客松香港 2025总冠军',
         coopAch2: '💡 组织港机首个创科马拉松',
         coopAch3: '🎤 担任港机精益日司仪',
         coopAch4: '🎙️ 4次媒体访问',
@@ -1444,7 +1517,7 @@ class JasonAssistant {
         project4: 'YouTube数据库系统 - SQLite项目',
         // Awards
         awardsTitle: '奖项与成就',
-        award1: '**总冠军** - AWS人工智能黑客松香港2025 (130+队)',
+        award1: '**总冠军** - AWS人工智能黑客松香港 2025 (130+队)',
         award2: '**司仪** - 港机精益日2025',
         award3: '**首席组织者** - 港机创科马拉松2026',
         award4: '**学术卓越奖** - 香港大学专业进修学院',
@@ -1893,7 +1966,7 @@ class JasonAssistant {
         "🌍 Jason出席拉斯維加斯AWS re:Invent並接受現場訪問。",
         "💡 Jason組織港機首個創科馬拉松，包括框架設計和GM簡報。",
         "📊 Jason擔任數據科學課程80多名學生的班代表。",
-        "🏆 Jason的團隊在AWS人工智能黑客松香港2025中與130多支隊伍競爭。",
+        "🏆 Jason的團隊在AWS人工智能黑客松香港 2025中與130多支隊伍競爭。",
         "⚡ 機位管理系統在黑客松期間14天內開發完成。",
         "🎉 Jason參與港機75週年慶典。",
         "🤖 Jason使用AWS Q Developer和Kiro等AI工具進行開發。",
@@ -1907,7 +1980,7 @@ class JasonAssistant {
         "🌍 Jason出席拉斯维加斯AWS re:Invent并接受现场访问。",
         "💡 Jason组织港机首个创科马拉松，包括框架设计和GM简报。",
         "📊 Jason担任数据科学课程80多名学生的班代表。",
-        "🏆 Jason的团队在AWS人工智能黑客松香港2025中与130多支队伍竞争。",
+        "🏆 Jason的团队在AWS人工智能黑客松香港 2025中与130多支队伍竞争。",
         "⚡ 机位管理系统在黑客松期间14天内开发完成。",
         "🎉 Jason参与港机75周年庆典。",
         "🤖 Jason使用AWS Q Developer和Kiro等AI工具进行开发。",
@@ -2031,7 +2104,7 @@ class JasonAssistant {
     const examples = [
       'Techathon details',
       "What are Jason's skills?",
-      "Download Jason's CV"
+      "View Jason's resume"
     ].map((query) => `• ${this.localizePromptQuery(query)}`).join('\n');
 
     return {
@@ -2994,6 +3067,117 @@ class JasonAssistant {
     return 'happy';
   }
 
+  getResumeAssets() {
+    return {
+      en: 'assets/images/CV/Jason Resume (EN).pdf',
+      cn: 'assets/images/CV/Jason Resume (CN).pdf'
+    };
+  }
+
+  detectResumeVariantPreference(message = '') {
+    const msg = this.normalize(message);
+    const wantsEnglish = /(english|英文|英語|英语|\ben\b|base version|base resume|英文版)/.test(msg);
+    const wantsChinese = /(chinese|中文|繁體|繁体|简体|簡體|\bcn\b|zh|中文版|中文版本|simplified|traditional)/.test(msg);
+
+    if (wantsEnglish && !wantsChinese) return 'en';
+    if (wantsChinese && !wantsEnglish) return 'cn';
+    return null;
+  }
+
+  buildResumeChoiceResponse(reply) {
+    this.pendingFollowUp = { type: 'resume_variant' };
+
+    return {
+      text: reply.cvChoiceText,
+      actions: [
+        { text: `📄 ${reply.openEnglishResume}`, link: this.getResumeAssets().en },
+        { text: `📄 ${reply.openChineseResume}`, link: this.getResumeAssets().cn }
+      ],
+      suggestions: [
+        "View Jason's English resume",
+        "View Jason's Chinese resume",
+        'What is the difference between the resume versions?',
+        "What is Jason's GitHub?"
+      ]
+    };
+  }
+
+  buildResumeVariantResponse(reply, variant = 'en') {
+    this.pendingFollowUp = null;
+    const isEnglish = variant === 'en';
+    const link = isEnglish ? this.getResumeAssets().en : this.getResumeAssets().cn;
+
+    return {
+      text: isEnglish ? reply.cvEnglishText : reply.cvChineseText,
+      actions: [
+        { text: `📋 ${isEnglish ? reply.openEnglishResume : reply.openChineseResume}`, link }
+      ],
+      suggestions: [
+        isEnglish ? "View Jason's Chinese resume" : "View Jason's English resume",
+        'What is the difference between the resume versions?',
+        "How can I contact Jason?",
+        "What is Jason's GitHub?"
+      ]
+    };
+  }
+
+  buildResumeDifferenceResponse(reply) {
+    return {
+      text: reply.cvDifferenceText,
+      actions: [
+        { text: `📄 ${reply.openEnglishResume}`, link: this.getResumeAssets().en },
+        { text: `📄 ${reply.openChineseResume}`, link: this.getResumeAssets().cn }
+      ],
+      suggestions: [
+        "View Jason's English resume",
+        "View Jason's Chinese resume",
+        "How can I contact Jason?",
+        "What is Jason's GitHub?"
+      ]
+    };
+  }
+
+  resolvePendingFollowUp(message) {
+    if (!this.pendingFollowUp) return null;
+    const reply = this.getReplyCopy();
+    const msg = this.normalize(message);
+
+    if (this.pendingFollowUp.type === 'resume_variant') {
+      const variant = this.detectResumeVariantPreference(message);
+      if (variant) {
+        return this.buildResumeVariantResponse(reply, variant);
+      }
+
+      if (/(difference|different|which one|compare|base|有什麼不同|有什么不同|差別|差别|以哪個為準|以哪个为准|哪個版本|哪个版本|有何不同)/.test(msg)) {
+        return this.buildResumeDifferenceResponse(reply);
+      }
+    }
+
+    return null;
+  }
+
+  shouldKeepPendingFollowUp(message) {
+    if (!this.pendingFollowUp) return false;
+
+    const msg = this.normalize(message);
+
+    if (this.pendingFollowUp.type === 'resume_variant') {
+      if (this.detectResumeVariantPreference(message)) return true;
+
+      return /(difference|different|which one|compare|base|resume|cv|pdf|english|chinese|有什麼不同|有什么不同|差別|差别|以哪個為準|以哪个为准|哪個版本|哪个版本|有何不同|履歷|履历|英文|中文)/.test(msg);
+    }
+
+    return false;
+  }
+
+  getAssistantResponseDelay(message = '') {
+    const msg = `${message}`.trim();
+    const wordCount = msg ? msg.split(/\s+/).length : 0;
+    const shortPrompt = wordCount <= 4 || msg.length <= 24;
+    const delay = 140 + Math.min(260, Math.round(msg.length * 3.5));
+    return shortPrompt ? Math.min(delay, 220) : Math.min(delay + 80, 420);
+  }
+
   handleSend(messageOverride = '') {
     const input = document.getElementById('chatInput');
     const displayMessage = typeof messageOverride === 'object'
@@ -3022,7 +3206,7 @@ class JasonAssistant {
       const response = this.generateResponse(responseMessage, contextSectionId || null);
       this.addMessage(response.text, 'assistant', response.actions, response.suggestions);
       this.setReaction(this.getResponseReaction(responseMessage, response), 1200);
-    }, 800);
+    }, this.getAssistantResponseDelay(responseMessage));
   }
 
   generateLegacyResponse(message) {
@@ -3140,8 +3324,8 @@ class JasonAssistant {
         low: ['connect', 'message', '聯繫', '联系', '訊息', '消息', 'mensaje']
       },
       cv: {
-        high: ['download cv', 'download resume', 'jason resume', 'jason cv', '下載履歷', '下载履历', 'descargar cv'],
-        medium: ['resume', 'cv', '履歷', '履历', 'currículum'],
+        high: ['download cv', 'download resume', 'jason resume', 'jason cv', 'english resume', 'chinese resume', '英文履歷', '中文履歷', '英文履历', '中文履历', '下載履歷', '下载履历', 'descargar cv'],
+        medium: ['resume', 'cv', '履歷', '履历', 'currículum', 'base version', 'base resume', 'en version', 'cn version'],
         low: ['pdf', 'formal details']
       },
       experience: {
@@ -3201,6 +3385,9 @@ class JasonAssistant {
     }
     
     this.trackIntent(intent);
+    if (intent !== 'cv') {
+      this.pendingFollowUp = null;
+    }
     
     // Check for loop
     if (this.isLooping()) {
@@ -3409,10 +3596,10 @@ class JasonAssistant {
         return {
           text: reply.githubText,
           actions: [
-            { text: `📄 ${reply.viewGithub}`, link: 'assets/images/CV/Jason Resume.pdf' },
+            { text: `💻 ${reply.openGithub}`, link: 'https://github.com/Jasonauyeungaa' },
             { text: `🚀 ${reply.viewProjects}`, link: 'index.html#projects' }
           ],
-          suggestions: ['Projects', 'Skills', 'Download Jason\'s CV', 'Contact info']
+          suggestions: ['Projects', 'Skills', "View Jason's resume", 'Contact info']
         };
       }
 
@@ -3420,18 +3607,24 @@ class JasonAssistant {
         text: reply.contactText,
         actions: [
           { text: `📬 ${reply.sendEmail}`, link: 'index.html#contact' },
-          { text: `📄 ${reply.viewGithub}`, link: 'assets/images/CV/Jason Resume.pdf' }
+          { text: `📄 ${reply.openEnglishResume}`, link: this.getResumeAssets().en },
+          { text: `📄 ${reply.openChineseResume}`, link: this.getResumeAssets().cn }
         ],
         suggestions: ['Tell me about Jason', 'Skills', 'Projects', 'Fun fact']
       };
     }
 
     if (intent === 'cv') {
-      return {
-        text: reply.cvText,
-        actions: [{ text: `📋 ${reply.openResume}`, link: 'assets/images/CV/Jason Resume.pdf' }],
-        suggestions: ['Skills', 'Experience', 'Education background', 'Contact info']
-      };
+      if (/(difference|different|which one|compare|base|有什麼不同|有什么不同|差別|差别|以哪個為準|以哪个为准)/.test(msg)) {
+        return this.buildResumeDifferenceResponse(reply);
+      }
+
+      const variant = this.detectResumeVariantPreference(message);
+      if (variant) {
+        return this.buildResumeVariantResponse(reply, variant);
+      }
+
+      return this.buildResumeChoiceResponse(reply);
     }
     
     // Experience queries
@@ -3502,10 +3695,29 @@ class JasonAssistant {
     return this.localizePromptQuery('Summarize this section');
   }
 
+  shouldPreferLegacyResponse(message = '') {
+    const normalized = this.normalize(message);
+    if (!normalized) return false;
+
+    if (this.matchDynamicAssistantQuery(message)) {
+      return false;
+    }
+
+    if (/(summarize|summary|section|page|總結|总结|摘要|概覽|概览|resumen|resume esta)/.test(normalized)) {
+      return false;
+    }
+
+    return /(github|git hub|resume|cv|curriculum|currículum|履歷|履历|英文履歷|中文履歷|英文履历|中文履历|contact|email|聯絡|联络|電郵|电邮|correo)/.test(normalized);
+  }
+
   getEngineResponse(message, contextSectionId = null) {
     if (!this.engine?.respond) return null;
 
     const canonicalMessage = this.getCanonicalAssistantQuery(message);
+    if (this.shouldPreferLegacyResponse(message) || this.shouldPreferLegacyResponse(canonicalMessage)) {
+      return null;
+    }
+
     const dynamicMatch = this.matchDynamicAssistantQuery(message) || this.matchDynamicAssistantQuery(canonicalMessage);
     const summaryIntent = this.engine?.detectSummaryIntent?.(message) || this.engine?.detectSummaryIntent?.(canonicalMessage) || null;
     const hasContextualFallback = this.currentLang !== 'en'
@@ -3547,6 +3759,13 @@ class JasonAssistant {
   generateResponse(message, contextSectionId = null) {
     if (this.isFunFactRequest(message)) {
       return this.buildFunFactResponse();
+    }
+
+    const followUpResponse = this.resolvePendingFollowUp(message);
+    if (followUpResponse) return followUpResponse;
+
+    if (!this.shouldKeepPendingFollowUp(message)) {
+      this.pendingFollowUp = null;
     }
 
     const engineResponse = this.getEngineResponse(message, contextSectionId);
@@ -3699,8 +3918,10 @@ class JasonAssistant {
         'What is the Bay Management System?',
         'How many teams were in the hackathon?',
         'When was the AWS Hackathon?',
-        'Open Jason\'s CV',
-        'Download Jason\'s CV'
+        "What is Jason's GitHub?",
+        "View Jason's resume",
+        'View Jason\'s English resume',
+        'View Jason\'s Chinese resume'
       ],
       'zh-TW': [
         '告訴我關於Jason',
@@ -3726,8 +3947,10 @@ class JasonAssistant {
         '什麼是機位管理系統？',
         '黑客松有多少隊伍？',
         'AWS黑客松是什麼時候？',
-        '打開Jason的履歷',
-        '下載Jason的履歷'
+        'Jason 的 GitHub 是什麼？',
+        '查看Jason的履歷',
+        '查看Jason的英文履歷',
+        '查看Jason的中文履歷'
       ],
       'zh-CN': [
         '告诉我关于Jason',
@@ -3753,8 +3976,10 @@ class JasonAssistant {
         '什么是机位管理系统？',
         '黑客松有多少队伍？',
         'AWS黑客松是什么时候？',
-        '打开Jason的履历',
-        '下载Jason的履历'
+        'Jason 的 GitHub 是什么？',
+        '查看Jason的履历',
+        '查看Jason的英文履历',
+        '查看Jason的中文履历'
       ],
       es: [
         'Cuéntame sobre Jason',
@@ -3780,8 +4005,10 @@ class JasonAssistant {
         '¿Qué es el Sistema de Gestión de Bahías?',
         '¿Cuántos equipos había en el hackathon?',
         '¿Cuándo fue el AWS Hackathon?',
-        'Abrir CV de Jason',
-        'Descargar CV de Jason'
+        '¿Cuál es el GitHub de Jason?',
+        'Ver el CV de Jason',
+        'Ver CV de Jason en inglés',
+        'Ver CV de Jason en chino'
       ]
     };
     

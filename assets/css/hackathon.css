@@ -998,12 +998,6 @@
   font-weight: 700;
 }
 
-.hackathon-official-link-url {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  word-break: break-all;
-}
-
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

@@ -1,5 +1,5 @@
 window.JASON_ASSISTANT_KNOWLEDGE = {
-  "version": 2,
+  "version": 3,
   "suggestedQueries": {
     "en": [
       "Tell me about Jason",
@@ -205,12 +205,12 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "type": "section_summary",
       "topic": "contact",
       "title": "Contact",
-      "summary_short": "The contact section centers on a direct message form, with the CV available as a secondary option.",
-      "summary_long": "The contact section is the portfolio's direct call-to-action area. It now guides visitors to send a message from the site itself for collaboration, opportunities, and project conversations, while still keeping the CV available for formal details.",
+      "summary_short": "The contact section centers on a direct message form, with the CV easy to view as a secondary option.",
+      "summary_long": "The contact section is the portfolio's direct call-to-action area. It now guides visitors to send a message from the site itself for collaboration, opportunities, and project conversations, while still keeping the CV there to view for formal details.",
       "facts": [
         "Visitors can send a message directly from the portfolio",
         "Best for collaboration, internship, and project inquiries",
-        "CV remains available for formal details"
+        "CV remains there to view for formal details"
       ],
       "keywords": ["contact", "message form", "reach jason", "resume"],
       "aliases": ["contact", "contact info", "how can i contact jason", "how do i contact jason", "reach jason", "聯絡", "联络", "contacto"],
@@ -218,7 +218,7 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "section": "contact",
       "priority": 8,
       "related": ["contact_email", "github_profile", "resume_cv"],
-      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
+      "followups": ["How can I contact Jason?", "View Jason's resume", "Summarize the contact section"],
       "url": "index.html#contact"
     },
     {
@@ -837,48 +837,49 @@ window.JASON_ASSISTANT_KNOWLEDGE = {
       "section": "contact",
       "priority": 9,
       "related": ["contact_summary", "github_profile", "resume_cv"],
-      "followups": ["Download Jason's CV", "Summarize the contact section", "Tell me about Jason"],
+      "followups": ["View Jason's resume", "Summarize the contact section", "Tell me about Jason"],
       "url": "index.html#contact"
     },
     {
       "id": "github_profile",
       "type": "fact",
       "topic": "contact",
-      "title": "Resume Access",
-      "summary_short": "Jason's CV can be opened directly from the contact section.",
-      "summary_long": "The contact area keeps Jason's CV close by as the formal, up-to-date source for experience, education, and project details.",
+      "title": "GitHub Profile",
+      "summary_short": "Jason's GitHub is the place to browse his code work and technical repositories.",
+      "summary_long": "Jason's GitHub profile is where visitors can look through code work and technical repositories alongside the portfolio. For formal background details, the portfolio also keeps both English and Chinese resume versions in the contact section.",
       "facts": [
-        "CV is accessible directly from the portfolio",
-        "Useful for formal and up-to-date details"
+        "GitHub profile is available directly from the portfolio assistant",
+        "Best for code work and technical repositories",
+        "Resume remains the better choice for formal summary details"
       ],
-      "keywords": ["cv", "resume", "formal details", "portfolio"],
-      "aliases": ["download jason's cv", "download resume", "cv", "履歷", "履历", "descargar cv"],
+      "keywords": ["github", "repositories", "code", "technical projects", "portfolio links"],
+      "aliases": ["what is jason's github", "jason github", "github profile", "view github", "open github", "github", "程式碼", "代码", "repositorios"],
       "page": "index.html",
       "section": "contact",
       "priority": 8,
       "related": ["contact_summary", "contact_email", "resume_cv"],
-      "followups": ["How can I contact Jason?", "Summarize the contact section", "Tell me about Jason"],
-      "url": "assets/images/CV/Jason Resume.pdf"
+      "followups": ["View Jason's resume", "How can I contact Jason?", "What projects should I look at first?"],
+      "url": "https://github.com/Jasonauyeungaa"
     },
     {
       "id": "resume_cv",
       "type": "fact",
       "topic": "contact",
       "title": "CV and Resume",
-      "summary_short": "Jason's CV is available directly from the portfolio and remains the best source for formal details.",
-      "summary_long": "The portfolio explicitly treats Jason's CV as the most accurate source for formal and up-to-date professional details, and it can be opened directly from the site.",
+      "summary_short": "Jason's resume can be viewed directly from the portfolio in both English and Chinese.",
+      "summary_long": "The portfolio provides both English and Chinese resume versions. The English resume is the base version for the most accurate and up-to-date professional details, while the Chinese version is provided for easier reading in Chinese.",
       "facts": [
-        "CV is the best source for formal details",
-        "Available directly from the portfolio"
+        "English and Chinese resume versions can be viewed directly from the portfolio",
+        "English resume is the base version if wording differs"
       ],
-      "keywords": ["cv", "resume", "download cv", "formal details"],
-      "aliases": ["download jason's cv", "download resume", "cv", "履歷", "履历", "descargar cv"],
+      "keywords": ["cv", "resume", "english resume", "chinese resume", "formal details"],
+      "aliases": ["download jason's cv", "download resume", "view jason's resume", "open english resume", "open chinese resume", "english resume", "chinese resume", "english cv", "chinese cv", "base version", "difference between resume versions", "cv", "履歷", "履历", "英文履歷", "中文履歷", "英文履历", "中文履历", "descargar cv"],
       "page": "index.html",
       "section": "contact",
       "priority": 7,
       "related": ["contact_summary", "contact_email", "github_profile"],
-      "followups": ["How can I contact Jason?", "Download Jason's CV", "Summarize the contact section"],
-      "url": "assets/images/CV/Jason Resume.pdf"
+      "followups": ["View Jason's English resume", "View Jason's Chinese resume", "How can I contact Jason?"],
+      "url": "assets/images/CV/Jason Resume (EN).pdf"
     }
   ]
 };

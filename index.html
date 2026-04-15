@@ -25,7 +25,7 @@
     <title>Jason Au-Yeung | IEEM × Data × Innovation</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/chat.css">
-    <script src="assets/js/translations.js"></script>
+    <script src="assets/js/translations.js?v=20260416-0006"></script>
 </head>
 <body data-page="home">
     <div class="scroll-progress" aria-hidden="true">
@@ -612,33 +612,34 @@
                     <div class="resume-selector-header">
                         <span class="resume-selector-kicker" data-i18n="resume.modal.kicker">Jason Au-Yeung</span>
                         <strong class="resume-selector-title" id="resumeModalTitle" data-i18n="resume.modal.title">Choose a CV Version</strong>
-                        <p class="resume-selector-note" data-i18n="resume.modal.note">Pick which version of my CV you'd like to open. The English version is ready now, and the Chinese version is coming soon.</p>
+                        <p class="resume-selector-note" data-i18n="resume.modal.note">Pick which version of my CV you'd like to view. If any wording differs, the English version is the base version.</p>
                     </div>
                     <div class="resume-version-grid">
                         <a
                             class="resume-version-card is-available"
-                            href="assets/images/CV/Jason Resume.pdf"
+                            href="assets/images/CV/Jason Resume (EN).pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             data-resume-primary
                             data-resume-choice
                         >
-                            <span class="resume-version-status" data-i18n="resume.option.english.status">Available now</span>
+                            <span class="resume-version-status" data-i18n="resume.option.english.status">Base version</span>
                             <strong class="resume-version-title" data-i18n="resume.option.english.title">English CV</strong>
-                            <p class="resume-version-copy" data-i18n="resume.option.english.note">Open the latest English resume in a new tab.</p>
-                            <span class="resume-version-cta" data-i18n="resume.option.english.cta">Open English CV</span>
+                            <p class="resume-version-copy" data-i18n="resume.option.english.note">View the English base resume in a new tab.</p>
+                            <span class="resume-version-cta" data-i18n="resume.option.english.cta">View English CV</span>
                         </a>
-                        <button
-                            type="button"
-                            class="resume-version-card is-soon"
-                            disabled
-                            aria-disabled="true"
+                        <a
+                            class="resume-version-card is-available"
+                            href="assets/images/CV/Jason Resume (CN).pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-resume-choice
                         >
-                            <span class="resume-version-status" data-i18n="resume.option.chinese.status">Soon</span>
-                            <strong class="resume-version-title" data-i18n="resume.option.chinese.title">Chinese CV (Soon)</strong>
-                            <p class="resume-version-copy" data-i18n="resume.option.chinese.note">A Chinese version is on the way.</p>
-                            <span class="resume-version-cta" data-i18n="resume.option.chinese.cta">Coming Soon</span>
-                        </button>
+                            <span class="resume-version-status" data-i18n="resume.option.chinese.status">Chinese version</span>
+                            <strong class="resume-version-title" data-i18n="resume.option.chinese.title">Chinese CV</strong>
+                            <p class="resume-version-copy" data-i18n="resume.option.chinese.note">View the Chinese resume in a new tab.</p>
+                            <span class="resume-version-cta" data-i18n="resume.option.chinese.cta">View Chinese CV</span>
+                        </a>
                     </div>
                 </div>
             </div>
